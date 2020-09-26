@@ -2,35 +2,35 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://bobtaoy.github.io/2020/09/26/%E5%8D%97%E9%82%AECTF-CG%20Web%E9%A2%98writeup%E8%AF%A6%E8%A7%A3/</loc>
+    <loc>http://www.ywboy.cn/2020/09/26/%E5%8D%97%E9%82%AECTF-CG%20Web%E9%A2%98writeup%E8%AF%A6%E8%A7%A3/</loc>
     
     <lastmod>2020-09-26</lastmod>
     
   </url>
   
   <url>
-    <loc>http://bobtaoy.github.io/2020/09/26/MD5%E7%A2%B0%E6%92%9E%E5%92%8CMD5%E5%80%BC(%E5%93%88%E5%B8%8C%E5%80%BC)%E7%9B%B8%E7%AD%89/</loc>
+    <loc>http://www.ywboy.cn/2020/09/26/MD5%E7%A2%B0%E6%92%9E%E5%92%8CMD5%E5%80%BC(%E5%93%88%E5%B8%8C%E5%80%BC)%E7%9B%B8%E7%AD%89/</loc>
     
     <lastmod>2020-09-26</lastmod>
     
   </url>
   
   <url>
-    <loc>http://bobtaoy.github.io/2020/09/26/phpstudy%E5%90%8E%E9%97%A8%E5%88%86%E6%9E%90/</loc>
+    <loc>http://www.ywboy.cn/2020/09/26/phpstudy%E5%90%8E%E9%97%A8%E5%88%86%E6%9E%90/</loc>
     
     <lastmod>2020-09-26</lastmod>
     
   </url>
   
   <url>
-    <loc>http://bobtaoy.github.io/tags/index.html</loc>
+    <loc>http://www.ywboy.cn/tags/index.html</loc>
     
     <lastmod>2020-09-26</lastmod>
     
   </url>
   
   <url>
-    <loc>http://bobtaoy.github.io/categories/index.html</loc>
+    <loc>http://www.ywboy.cn/categories/index.html</loc>
     
     <lastmod>2020-09-26</lastmod>
     
@@ -38,7 +38,7 @@
   
 
   <url>
-    <loc>http://bobtaoy.github.io/</loc>
+    <loc>http://www.ywboy.cn/</loc>
     <lastmod>2020-09-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
@@ -46,21 +46,21 @@
 
   
   <url>
-    <loc>http://bobtaoy.github.io/tags/CTF/</loc>
+    <loc>http://www.ywboy.cn/tags/CTF/</loc>
     <lastmod>2020-09-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://bobtaoy.github.io/tags/php%E5%AE%89%E5%85%A8/</loc>
+    <loc>http://www.ywboy.cn/tags/php%E5%AE%89%E5%85%A8/</loc>
     <lastmod>2020-09-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://bobtaoy.github.io/tags/phpstudy%E5%90%8E%E9%97%A8%E5%88%86%E6%9E%90/</loc>
+    <loc>http://www.ywboy.cn/tags/phpstudy%E5%90%8E%E9%97%A8%E5%88%86%E6%9E%90/</loc>
     <lastmod>2020-09-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -69,21 +69,21 @@
 
   
   <url>
-    <loc>http://bobtaoy.github.io/categories/%E8%83%A1%E4%B9%B1%E5%80%92%E8%85%BE/</loc>
+    <loc>http://www.ywboy.cn/categories/%E8%83%A1%E4%B9%B1%E5%80%92%E8%85%BE/</loc>
     <lastmod>2020-09-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://bobtaoy.github.io/categories/PHP/</loc>
+    <loc>http://www.ywboy.cn/categories/PHP/</loc>
     <lastmod>2020-09-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://bobtaoy.github.io/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/</loc>
+    <loc>http://www.ywboy.cn/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/</loc>
     <lastmod>2020-09-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
