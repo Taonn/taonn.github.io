@@ -3,14 +3,14 @@
   <title>Tao&#39;s blog</title>
   
   
-  <link href="http://example.com/atom.xml" rel="self"/>
+  <link href="http://bobtaoy.github.io/atom.xml" rel="self"/>
   
-  <link href="http://example.com/"/>
+  <link href="http://bobtaoy.github.io/"/>
   <updated>2020-09-26T00:56:49.921Z</updated>
-  <id>http://example.com/</id>
+  <id>http://bobtaoy.github.io/</id>
   
   <author>
-    <name>John Doe</name>
+    <name>Bobtaoy</name>
     
   </author>
   
@@ -18,8 +18,8 @@
   
   <entry>
     <title>Tao&#39;Blog</title>
-    <link href="http://example.com/2020/09/26/Tao-Blog/"/>
-    <id>http://example.com/2020/09/26/Tao-Blog/</id>
+    <link href="http://bobtaoy.github.io/2020/09/26/Tao-Blog/"/>
+    <id>http://bobtaoy.github.io/2020/09/26/Tao-Blog/</id>
     <published>2020-09-26T00:56:49.000Z</published>
     <updated>2020-09-26T00:56:49.921Z</updated>
     
@@ -31,8 +31,8 @@
   
   <entry>
     <title>Hello World</title>
-    <link href="http://example.com/2020/09/26/hello-world/"/>
-    <id>http://example.com/2020/09/26/hello-world/</id>
+    <link href="http://bobtaoy.github.io/2020/09/26/hello-world/"/>
+    <id>http://bobtaoy.github.io/2020/09/26/hello-world/</id>
     <published>2020-09-26T00:55:56.634Z</published>
     <updated>2020-09-26T00:55:56.634Z</updated>
     
