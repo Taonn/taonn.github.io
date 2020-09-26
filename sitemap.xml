@@ -46,6 +46,13 @@
 
   
   <url>
+    <loc>http://bobtaoy.github.io/tags/CTF/</loc>
+    <lastmod>2020-09-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://bobtaoy.github.io/tags/php%E5%AE%89%E5%85%A8/</loc>
     <lastmod>2020-09-26</lastmod>
     <changefreq>daily</changefreq>
@@ -59,24 +66,17 @@
     <priority>0.6</priority>
   </url>
   
-  <url>
-    <loc>http://bobtaoy.github.io/tags/CTF/</loc>
-    <lastmod>2020-09-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
 
   
   <url>
-    <loc>http://bobtaoy.github.io/categories/PHP/</loc>
+    <loc>http://bobtaoy.github.io/categories/%E8%83%A1%E4%B9%B1%E5%80%92%E8%85%BE/</loc>
     <lastmod>2020-09-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://bobtaoy.github.io/categories/%E8%83%A1%E4%B9%B1%E5%80%92%E8%85%BE/</loc>
+    <loc>http://bobtaoy.github.io/categories/PHP/</loc>
     <lastmod>2020-09-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
