@@ -1,0 +1,509 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="Wireshark 实用小技巧"><meta name="keywords" content="Wireshark,常用工具"><meta name="author" content="Bobtaoy"><meta name="copyright" content="Bobtaoy"><title>Wireshark 实用小技巧 | Tao's blog</title><link rel="shortcut icon" href="/favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.8.2"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.8.2"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  hexoVersion: '5.2.0'
+} </script><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Tao's blog" type="application/atom+xml">
+</head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Wireshark%E5%AE%9E%E7%94%A8%E5%B0%8F%E6%8A%80%E5%B7%A7"><span class="toc-number">1.</span> <span class="toc-text">Wireshark实用小技巧</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ftp"><span class="toc-number">1.1.</span> <span class="toc-text">ftp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94%E6%B5%85%E6%9E%90"><span class="toc-number">1.2.</span> <span class="toc-text">应急响应浅析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#windows"><span class="toc-number">1.2.1.</span> <span class="toc-text">windows</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux"><span class="toc-number">1.2.2.</span> <span class="toc-text">Linux</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#wireshark-%E8%BF%87%E6%BB%A4%E8%A7%84%E5%88%99"><span class="toc-number">1.3.</span> <span class="toc-text">wireshark 过滤规则</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4MAC%E5%9C%B0%E5%9D%80"><span class="toc-number">1.3.0.1.</span> <span class="toc-text">过滤MAC地址</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4IP"><span class="toc-number">1.3.0.2.</span> <span class="toc-text">过滤IP</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E8%BF%87%E6%BB%A4"><span class="toc-number">1.3.0.3.</span> <span class="toc-text">端口过滤</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E5%8D%8F%E8%AE%AE%E8%BF%87%E6%BB%A4"><span class="toc-number">1.3.0.4.</span> <span class="toc-text">常见协议过滤</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#http%E6%A8%A1%E5%BC%8F%E8%BF%87%E6%BB%A4"><span class="toc-number">1.3.0.5.</span> <span class="toc-text">http模式过滤</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AF%B7%E6%B1%82%E5%A4%B4"><span class="toc-number">1.3.0.5.1.</span> <span class="toc-text">请求头</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">1.3.0.6.</span> <span class="toc-text">运算符</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#TCP%E8%BF%87%E6%BB%A4"><span class="toc-number">1.3.0.7.</span> <span class="toc-text">TCP过滤</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">1.4.</span> <span class="toc-text">参考链接</span></a></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">Bobtaoy</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">7</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">4</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://w.wallhaven.cc/full/j5/wallhaven-j5mz95.png)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">Tao's blog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span><span class="pull-right"></span></div><div id="post-info"><div id="post-title">Wireshark 实用小技巧</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-10-03</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h1 id="Wireshark实用小技巧"><a href="#Wireshark实用小技巧" class="headerlink" title="Wireshark实用小技巧"></a>Wireshark实用小技巧</h1><p>由于比赛数据包一般都比较大，先通过脚本进行下流量清洗会有事半功倍的效果（感觉上kali下wireshark命令行工具tshark以及TCPdump效率更高，因为是命令行的原因，反而更有利于减少干扰，保持专注)。<br> 以下为几点注意事项：<br>     1、wireshark过滤DHCP时直接输入dhcp会报错，应输入bootp<br>     2、利用过滤http，导出http，保存成相应文件。</p>
+<p>​     3、urldecode解码，解码后z0部分base64解码，PHP代码在线格式化（输入头&lt;?php 点击格式化即可）<br>​     4、一般先url解码，再载base64解码<br>​     5、攻击行为特征</p>
+<ul>
+<li>大量404                       目录扫描</li>
+<li>select … from     等关键词 sql注入</li>
+<li>POST请求            用户名和密码——爆破</li>
+<li>/../../..                  测试文件包含 </li>
+<li>echo等                 命令执行</li>
+<li>http、POST、”@eval“        一句话木马特征</li>
+<li>内网环境，因此攻击者一般为外网ip，被攻击者为内网</li>
+<li>最后一条login信息，中提交的用户名密码，且下一次访问换了目录，一般为攻击者成功破解并登录 </li>
+<li>关键字<ul>
+<li>过滤多个关键字：ip.addr == 攻击者IP and http.request.uri matches “edit|upload|login| modify “</li>
+<li>文件修改关键字：edit/upload/modify</li>
+<li>登录关键字: admin/login/manage</li>
+</ul>
+</li>
+<li>菜刀<ul>
+<li>查看菜刀连接地址在上一层传输层 </li>
+<li>ctrl+shift+n追踪到下一条 </li>
+<li><strong>注：如果是明文说明是下载文件；base64编码则是读取文件内容</strong></li>
+</ul>
+</li>
+</ul>
+<h2 id="ftp"><a href="#ftp" class="headerlink" title="ftp"></a>ftp</h2><p>过滤语句：<code>ftp-data or ftp</code></p>
+<table>
+<thead>
+<tr>
+<th>追踪流显示</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>STOR</td>
+<td>上传命令</td>
+</tr>
+<tr>
+<td>DELE</td>
+<td>删除</td>
+</tr>
+<tr>
+<td>CWD</td>
+<td>请求目录</td>
+</tr>
+<tr>
+<td>LIST</td>
+<td>列出目录内容</td>
+</tr>
+</tbody></table>
+<p><img src="image-01.png" alt="image-01.png"></p>
+<h2 id="应急响应浅析"><a href="#应急响应浅析" class="headerlink" title="应急响应浅析"></a>应急响应浅析</h2><h3 id="windows"><a href="#windows" class="headerlink" title="windows"></a>windows</h3><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>描述</th>
+<th>工具来源</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>cmd</td>
+<td>命令模式</td>
+<td>win自带</td>
+</tr>
+<tr>
+<td>net</td>
+<td>网络管理命令</td>
+<td>win自带</td>
+</tr>
+<tr>
+<td>netstat</td>
+<td>网络连接状态命令</td>
+<td>win自带</td>
+</tr>
+<tr>
+<td>ipconfig</td>
+<td>ip状态参数</td>
+<td>win自带</td>
+</tr>
+<tr>
+<td>regedit</td>
+<td>注册表编辑器</td>
+<td>win自带</td>
+</tr>
+<tr>
+<td>secpol.msc</td>
+<td>本地安全策略</td>
+<td>win自带</td>
+</tr>
+<tr>
+<td>gpedit.msc</td>
+<td>本地安全组策略</td>
+<td>win自带</td>
+</tr>
+<tr>
+<td>lusrmgr.msc</td>
+<td>用户管理器</td>
+<td>win自带</td>
+</tr>
+<tr>
+<td>eventvwr.msc</td>
+<td>事件查看器</td>
+<td>win自带</td>
+</tr>
+<tr>
+<td>msinfo32</td>
+<td>系统信息</td>
+<td>win自带</td>
+</tr>
+<tr>
+<td>services.msc</td>
+<td>服务列表</td>
+<td>win自带</td>
+</tr>
+<tr>
+<td>at</td>
+<td>计划任务</td>
+<td>win自带</td>
+</tr>
+<tr>
+<td>systeminfo</td>
+<td>系统信息</td>
+<td>win自带</td>
+</tr>
+<tr>
+<td>md5sum</td>
+<td>md5校验和检测</td>
+<td>GNU Windows tool</td>
+</tr>
+<tr>
+<td>fport</td>
+<td>进程对应端口显示</td>
+<td>Foundstone, inc</td>
+</tr>
+<tr>
+<td>Psfile</td>
+<td>列举打开文件系统</td>
+<td>Sysintemals</td>
+</tr>
+<tr>
+<td>Pskill</td>
+<td>杀进程命令</td>
+<td>Sysintemals</td>
+</tr>
+<tr>
+<td>sc</td>
+<td>服务列举工具</td>
+<td>资源工具箱</td>
+</tr>
+</tbody></table>
+<h3 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h3><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>描述</th>
+<th>来源</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ps</td>
+<td>查看系统进程</td>
+<td>/usr/bin/ps</td>
+</tr>
+<tr>
+<td>ls</td>
+<td>查看目录，文件列表</td>
+<td>/usr/bin/ls</td>
+</tr>
+<tr>
+<td>df</td>
+<td>查看磁盘空间使用情况</td>
+<td>/usr/bin/df</td>
+</tr>
+<tr>
+<td>netstat</td>
+<td>查看网络连接/端口状态</td>
+<td>/usr/bin/netstat</td>
+</tr>
+<tr>
+<td>find</td>
+<td>查找文件</td>
+<td>/usr/bin/find</td>
+</tr>
+<tr>
+<td>more</td>
+<td>分页显示输出信息</td>
+<td>/usr/bin/more</td>
+</tr>
+<tr>
+<td>chkrootkit</td>
+<td>检测常见的rootkit</td>
+<td>sunfreeware</td>
+</tr>
+<tr>
+<td>lsof</td>
+<td>检测文件和进程/端口关联</td>
+<td>sunfreeware</td>
+</tr>
+<tr>
+<td>md5</td>
+<td>文件校验和</td>
+<td>sunfreeware</td>
+</tr>
+<tr>
+<td>nc</td>
+<td>网络工具</td>
+<td>sunfreeware</td>
+</tr>
+<tr>
+<td>tcpdump</td>
+<td>sniffer</td>
+<td>自行下载</td>
+</tr>
+<tr>
+<td>nmap</td>
+<td>端口扫描</td>
+<td>自行下载</td>
+</tr>
+<tr>
+<td>john</td>
+<td>检测口令强度</td>
+<td>自行下载</td>
+</tr>
+</tbody></table>
+<h2 id="wireshark-过滤规则"><a href="#wireshark-过滤规则" class="headerlink" title="wireshark 过滤规则"></a>wireshark 过滤规则</h2><h4 id="过滤MAC地址"><a href="#过滤MAC地址" class="headerlink" title="过滤MAC地址"></a>过滤MAC地址</h4><table>
+<thead>
+<tr>
+<th>过滤语句</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>eth.addr == 00:00:00:00:00:00</td>
+<td>过滤目标或源地址是00:00:00:00:00:00</td>
+</tr>
+<tr>
+<td>eth.src == 00:00:00:00:00:00</td>
+<td>过滤源MAC地址是00:00:00:00:00:00</td>
+</tr>
+<tr>
+<td>eth.dst == 00:00:00:00:00:00</td>
+<td>过滤目标MAC地址是00:00:00:00:00:00</td>
+</tr>
+</tbody></table>
+<h4 id="过滤IP"><a href="#过滤IP" class="headerlink" title="过滤IP"></a>过滤IP</h4><table>
+<thead>
+<tr>
+<th>过滤语句</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ip.src == 192.168.1.1</td>
+<td>源地址为192.168.1.1</td>
+</tr>
+<tr>
+<td>ip.src eq 192.168.1.1</td>
+<td>源地址为192.168.1.1</td>
+</tr>
+<tr>
+<td>ip.dst == 192.168.1.1</td>
+<td>目标地址为192.168.1.1</td>
+</tr>
+<tr>
+<td>ip.dst eq 192.168.1.1</td>
+<td>目标地址为192.168.1.1</td>
+</tr>
+<tr>
+<td>ip.addr == 192.168.1.1</td>
+<td>ip地址过滤，不论源还是目标</td>
+</tr>
+<tr>
+<td>ip.addr eq 192.168.1.1</td>
+<td>ip地址过滤，不论源还是目标</td>
+</tr>
+</tbody></table>
+<h4 id="端口过滤"><a href="#端口过滤" class="headerlink" title="端口过滤"></a>端口过滤</h4><table>
+<thead>
+<tr>
+<th>过滤语句</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>tcp.port == 80</td>
+<td>过滤tcp端口80</td>
+</tr>
+<tr>
+<td>udp.port eq 80</td>
+<td>过滤udp端口80</td>
+</tr>
+<tr>
+<td>tcp.srcport == 80</td>
+<td>tcp协议的来源端口是80</td>
+</tr>
+<tr>
+<td>tcp.dstport == 80</td>
+<td>tcp协议的目标端口是80</td>
+</tr>
+<tr>
+<td>tcp.port &gt;=1 and tcp.port &lt;= 80</td>
+<td>端口范围过滤: 1&lt;= tcp协议端口 &lt;=80</td>
+</tr>
+</tbody></table>
+<h4 id="常见协议过滤"><a href="#常见协议过滤" class="headerlink" title="常见协议过滤"></a>常见协议过滤</h4><table>
+<thead>
+<tr>
+<th>过滤协议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>tcp</td>
+</tr>
+<tr>
+<td>udp</td>
+</tr>
+<tr>
+<td>arp</td>
+</tr>
+<tr>
+<td>icmp</td>
+</tr>
+<tr>
+<td>http</td>
+</tr>
+<tr>
+<td>smtp</td>
+</tr>
+<tr>
+<td>ftp</td>
+</tr>
+<tr>
+<td>dns</td>
+</tr>
+<tr>
+<td>msnms</td>
+</tr>
+<tr>
+<td>ip</td>
+</tr>
+<tr>
+<td>ssl</td>
+</tr>
+<tr>
+<td>telnet</td>
+</tr>
+<tr>
+<td>oicq</td>
+</tr>
+<tr>
+<td>bootp</td>
+</tr>
+<tr>
+<td>…</td>
+</tr>
+<tr>
+<td>排除协议包: !arp  或者 not arp</td>
+</tr>
+</tbody></table>
+<h4 id="http模式过滤"><a href="#http模式过滤" class="headerlink" title="http模式过滤"></a>http模式过滤</h4><table>
+<thead>
+<tr>
+<th>过滤语句</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>http.request.method == “GET”</td>
+<td>只显示GET请求</td>
+</tr>
+<tr>
+<td>http.request.method == “POST”</td>
+<td>只显示POST请求</td>
+</tr>
+<tr>
+<td>http.request.uri == “/login.php”</td>
+<td>显示请求URL中有login.php</td>
+</tr>
+<tr>
+<td>http contains “GET”</td>
+<td></td>
+</tr>
+<tr>
+<td>http contains “HTTP/1.1”</td>
+<td></td>
+</tr>
+</tbody></table>
+<h5 id="请求头"><a href="#请求头" class="headerlink" title="请求头"></a>请求头</h5><table>
+<thead>
+<tr>
+<th>过滤语句</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>请求头（GET）</td>
+</tr>
+<tr>
+<td>http.request.method == “GET” &amp;&amp; http contains “Host:”</td>
+</tr>
+<tr>
+<td>http.request.method == “GET” &amp;&amp; http contains “User-Agent:”</td>
+</tr>
+<tr>
+<td>请求头（POST）</td>
+</tr>
+<tr>
+<td>http.request.method == “POST” &amp;&amp; http contains “Host:”</td>
+</tr>
+<tr>
+<td>http.request.method == “POST” &amp;&amp; http contains “User-Agent:”</td>
+</tr>
+<tr>
+<td>响应包</td>
+</tr>
+<tr>
+<td>http contains “HTTP/1.1 200 OK” &amp;&amp; http contains “Content-Type:”</td>
+</tr>
+<tr>
+<td>http contains “HTTP/1.0 200 OK” &amp;&amp; http contains “Content-Type:”</td>
+</tr>
+</tbody></table>
+<h4 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h4><table>
+<thead>
+<tr>
+<th>原意</th>
+<th>简写</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>less than</td>
+<td>lt</td>
+<td>小于</td>
+</tr>
+<tr>
+<td>less and qeual</td>
+<td>le</td>
+<td>小于等于</td>
+</tr>
+<tr>
+<td>equal</td>
+<td>eq</td>
+<td>等于</td>
+</tr>
+<tr>
+<td>great then</td>
+<td>gt</td>
+<td>大于</td>
+</tr>
+<tr>
+<td>great and equal</td>
+<td>ge</td>
+<td>大于等于</td>
+</tr>
+<tr>
+<td>not equal</td>
+<td>ne</td>
+<td>不等于</td>
+</tr>
+</tbody></table>
+<h4 id="TCP过滤"><a href="#TCP过滤" class="headerlink" title="TCP过滤"></a>TCP过滤</h4><table>
+<thead>
+<tr>
+<th>过滤语句</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>tcp.flags</td>
+<td>显示包含TCP标志的封包</td>
+</tr>
+<tr>
+<td>tcp.flags.syn == 0x02</td>
+<td>显示包含TCP SYN标志的封包</td>
+</tr>
+<tr>
+<td>tcp.window_size == 0 &amp;&amp; tcp.flags.reset != 1</td>
+<td></td>
+</tr>
+<tr>
+<td>tcp.flags.reset == 1</td>
+<td>RST/ACK 数据包</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p> 注: 以上为 显示过滤器 </p>
+</blockquote>
+<p>最后，附上一张wireshark思维导图</p>
+<p><img src="wiresharkt.png" alt="wiresharkt.png"></p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/y7u8t6/article/details/86511338">https://blog.csdn.net/y7u8t6/article/details/86511338</a> </li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/63f6f7d5deed">https://www.jianshu.com/p/63f6f7d5deed</a> </li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/bbd2ffe57aeb">https://www.jianshu.com/p/bbd2ffe57aeb</a> </li>
+</ul>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Bobtaoy</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://www.ywboy.cn/2020/10/03/Wireshark%20%E5%AE%9E%E7%94%A8%E5%B0%8F%E6%8A%80%E5%B7%A7/">http://www.ywboy.cn/2020/10/03/Wireshark%20%E5%AE%9E%E7%94%A8%E5%B0%8F%E6%8A%80%E5%B7%A7/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Wireshark/">Wireshark</a><a class="post-meta__tags" href="/tags/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2020/10/03/%E4%B8%AD%E5%9B%BD%E8%8F%9C%E5%88%80%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/"><i class="fa fa-chevron-left">  </i><span>中国菜刀原理分析</span></a></div><div class="next-post pull-right"><a href="/2020/09/26/%E5%8D%97%E9%82%AECTF-CG%20Web%E9%A2%98writeup%E8%AF%A6%E8%A7%A3/"><span>南邮CTF-CG Web题writeup详解</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://w.wallhaven.cc/full/j5/wallhaven-j5mz95.png)"><div class="layout" id="footer"><div class="copyright">&copy;2020 By Bobtaoy</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.8.2"></script><script src="/js/fancybox.js?version=1.8.2"></script><script src="/js/sidebar.js?version=1.8.2"></script><script src="/js/copy.js?version=1.8.2"></script><script src="/js/fireworks.js?version=1.8.2"></script><script src="/js/transition.js?version=1.8.2"></script><script src="/js/scroll.js?version=1.8.2"></script><script src="/js/head.js?version=1.8.2"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script></body></html>
