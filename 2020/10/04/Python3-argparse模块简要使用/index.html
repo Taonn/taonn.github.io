@@ -1,0 +1,123 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="Python3--argparse模块简要使用"><meta name="keywords" content="Python常用模块"><meta name="author" content="Bobtaoy"><meta name="copyright" content="Bobtaoy"><title>Python3--argparse模块简要使用 | Tao's blog</title><link rel="shortcut icon" href="/favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.8.2"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.8.2"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  hexoVersion: '5.2.0'
+} </script><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Tao's blog" type="application/atom+xml">
+</head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">参考文章：</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">Bobtaoy</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">13</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">7</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">6</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://w.wallhaven.cc/full/j5/wallhaven-j5mz95.png)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">Tao's blog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span><span class="pull-right"></span></div><div id="post-info"><div id="post-title">Python3--argparse模块简要使用</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-10-04</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/Python/">Python</a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Python3中的argparse模块，是用来做<strong>命令行参数解析的</strong>，因为optparse模块已经不再更新，所以特此来为argparse的使用做个笔记</p>
+<p>官网是这样说明的：</p>
+<p> <em>3.2版后已可移除：</em>该<a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3.7/library/optparse.html#module-optparse"><code>optparse</code></a>模块已弃用，将不再进行开发；该<a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3.7/library/argparse.html#module-argparse"><code>argparse</code></a>模块将继续开发 </p>
+<p>optparse官方说明地址： <a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3.7/library/optparse.html">https://docs.python.org/zh-cn/3.7/library/optparse.html</a> </p>
+<p>这个模块的基本使用步骤跟optparse差别不大，使用步骤如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import argparse # 导入模块</span><br><span class="line"></span><br><span class="line">parser &#x3D; argparse.ArgumentParser()  # 创建一个解析对象</span><br><span class="line">parser.add_argument() # 添加参数</span><br><span class="line">parser.parse_args() # 解析</span><br></pre></td></tr></table></figure>
+
+<p>**argparse.ArgumentParse()**方法有很多参数，但是最常用的就是description,</p>
+<ul>
+<li><p>prog = None         # 程序名，默认为sys.argv[0]。另外，如果你需要在help中使用到程序的名字，可以使用%(prog)s </p>
+</li>
+<li><p>description = None   # help时显示的开始文字</p>
+</li>
+<li><p>epilog = None   # help时显示的结尾文字</p>
+</li>
+<li><p>prefix_chars=’-‘,   - 命令的前缀，默认是‘-’ </p>
+</li>
+<li><p>add_help=True  # 是否增加-h/–help选项，默认是True) </p>
+</li>
+<li><p>usage：# 描述程序用途的字符串 </p>
+</li>
+<li><p>….. </p>
+</li>
+</ul>
+<p>更详细的使用，查看官方文档： <a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3.7/library/argparse.html">https://docs.python.org/zh-cn/3.7/library/argparse.html</a> </p>
+<p><strong>add_argument()</strong> 方法和参数，我们实际使用来介绍:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># file-name:print_name.py</span><br><span class="line">import argparse</span><br><span class="line"></span><br><span class="line">def main():</span><br><span class="line">    parser &#x3D; argparse.ArgumentParser(description&#x3D;&#39;Dome of argparse &#39;)</span><br><span class="line">    parser.add_argument(&#39;--name&#39;, &#39;-n&#39;, default&#x3D;&#39;Tao&#39;)</span><br><span class="line"></span><br><span class="line">    return parser</span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    parser &#x3D; main()</span><br><span class="line">    args &#x3D; parser.parse_args()</span><br><span class="line">    name &#x3D; args.name</span><br><span class="line">    print(&#39;Hello &#123;0&#125;&#39;.format(name))</span><br></pre></td></tr></table></figure>
+
+<p>上述代码执行结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ python print_name.py --name dog</span><br><span class="line"><span class="comment"># 输出：	Hello dog</span></span><br></pre></td></tr></table></figure>
+
+<p>上面的代码中，我们首先导入了<code>argparse</code>模块，然后通过 <code>argparser.ArgumentParser</code>函数生成argparser对象 ，其中这个函数的<code>description</code>字段，表示在命令行显示的帮助信息时输出这个程序的描述信息，然后我们通过<code>add_argument</code>函数来增加参数，这里我添加了两个参数<code>-n</code>和<code>--name</code>，其中有个默认值字段<code>default</code>是Tao。然后我们这里发现，同一个值的设定可以设置多个参数。</p>
+<p>这里默认值的意思是，如果我们不传这个参数，那么这个参数的值默认就是<code>Tao</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ python print_name.py</span><br><span class="line"><span class="comment"># 输出：	Hello Tao</span></span><br></pre></td></tr></table></figure>
+
+<p> 最后我们通过argpaser对象的<code>parser_args</code>函数来获取所有参数<code>args</code>，然后通过<code>args.name</code>的方式得到我们设置的<code>-name</code>参数的值，可以看到这里argparse默认的参数名就是<code>--name</code>形式里面<code>--</code>后面的字符串 。</p>
+<p>一 .</p>
+<ul>
+<li><code>default</code> ：没有设置值情况下的默认参数</li>
+</ul>
+<p>二 .</p>
+<ul>
+<li><code>required</code> ：表示这个参数是否一定需要设置</li>
+</ul>
+<p>如果设置了<code>required=True</code>,然则在实际的运用中不设置该参数，那么则会报错，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python print_name.py</span><br></pre></td></tr></table></figure>
+
+<p>输出如下信息</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">usage: print_name.py [-h] --name NAME</span><br><span class="line">print_name.py: error: the following arguments are required: --name</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>type</code>  指定参数类型，默认是str, 还有int,float等</li>
+</ul>
+<p>如果你的程序需要整数运算的话，那么需要指定<code>type=int</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    parser = argparse.ArgumentParser(description=<span class="string">&#x27;Dome of argparse &#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--num&#x27;</span>, type=int)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> parser</span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    parser = main()</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    sum = args.num</span><br><span class="line">    print(<span class="number">1</span>+sum)</span><br></pre></td></tr></table></figure>
+
+<p>执行结果:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python print_num.py --num <span class="number">10</span></span><br><span class="line"><span class="comment"># 输出：11</span></span><br></pre></td></tr></table></figure>
+
+<p>没有指定的话，则会报错</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">python print_num.py --num <span class="number">10</span></span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">&quot;print_num.py&quot;</span>, line <span class="number">13</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    print(<span class="number">1</span>+sum)</span><br><span class="line">TypeError: unsupported operand type(s) <span class="keyword">for</span> +: <span class="string">&#x27;int&#x27;</span> <span class="keyword">and</span> <span class="string">&#x27;str&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>dest</code>  设置参数在代码中的变量名</p>
+<ul>
+<li>argparse默认的变量名是<code>--</code>或<code>-</code>后面的字符串，但是你也可以通过<code>dest=xxx</code>来设置参数的变量名，然后在代码中用<code>args.xxx</code>来获取参数的值 </li>
+</ul>
+</li>
+<li><p><code>choices</code>  参数值只能从几个选项里面选择</p>
+</li>
+<li><p><code>help</code>   指定参数的说明信息</p>
+<ul>
+<li>告诉别人这个参数有啥作用</li>
+</ul>
+</li>
+</ul>
+<p>通过代码来解释一下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">choices</span>():</span></span><br><span class="line">    parser = argparse.ArgumentParser(description=<span class="string">&#x27;Choices Dome&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;-c&#x27;</span>, dest=<span class="string">&#x27;choice&#x27;</span>, required=<span class="literal">True</span>, choices=[<span class="string">&#x27;Tao&#x27;</span>,<span class="string">&#x27;xiaoming&#x27;</span>], help=<span class="string">&#x27;Choose a person you love&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> parser</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    parser = choices()</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    choice = args.choice</span><br><span class="line">    print(<span class="string">&#x27;You choices is &#123;0&#125;&#x27;</span>.format(choice))</span><br><span class="line">i</span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<p>帮助信息的输出：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ python print_choices.py -h</span><br><span class="line"></span><br><span class="line">usage: print_choices.py [-h] -c &#123;Tao,xiaoming&#125;</span><br><span class="line"></span><br><span class="line">Choices Dome</span><br><span class="line"></span><br><span class="line">optional arguments:</span><br><span class="line">  -h, --help         show this help message <span class="keyword">and</span> exit</span><br><span class="line">  -c &#123;Tao,xiaoming&#125;  Choose a person you love  <span class="comment"># 在这里！！！</span></span><br></pre></td></tr></table></figure>
+
+<p>选择一个参数，结果执行如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ python print_choices.py -c Tao</span><br><span class="line"><span class="comment"># 输出结果： You choices is Tao</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>nargs</code>   命令行参数的个数，指定这个参数后面的value有多少个，默认为1.</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">值		含义</span><br><span class="line">N	  参数的绝对个数（例如：<span class="number">3</span>）</span><br><span class="line"><span class="string">&#x27;?&#x27;</span>   <span class="number">0</span>或<span class="number">1</span>个参数</span><br><span class="line"><span class="string">&#x27;*&#x27;</span>   <span class="number">0</span>或所有参数</span><br><span class="line"><span class="string">&#x27;+&#x27;</span>   所有，并且至少一个参数</span><br></pre></td></tr></table></figure>
+
+<p>代码实现：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_parser</span>():</span></span><br><span class="line">    parser = argparse.ArgumentParser(description=<span class="string">&#x27;nargs Dome&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;-n&#x27;</span>, dest=<span class="string">&#x27;name&#x27;</span> ,required=<span class="literal">True</span>, type=str, nargs=<span class="string">&#x27;+&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> parser</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    parser = get_parser()</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    names = <span class="string">&#x27;, &#x27;</span>.join(args.name)</span><br><span class="line">    print(<span class="string">&#x27;Hello %s&#x27;</span> % names)</span><br></pre></td></tr></table></figure>
+
+<p>使用如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ python print_name.py -n Tao xiaoming</span><br><span class="line">Hello Tao, xiaoming</span><br></pre></td></tr></table></figure>
+
+<p>关于add_argument详细参数使用如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">ArgumentParser.add_argument(name <span class="keyword">or</span> flags...[, action][, nargs][, const][, default][, type][, choices][, required][, help][, metavar][, dest])</span><br><span class="line">定义应该如何解析一个命令行参数。下面每个参数有它们自己详细的描述，简单地讲它们是：</span><br><span class="line"></span><br><span class="line">name <span class="keyword">or</span> flags - 选项字符串的名字或者列表，例如foo 或者-f, --foo。</span><br><span class="line">action - 在命令行遇到该参数时采取的基本动作类型。</span><br><span class="line">nargs - 应该读取的命令行参数数目。</span><br><span class="line">const - 某些action和nargs选项要求的常数值。</span><br><span class="line">default - 如果命令行中没有出现该参数时的默认值。</span><br><span class="line">type - 命令行参数应该被转换成的类型。</span><br><span class="line">choices - 参数可允许的值的一个容器。</span><br><span class="line">required - 该命令行选项是否可以省略（只针对可选参数）。</span><br><span class="line">help - 参数的简短描述。</span><br><span class="line">metavar - 参数在帮助信息中的名字。</span><br><span class="line">dest - 给parse_args()返回的对象要添加的属性名称。</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考文章："><a href="#参考文章：" class="headerlink" title="参考文章："></a>参考文章：</h2><ul>
+<li><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/piperck/p/8446580.html">https://www.cnblogs.com/piperck/p/8446580.html</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://vra.github.io/2017/12/02/argparse-usage/">http://vra.github.io/2017/12/02/argparse-usage/</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3.7/library/argparse.html">https://docs.python.org/zh-cn/3.7/library/argparse.html</a> </p>
+</li>
+</ul>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Bobtaoy</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://www.ywboy.cn/2020/10/04/Python3-argparse%E6%A8%A1%E5%9D%97%E7%AE%80%E8%A6%81%E4%BD%BF%E7%94%A8/">http://www.ywboy.cn/2020/10/04/Python3-argparse%E6%A8%A1%E5%9D%97%E7%AE%80%E8%A6%81%E4%BD%BF%E7%94%A8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Python%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97/">Python常用模块</a></div><nav id="pagination"><div class="next-post pull-right"><a href="/2020/10/04/Linux%E5%9C%A8CTF%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B0%8F%E6%8A%80%E5%B7%A7/"><span>Linux在CTF中的一些小技巧</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://w.wallhaven.cc/full/j5/wallhaven-j5mz95.png)"><div class="layout" id="footer"><div class="copyright">&copy;2020 By Bobtaoy</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.8.2"></script><script src="/js/fancybox.js?version=1.8.2"></script><script src="/js/sidebar.js?version=1.8.2"></script><script src="/js/copy.js?version=1.8.2"></script><script src="/js/fireworks.js?version=1.8.2"></script><script src="/js/transition.js?version=1.8.2"></script><script src="/js/scroll.js?version=1.8.2"></script><script src="/js/head.js?version=1.8.2"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script></body></html>

