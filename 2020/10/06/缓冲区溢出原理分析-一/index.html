@@ -1,0 +1,127 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="缓冲区溢出原理分析(一)"><meta name="keywords" content="溢出攻击"><meta name="author" content="Bobtaoy"><meta name="copyright" content="Bobtaoy"><title>缓冲区溢出原理分析(一) | Tao's blog</title><link rel="shortcut icon" href="/favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.8.2"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.8.2"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  hexoVersion: '5.2.0'
+} </script><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Tao's blog" type="application/atom+xml">
+</head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA"><span class="toc-number">1.</span> <span class="toc-text">缓冲区溢出</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%8E%AF%E5%A2%83"><span class="toc-number">1.1.</span> <span class="toc-text">实验环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E5%87%86%E5%A4%87%EF%BC%9A"><span class="toc-number">1.2.</span> <span class="toc-text">实验准备：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90main%E5%87%BD%E6%95%B0%E7%9A%84%E7%BC%93%E5%86%B2%E5%8C%BA%E6%83%85%E5%86%B5"><span class="toc-number">1.3.</span> <span class="toc-text">分析main函数的缓冲区情况</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E6%BA%A2%E5%87%BA%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90"><span class="toc-number">1.4.</span> <span class="toc-text">对溢出程序分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%A5%E5%85%85%EF%BC%9A"><span class="toc-number">1.5.</span> <span class="toc-text">补充：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-number">1.6.</span> <span class="toc-text">总结：</span></a></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">Bobtaoy</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">16</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">8</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">6</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://w.wallhaven.cc/full/j5/wallhaven-j5mz95.png)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">Tao's blog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span><span class="pull-right"></span></div><div id="post-info"><div id="post-title">缓冲区溢出原理分析(一)</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-10-06</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h1 id="缓冲区溢出"><a href="#缓冲区溢出" class="headerlink" title="缓冲区溢出"></a>缓冲区溢出</h1><p>  什么是缓冲区溢出？？？先作下类比，如果某个人把一瓶啤酒全部倒入一个小杯子中，那装不下的啤酒就会四处冒出，流到桌子上。</p>
+<p>  同样的道理，在计算机内部，输入数据通常被存放在一个临时空间内，这个临时存放空间就被称为缓冲区，缓冲区的长度事先已经被程序或者操作系统定义好了。缓冲区就很像那个啤酒杯，用来装东西，而且大小固定。</p>
+<p>  向缓冲区内填充数据，如果数据的长度很长（如同那瓶啤酒），超过了缓冲区（那个啤酒杯）本身的容量，那么结果就如同啤酒一样，四处溢出，数据也会溢出存储空间！装不下的啤酒会流到桌子上，而装不下的数据则会覆盖在合法数据上，这就是缓冲区和缓冲区溢出的道理。当然在理想的情况下，程序检查每个数据的长度，并且不允许超过缓冲区的长度大小，就像在倒啤酒的时候，啤酒要冒出杯子时我们就停止。但有些程序会假设数据长度总是与所分配的存储空间相匹配，而不作检查，从而为缓冲区溢出埋下隐患。OK，那我们如何利用缓冲区溢出呢在一般情况下，就像啤酒会到处流满桌面一样，溢出的数据会覆盖掉任何数据、指针或内容。除了破坏之外，对攻击者来说没有任何好处。但我们可引导溢出的数据，使计算机执行我们想要的命令。这就是很多漏洞公告上说的：‘黑客可以用精心构造的数据……</p>
+<p>​                                                                                - &gt; 摘选自 王炜老师的《<em>Q版缓冲区</em>溢出教程》</p>
+<h2 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h2><blockquote>
+<p>操作机： windows XP</p>
+<p>工具： <a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-675251-1-1.html">DA</a> pro , <a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-350397-1-1.html">OllyDbg</a>，vc++6.0； </p>
+<p>测试软件：test1.exe,    test2.exe</p>
+</blockquote>
+<p>我们下面的实验是通过编写两个C例程序，使用工具OD，IDA pro进行逆向分析。针对汇编语句中CALL机制剖析缓冲区溢出的基本原理 。</p>
+<h2 id="实验准备："><a href="#实验准备：" class="headerlink" title="实验准备："></a>实验准备：</h2><p>编写C代码程序，编译</p>
+<p>test1.c,代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt; </span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt; //引入头文件</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> name[] = <span class="string">&quot;betao&quot;</span>;  <span class="comment">//定义全局变量</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span>            <span class="comment">//返回值 主函数main()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">char</span> buffer[<span class="number">8</span>];   <span class="comment">//开辟8个字节的空间用来存储变量name</span></span><br><span class="line">    <span class="built_in">strcpy</span>(buffer,name);  <span class="comment">//内置函数（作用）：将变量name内容赋值给buffer变量</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>,buffer);  <span class="comment">//输出</span></span><br><span class="line">    getchar();               <span class="comment">//方便观察 作用：等待用户输入按键</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;                <span class="comment">//返回值</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>以上test1.c代码中，因为’betao’为超过buffer的空间，所以不会引起缓冲区溢出</p>
+</blockquote>
+<p>test2.c代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt; </span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt; //引入头文件</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> name[] = <span class="string">&quot;betaobetaobetao&quot;</span>;  <span class="comment">//定义全局变量,！！！ 注意，这里多了两个betao</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span>            <span class="comment">//返回值 主函数main()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">char</span> buffer[<span class="number">8</span>];   <span class="comment">//开辟8个字节的空间用来存储变量name</span></span><br><span class="line">    <span class="built_in">strcpy</span>(buffer,name);  <span class="comment">//内置函数（作用）：将变量name内容赋值给buffer变量</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>,buffer);  <span class="comment">//输出</span></span><br><span class="line">    getchar();               <span class="comment">//方便观察 作用：等待用户输入按键</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;                <span class="comment">//返回值</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>以上test2.c代码，因为copy给buffer超出了空间，所以导致缓冲区溢出</p>
+</blockquote>
+<p>将C语言代码使用vc++6.0编程成可执行文件，大概步骤</p>
+<blockquote>
+<p>新建win32 console application -&gt; 新建 C++ 源文件 -&gt; 编写代码  -&gt; 编译(选择win32 Debug) -&gt; 生成exe可执行文件</p>
+<p><strong>编译选择win32 debug操作如下：</strong></p>
+<p> 右键点击菜单空白处——选择“组建”——选择“Win32 Debug“——重新编译链接</p>
+</blockquote>
+<p>  首先，我们先来运行一些编译好了的可执行文件<code>test1.exe</code> and <code>test2.exe</code>，看看两者区别</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220211457759.png" alt="image-20191220211457759"></p>
+<p>第一个程序，没有任何异常</p>
+<p>   可见程序已经得到了正确的执行与输出。但是我在程序中所创建出来的是一个8字节长度的数组，而我在程序中的输入是5个字节。如果我的输入超过八个字节会怎么样呢？</p>
+<p>接下来，我们执行第二个程序</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220211551187.png" alt="image-20191220211551187"></p>
+<p>可见，程序虽然也能够正确输出，但是却弹出了错误提示对话框。为什么会出现这种情况？我们接下来就来研究一下。</p>
+<p>我们首先分析一下无异常的程序，也就是<code>test1.exe</code>，这里我们使用ollydbg来分析</p>
+<p>将<code>test1.exe</code>载入ollydbg中，ollydbg载入方式有两种：</p>
+<ul>
+<li>鼠标直接将exe执行程序拖入OD控件区域</li>
+<li>文件     -&gt;    附加    -&gt;    选择运行中的程序</li>
+</ul>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220213005763.png" alt="image-20191220212336225"></p>
+<p> 因为我们需要从main函数开始分析，而上图：004015B0地址为软件初始运行地址，并非main函数的起始地址。所以我们需要寻找main函数的内存地址。我们使用 IDA Pro 打开程序寻找，当然我们可以不断地按F8单步执行，通过观察获取，但是这样未免需要一定的经验，而且也比较麻烦。所以我们将程序拖入IDA中</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220213151974.png" alt="image-20191220213005763"></p>
+<p>如果不是图上的情况，而是图下的情况，按一下空格键，即可调出图上内容</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220213345908.png" alt="image-20191220212914884"></p>
+<p>双击进入如下页面：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220214521642.png"></p>
+<p>按下空格键</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220214544784.png" alt="image-20191220213345908.png"></p>
+<p>可见,IDA已经帮我们获取了main函数的入口地址，即<code>0x00401010  </code>,此时，我们可以切换到OD中，<code>Ctrl + G</code> 输入<code>401010</code>跳到该位置，按F2设置一个断点( 某个内存地址下了F2断点,当程序运行到此处的时候就会断下来 )</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220212914884.png" alt="image-20191220214324018"></p>
+<p>由上面的截图，我们除了可以知道main函数的位置外，我们还从下面那段话“跳转来自 00401005”（英文版的是：jump from 00401005）得知main函数是由位于0x00401005位置处的语句跳过来的。由于缓冲区溢出是与栈空间紧密相关的，所以我们现在应当分析调用（CALL）main函数前后，栈空间的情况，所以这里我们就需要定位究竟是哪条语句调用了main函数。如果仅仅通过OD，我们是比较难定位的，所以这里我还是使用IDA Pro。</p>
+<p>由于已经知道main函数的地址是0x00401010，那么我们在IDA中，用鼠标在该地址点一下，之后利用快捷键“Ctrl+X”打开“交叉引用窗口”，就来到了jmp到此的函数位置：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220214324018.png" alt="image-20191220214521642"></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220215539618.png" alt="image-20191220214544784"></p>
+<p>然后在0x00401005的地址处，再次利用“交叉引用”功能，我们就能够找到调用main函数的位置了：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220214634601.png" alt="image-20191220214634601"></p>
+<p>位于 <code>0x00401694</code>处的语句调用了main函数，那么接下来我们在OD中来分析堆栈的情况</p>
+<p>继续<code>Ctrl + G</code> 输入 401694 跳转到执行main函数的内存地址，F2设置断点</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220215928730.png" alt="image-20191220215539618"></p>
+<p>注意上图中 红色箭头和黄色箭头的地方</p>
+<p>​        红色箭头 CALL语句下面的地址是0x00401699。这个地址很重要，为什么重要呢？因为我们的程序在进入每一个CALL之前，都会首先将CALL<strong>下面那条语句的地址入栈</strong>，然后<strong>再执行CALL语句</strong>。这样当CALL执行完后，程序再将该地址出栈，这样就能够知道下一步应该执行哪条指令. 我们一般也将这个地址称为“返回地址”，它告诉程序：“CALL执行完后，请执行这个地址处的语句。”  </p>
+<p>我们按下F9，跳转到此位置，查看栈中内容：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220221935424.png" alt="image-20191220215928730"></p>
+<p>我们接下来按F7，进入这个CALL,此时再看一下栈空间(注：栈空间由下至上是高地址往低地址处走的  )</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220220111419.png" alt="image-20191220220111419"></p>
+<p>是上上图CALL语句下一个内存地址哦，由此可见，返回地址0x00401669已经入栈 .</p>
+<h2 id="分析main函数的缓冲区情况"><a href="#分析main函数的缓冲区情况" class="headerlink" title="分析main函数的缓冲区情况"></a>分析main函数的缓冲区情况</h2><p>  因为我们在源程序中创建了一个8个字节大小的数组，因此进入main函数后的首要工作就是为这个局部变量分配空间。由于我们的程序是以Debug形式编译的，所以它会多分配一些空间（Release版本则会分配正好的空间）。结合本程序可以看到，它为我们分配的局部变量空间大小为0x4C(7C - 34)-&gt;（F8一步步向下执行）：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220220929691.png" alt="image-20191220220929691"></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220222551168.png" alt="image-20191220221935424"></p>
+<p>  在上图中，比较重要的是最后两行。其中最后一行在之前已经说过了，是非常重要的<strong>返回地址</strong>，它决定了当main函数执行完毕后，程序所要执行的语句的地址，而倒数第二行是父函数的EBP 。</p>
+<p>  再往上，就是我们的main函数的局部变量空间。这里大家可能会有疑惑，既然是分配给我们的空间，那么为什么还会有其它的数据呢？  我们继续往下执行 ,当我们执行完<code>0x401026</code></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220222344195.png" alt="image-20191220222344195"><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220222811127.png" alt="image-20191220222551168"></p>
+<p>0X4C的空间大小(7C - 34), 这段空间都被0xCC填充了。这是因为程序为了容错性与保持自身的健壮性，于是利用0xCC，即int 3断点来填充满这段区域，这样一来，如果有未知的程序跳到这片区域，就不会出现崩溃的情况，而是直接断下来了。当然，这个问题与我们的缓冲区溢出没什么关系。</p>
+<p>继续执行：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220222849625.png" alt="image-20191220222811127"></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220223306866.png" alt="image-20191220222849625"></p>
+<p>这里将<code>betao</code>入栈了，说明执行到了strcpy()，这个函数，我们通过IDA来查看一下，strcpy()函数的位置</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220223344255.png" alt="image-20191220223306866"></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220223433751.png" alt="image-20191220223344255"></p>
+<p>继续执行，查看堆栈中的情况</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220223754120.png" alt="image-20191220223433751"></p>
+<p>发现<code>strcpy</code>函数的第二个参数，也就是接收字符串所保存的位置，其保存的位置为<code>0X0012FF78</code>(buffer变量)</p>
+<p>到这里程序无异常，正常执行，继续F8，直至retn</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220223820151.png" alt="image-20191220223754120"></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220224251689.png" alt="image-20191220223820151"></p>
+<p>这个地址是不是很熟悉呢？没错就是返回地址</p>
+<h2 id="对溢出程序分析"><a href="#对溢出程序分析" class="headerlink" title="对溢出程序分析"></a>对溢出程序分析</h2><p>其余跟上面步骤类似，我们直接跳至执行<code>strcpy</code>函数的内存地址分析</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220224431503.png" alt="image-20191220224251689"></p>
+<p>继续执行，执行至retn,查看堆栈此时的情况:</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220224531935.png" alt="image-20191220224431503"></p>
+<p>我们右键显示一下ascii码：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220224744720.png" alt="image-20191220224531935"></p>
+<p>由上图可知： 原本返回值：<code>0x00401699</code>地址被占用 且指向错误的地址（或不应该的地址）</p>
+<p>F8执行，结果如图</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220230136615.png" alt="image-20191220224744720"> </p>
+<p>此时我们发现了两件事，一件是OD中的反汇编代码窗口是空的，说明<code>0x006F6174</code>地址处不存在指令，或者说它就是一个无效地址。第二件事是OD弹出了错误对话框，提示我们该地址出错，这与我们直接执行程序时所弹出的错误对话框有几分类似。</p>
+<p>这里先补充一下，为什么返回地址显示的是<code>tao</code>,而不是<code>aob</code>，因为buffer 空间只有8个字节，而我输入了15个字节，buffer后面的四个字节是ebp的地址.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">betaobet	aobe	tao</span><br><span class="line">拷贝字符	  EBP     覆盖内容</span><br></pre></td></tr></table></figure>
+
+<h2 id="补充："><a href="#补充：" class="headerlink" title="补充："></a>补充：</h2><p>我们也可以通过执行<code>test2.exe</code>程序</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220230205983.png" alt="image-20191220230136615"></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220230259576.png" alt="image-20191220230205983"></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191220212336225.png" alt="image-20191220230259576"></p>
+<h2 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h2><p>缓冲区漏洞的原理，它就是因为我们输入了过长的字符，而缓冲区本身又没有有效的验证机制，导致过长的字符将返回地址覆盖掉了，当我们的函数需要返回的时候，由于此时的返回地址是一个无效地址，因此导致程序出错。</p>
+<p>那么依据这个原理，假设我们所覆盖的返回地址是一个有效地址，而在该地址处又包含着有效的指令，那么我们的系统就会毫不犹豫地跳到该地址处去执行指令。因此，如果想利用缓冲区溢出的漏洞，我们就可以构造出一个有效地址出来，然后将我们想让计算机执行的代码写入该地址，这样一来，我们就通过程序的漏洞，让计算机执行了我们自己编写的程序。</p>
+<blockquote>
+<p>本文例子参考来源：  <a target="_blank" rel="noopener" href="https://blog.csdn.net/ioio_jy/article/details/48316029">https://blog.csdn.net/ioio_jy/article/details/48316029</a> </p>
+</blockquote>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Bobtaoy</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://www.ywboy.cn/2020/10/06/%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90-%E4%B8%80/">http://www.ywboy.cn/2020/10/06/%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90-%E4%B8%80/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%BA%A2%E5%87%BA%E6%94%BB%E5%87%BB/">溢出攻击</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2020/10/06/%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E7%9A%84%E5%88%A9%E7%94%A8-%E4%BA%8C/"><i class="fa fa-chevron-left">  </i><span>缓冲区溢出的利用(二)</span></a></div><div class="next-post pull-right"><a href="/2020/10/04/Python3-argparse%E6%A8%A1%E5%9D%97%E7%AE%80%E8%A6%81%E4%BD%BF%E7%94%A8/"><span>Python3--argparse模块简要使用</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://w.wallhaven.cc/full/j5/wallhaven-j5mz95.png)"><div class="layout" id="footer"><div class="copyright">&copy;2020 By Bobtaoy</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.8.2"></script><script src="/js/fancybox.js?version=1.8.2"></script><script src="/js/sidebar.js?version=1.8.2"></script><script src="/js/copy.js?version=1.8.2"></script><script src="/js/fireworks.js?version=1.8.2"></script><script src="/js/transition.js?version=1.8.2"></script><script src="/js/scroll.js?version=1.8.2"></script><script src="/js/head.js?version=1.8.2"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script></body></html>
