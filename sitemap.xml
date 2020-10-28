@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.ywboy.cn/2020/10/06/%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E7%9A%84%E5%88%A9%E7%94%A8-%E4%BA%8C/</loc>
+    
+    <lastmod>2020-10-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.ywboy.cn/2020/10/06/%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90-%E4%B8%80/</loc>
+    
+    <lastmod>2020-10-28</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.ywboy.cn/2020/10/22/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C-Web-php-unserialize-Writeup/</loc>
     
     <lastmod>2020-10-22</lastmod>
@@ -10,20 +24,6 @@
   
   <url>
     <loc>http://www.ywboy.cn/2020/10/06/shellcode%E7%BC%96%E5%86%99-%E4%B8%89/</loc>
-    
-    <lastmod>2020-10-06</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.ywboy.cn/2020/10/06/%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E7%9A%84%E5%88%A9%E7%94%A8-%E4%BA%8C/</loc>
-    
-    <lastmod>2020-10-06</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.ywboy.cn/2020/10/06/%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90-%E4%B8%80/</loc>
     
     <lastmod>2020-10-06</lastmod>
     
@@ -137,7 +137,7 @@
 
   <url>
     <loc>http://www.ywboy.cn/</loc>
-    <lastmod>2020-10-24</lastmod>
+    <lastmod>2020-10-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -145,56 +145,56 @@
   
   <url>
     <loc>http://www.ywboy.cn/tags/CTF/</loc>
-    <lastmod>2020-10-24</lastmod>
+    <lastmod>2020-10-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.ywboy.cn/tags/php%E5%AE%89%E5%85%A8/</loc>
-    <lastmod>2020-10-24</lastmod>
+    <lastmod>2020-10-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.ywboy.cn/tags/Python%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97/</loc>
-    <lastmod>2020-10-24</lastmod>
+    <lastmod>2020-10-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.ywboy.cn/tags/Wireshark/</loc>
-    <lastmod>2020-10-24</lastmod>
+    <lastmod>2020-10-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.ywboy.cn/tags/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/</loc>
-    <lastmod>2020-10-24</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.ywboy.cn/tags/%E6%BA%A2%E5%87%BA%E6%94%BB%E5%87%BB/</loc>
-    <lastmod>2020-10-24</lastmod>
+    <lastmod>2020-10-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.ywboy.cn/tags/phpstudy%E5%90%8E%E9%97%A8%E5%88%86%E6%9E%90/</loc>
-    <lastmod>2020-10-24</lastmod>
+    <lastmod>2020-10-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.ywboy.cn/tags/%E6%BA%A2%E5%87%BA%E6%94%BB%E5%87%BB/</loc>
+    <lastmod>2020-10-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.ywboy.cn/tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/</loc>
-    <lastmod>2020-10-24</lastmod>
+    <lastmod>2020-10-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -203,42 +203,42 @@
   
   <url>
     <loc>http://www.ywboy.cn/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/</loc>
-    <lastmod>2020-10-24</lastmod>
+    <lastmod>2020-10-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.ywboy.cn/categories/PHP/</loc>
-    <lastmod>2020-10-24</lastmod>
+    <lastmod>2020-10-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.ywboy.cn/categories/%E8%83%A1%E4%B9%B1%E5%80%92%E8%85%BE/</loc>
-    <lastmod>2020-10-24</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.ywboy.cn/categories/PHP/web%E5%AE%89%E5%85%A8/</loc>
-    <lastmod>2020-10-24</lastmod>
+    <lastmod>2020-10-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.ywboy.cn/categories/Python/</loc>
-    <lastmod>2020-10-24</lastmod>
+    <lastmod>2020-10-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.ywboy.cn/categories/PHP/web%E5%AE%89%E5%85%A8/</loc>
+    <lastmod>2020-10-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.ywboy.cn/categories/web%E5%AE%89%E5%85%A8/</loc>
-    <lastmod>2020-10-24</lastmod>
+    <lastmod>2020-10-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
