@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>功与名 | Tao&#39;s blog</title>
+  <title>Tao&#39;s blog</title>
   
-  
+  <subtitle>漫思茶</subtitle>
   <link href="https://bobtaoy.github.io/atom.xml" rel="self"/>
   
   <link href="https://bobtaoy.github.io/"/>
