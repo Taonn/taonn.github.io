@@ -1,149 +1,319 @@
-<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>南邮CTF-CG Web题writeup详解 | Tao's blog</title><meta name="keywords" content="CTF"><meta name="author" content="Bobtaoy"><meta name="copyright" content="Bobtaoy"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="签到题题目链接  1F12 # 查看源代码  md5 collision题目链接 源代码： 12345678910$md51 &#x3D; md5(&amp;#x27;QNKCDZO&amp;#x27;);$a &#x3D; @$_GET[&amp;#x27;a&amp;#x27;];$md52 &#x3D; @md5($a);if(isset($a))&amp;#123;if ($a !&#x3D; &amp;#x27;QNKCDZO&amp;#x27; &amp;&amp; $md51">
+<!DOCTYPE html>
+<html lang=en>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>南邮CTF-CG Web题writeup详解 | Tao&#39;s Blog</title>
+  <meta name="description" content="签到题题目链接  1F12 # 查看源代码  md5 collision题目链接 源代码： 12345678910$md51 &#x3D; md5(&amp;#x27;QNKCDZO&amp;#x27;);$a &#x3D; @$_GET[&amp;#x27;a&amp;#x27;];$md52 &#x3D; @md5($a);if(isset($a))&amp;#123;if ($a !&#x3D; &amp;#x27;QNKCDZO&amp;#x27; &amp;&amp; $md51">
 <meta property="og:type" content="article">
 <meta property="og:title" content="南邮CTF-CG Web题writeup详解">
 <meta property="og:url" content="https://bobtaoy.github.io/2020/09/26/%E5%8D%97%E9%82%AECTF-CG%20Web%E9%A2%98writeup%E8%AF%A6%E8%A7%A3/index.html">
-<meta property="og:site_name" content="Tao&#39;s blog">
+<meta property="og:site_name" content="Tao&#39;s Blog">
 <meta property="og:description" content="签到题题目链接  1F12 # 查看源代码  md5 collision题目链接 源代码： 12345678910$md51 &#x3D; md5(&amp;#x27;QNKCDZO&amp;#x27;);$a &#x3D; @$_GET[&amp;#x27;a&amp;#x27;];$md52 &#x3D; @md5($a);if(isset($a))&amp;#123;if ($a !&#x3D; &amp;#x27;QNKCDZO&amp;#x27; &amp;&amp; $md51">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://w.wallhaven.cc/full/n6/wallhaven-n6kde7.jpg">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106162753668.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106163458184.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106163755543.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106164226710.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106164324505.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106164458500.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106164611379.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106164647154.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106164734181.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106164806035.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106164905831.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106165147839.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106165244396.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106165337816.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106165538239.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106170009458.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106170147915.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106170323988.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106170834158.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106171055082.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106171254297.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106171645429.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106171740428.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106172108345.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106172211916.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106172640403.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106172804773.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107083142890.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107083725957.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107084020450.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107084409642.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107085532993.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107085611068.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107090431094.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107091052578.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107091214463.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107091505130.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107091810207.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107092353796.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107092534236.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107092718703.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107093846799.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107094124578.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107094342248.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107094705232.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107094512667.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107094836626.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107095043648.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107095158798.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107095507687.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107095955427.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107151919613.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107152003982.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107152245864.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107152635693.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107153051664.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107153424670.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107153553605.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107153720908.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107153805399.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107153907913.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107154006171.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107154110389.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107154848929.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107155203134.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107155306673.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107155606806.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107160050767.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107160357034.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107160545789.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107160732042.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107160804657.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107160957507.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107161120433.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191107161312350.png">
 <meta property="article:published_time" content="2020-09-26T07:02:59.000Z">
 <meta property="article:modified_time" content="2020-10-03T08:13:32.786Z">
 <meta property="article:author" content="Bobtaoy">
 <meta property="article:tag" content="CTF">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://w.wallhaven.cc/full/n6/wallhaven-n6kde7.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://bobtaoy.github.io/2020/09/26/%E5%8D%97%E9%82%AECTF-CG%20Web%E9%A2%98writeup%E8%AF%A6%E8%A7%A3/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css"><script>var GLOBAL_CONFIG = { 
-  root: '/',
-  hexoversion: '5.2.0',
-  algolia: undefined,
-  localSearch: undefined,
-  translate: undefined,
-  noticeOutdate: undefined,
-  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
-  copy: {
-    success: 'Copy successfully',
-    error: 'Copy error',
-    noSupport: 'The browser does not support'
-  },
-  relativeDate: {
-    homepage: false,
-    post: false
-  },
-  runtime: 'days',
-  date_suffix: {
-    just: 'Just',
-    min: 'minutes ago',
-    hour: 'hours ago',
-    day: 'days ago',
-    month: 'months ago'
-  },
-  copyright: undefined,
-  ClickShowText: undefined,
-  lightbox: 'fancybox',
-  Snackbar: {"chs_to_cht":"Traditional Chinese Activated Manually","cht_to_chs":"Simplified Chinese Activated Manually","day_to_night":"Dark Mode Activated Manually","night_to_day":"Light Mode Activated Manually","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
-  justifiedGallery: {
-    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
-    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
-  },
-  isPhotoFigcaption: false,
-  islazyload: false,
-  isanchor: false
-};
+<meta name="twitter:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106162753668.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://bobtaoy.github.io/2020/09/26/%E5%8D%97%E9%82%AECTF-CG%20Web%E9%A2%98writeup%E8%AF%A6%E8%A7%A3/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Tao&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
 
-var saveToLocal = {
-  set: function setWithExpiry(key, value, ttl) {
-    const now = new Date()
-    const expiryDay = ttl * 86400000
-    const item = {
-      value: value,
-      expiry: now.getTime() + expiryDay,
-    }
-    localStorage.setItem(key, JSON.stringify(item))
-  },
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.2.0"></head>
 
-  get: function getWithExpiry(key) {
-    const itemStr = localStorage.getItem(key)
 
-    if (!itemStr) {
-      return undefined
-    }
-    const item = JSON.parse(itemStr)
-    const now = new Date()
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/Bobtaoy" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Tao</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
 
-    if (now.getTime() > item.expiry) {
-      localStorage.removeItem(key)
-      return undefined
-    }
-    return item.value
-  }
-}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
-  isPost: true,
-  isHome: false,
-  isHighlightShrink: false,
-  isSidebar: true,
-  postUpdate: '2020-10-03 16:13:32'
-}</script><noscript><style type="text/css">
-  #nav {
-    opacity: 1
-  }
-  .justified-gallery img {
-    opacity: 1
-  }
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
 
-  #recent-posts time,
-  #post-meta time {
-    display: inline !important
-  }
-</style></noscript><script>(function () {
-  window.activateDarkMode = function () {
-    document.documentElement.setAttribute('data-theme', 'dark')
-    if (document.querySelector('meta[name="theme-color"]') !== null) {
-      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
-    }
-  }
-  window.activateLightMode = function () {
-    document.documentElement.setAttribute('data-theme', 'light')
-    if (document.querySelector('meta[name="theme-color"]') !== null) {
-      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
-    }
-  }
 
-  const autoChangeMode = 'false'
-  const t = saveToLocal.get('theme')
-  if (autoChangeMode === '1') {
-    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
-    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
-    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
-    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <span class="menu-title">Links</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <span class="menu-title">About</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/Bobtaoy" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
 
-    if (t === undefined) {
-      if (isLightMode) activateLightMode()
-      else if (isDarkMode) activateDarkMode()
-      else if (isNotSpecified || hasNoSupport) {
-        const now = new Date()
-        const hour = now.getHours()
-        const isNight = hour <= 6 || hour >= 18
-        isNight ? activateDarkMode() : activateLightMode()
-      }
-      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
-        if (saveToLocal.get('theme') === undefined) {
-          e.matches ? activateDarkMode() : activateLightMode()
-        }
-      })
-    } else if (t === 'light') activateLightMode()
-    else activateDarkMode()
-  } else if (autoChangeMode === '2') {
-    const now = new Date()
-    const hour = now.getHours()
-    const isNight = hour <= 6 || hour >= 18
-    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
-    else if (t === 'light') activateLightMode()
-    else activateDarkMode()
-  } else {
-    if (t === 'dark') activateDarkMode()
-    else if (t === 'light') activateLightMode()
-  }
-})()</script><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Tao's blog" type="application/atom+xml">
-</head><body><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">26</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">9</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">Categories</div><div class="length_num">7</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/friends-link/"><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/read/"><span> Read</span></a></div></div></div></div><div id="body-wrap"><div id="sidebar"><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AD%BE%E5%88%B0%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">签到题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#md5-collision"><span class="toc-number">2.</span> <span class="toc-text">md5 collision</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AD%BE%E5%88%B02"><span class="toc-number">3.</span> <span class="toc-text">签到2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%99%E9%A2%98%E4%B8%8D%E6%98%AFWEB"><span class="toc-number">4.</span> <span class="toc-text">这题不是WEB</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B1%82%E5%B1%82%E9%80%92%E8%BF%9B"><span class="toc-number">4.0.1.</span> <span class="toc-text">层层递进</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AAencode"><span class="toc-number">5.</span> <span class="toc-text">AAencode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E8%BA%AB%E4%BA%8C%E5%8D%81%E5%B9%B4"><span class="toc-number">6.</span> <span class="toc-text">单身二十年</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#php-decode"><span class="toc-number">7.</span> <span class="toc-text">php decode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB"><span class="toc-number">8.</span> <span class="toc-text">文件包含</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E8%BA%AB%E4%B8%80%E7%99%BE%E5%B9%B4%E4%B9%9F%E6%B2%A1%E7%94%A8"><span class="toc-number">9.</span> <span class="toc-text">单身一百年也没用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Download"><span class="toc-number">10.</span> <span class="toc-text">Download~!</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#COOKIE"><span class="toc-number">11.</span> <span class="toc-text">COOKIE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MYSQL"><span class="toc-number">12.</span> <span class="toc-text">MYSQL</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#intval"><span class="toc-number">12.1.</span> <span class="toc-text">intval()</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GBK-Injection"><span class="toc-number">13.</span> <span class="toc-text">GBK Injection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#x00"><span class="toc-number">14.</span> <span class="toc-text">&#x2F;x00</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bypass-again"><span class="toc-number">15.</span> <span class="toc-text">bypass again</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E8%A6%86%E7%9B%96"><span class="toc-number">16.</span> <span class="toc-text">变量覆盖</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PHP%E6%98%AF%E6%9C%80%E5%A5%BD%E7%9A%84%E8%AF%AD%E8%A8%80"><span class="toc-number">17.</span> <span class="toc-text">PHP是最好的语言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%AA%E8%A3%85%E8%80%85"><span class="toc-number">18.</span> <span class="toc-text">伪装者</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Header"><span class="toc-number">19.</span> <span class="toc-text">Header</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8A%E4%BC%A0%E7%BB%95%E8%BF%87"><span class="toc-number">20.</span> <span class="toc-text">上传绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL%E6%B3%A8%E5%85%A51"><span class="toc-number">21.</span> <span class="toc-text">SQL注入1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pass-check"><span class="toc-number">22.</span> <span class="toc-text">pass check</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B5%B7%E5%90%8D%E5%AD%97%E7%9C%9F%E9%9A%BE"><span class="toc-number">23.</span> <span class="toc-text">起名字真难</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE"><span class="toc-number">24.</span> <span class="toc-text">密码重置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#php-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-%E6%9A%82%E6%97%B6%E6%97%A0%E6%B3%95%E5%81%9A"><span class="toc-number">25.</span> <span class="toc-text">php 反序列化(暂时无法做)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-Injection"><span class="toc-number">26.</span> <span class="toc-text">SQL Injection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%BC%E5%90%88%E9%A2%98"><span class="toc-number">27.</span> <span class="toc-text">综合题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#system%EF%BC%88%E6%9A%82%E6%97%B6%E6%97%A0%E6%B3%95%E5%81%9A%EF%BC%89"><span class="toc-number">28.</span> <span class="toc-text">system（暂时无法做）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL%E6%B3%A8%E5%85%A52"><span class="toc-number">29.</span> <span class="toc-text">SQL注入2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%BC%E5%90%88%E9%A2%982"><span class="toc-number">30.</span> <span class="toc-text">综合题2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE2"><span class="toc-number">31.</span> <span class="toc-text">密码重置2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#file-get-contents"><span class="toc-number">32.</span> <span class="toc-text">file_get_contents</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E8%A6%86%E7%9B%96-1"><span class="toc-number">33.</span> <span class="toc-text">变量覆盖</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%EF%BC%81%EF%BC%81"><span class="toc-number">34.</span> <span class="toc-text">注意！！</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HateIT"><span class="toc-number">35.</span> <span class="toc-text">HateIT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Anonymous"><span class="toc-number">36.</span> <span class="toc-text">Anonymous</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number"></span> <span class="toc-text">总结</span></a></div></div></div><header class="post-bg" id="page-header" style="background-image: url(https://w.wallhaven.cc/full/n6/wallhaven-n6kde7.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Tao's blog</a></span><span id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/friends-link/"><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/read/"><span> Read</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">南邮CTF-CG Web题writeup详解</div></div><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2020-09-26T07:02:59.000Z" title="Created 2020-09-26 15:02:59">2020-09-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2020-10-03T08:13:32.786Z" title="Updated 2020-10-03 16:13:32">2020-10-03</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><h2 id="签到题"><a href="#签到题" class="headerlink" title="签到题"></a>签到题</h2><p><a target="_blank" rel="noopener" href="http://chinalover.sinaapp.com/web1/">题目链接</a></p>
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a><span class="category-list-count">11</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/web%E5%AE%89%E5%85%A8/">web安全</a><span class="category-list-count">9</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/web%E5%AE%89%E5%85%A8/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">代码审计</a><span class="category-list-count">5</span></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web%E5%AE%89%E5%85%A8/">web安全</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/web%E5%AE%89%E5%85%A8/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">代码审计</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%83%A1%E4%B9%B1%E5%80%92%E8%85%BE/">胡乱倒腾</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/CTF/" style="font-size: 13.75px;">CTF</a> <a href="/tags/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" style="font-size: 14px;">PHP代码审计</a> <a href="/tags/Python%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97/" style="font-size: 13px;">Python常用模块</a> <a href="/tags/Wireshark/" style="font-size: 13px;">Wireshark</a> <a href="/tags/phpstudy%E5%90%8E%E9%97%A8%E5%88%86%E6%9E%90/" style="font-size: 13px;">phpstudy后门分析</a> <a href="/tags/php%E5%AE%89%E5%85%A8/" style="font-size: 13.75px;">php安全</a> <a href="/tags/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/" style="font-size: 13.25px;">常用工具</a> <a href="/tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" style="font-size: 13px;">正则表达式</a> <a href="/tags/%E6%BA%A2%E5%87%BA%E6%94%BB%E5%87%BB/" style="font-size: 13.5px;">溢出攻击</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-南邮CTF-CG Web题writeup详解" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      南邮CTF-CG Web题writeup详解
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/09/26/%E5%8D%97%E9%82%AECTF-CG%20Web%E9%A2%98writeup%E8%AF%A6%E8%A7%A3/" class="article-date">
+	  <time datetime="2020-09-26T07:02:59.000Z" itemprop="datePublished">2020-09-26</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/CTF/" rel="tag">CTF</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/09/26/%E5%8D%97%E9%82%AECTF-CG%20Web%E9%A2%98writeup%E8%AF%A6%E8%A7%A3/#comments" class="article-comment-link">Comments</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 3.9k(words)</span>
+	
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="签到题"><a href="#签到题" class="headerlink" title="签到题"></a>签到题</h2><p><a target="_blank" rel="noopener" href="http://chinalover.sinaapp.com/web1/">题目链接</a></p>
 <p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20191106162753668.png" alt="image-20191106162753668"></p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">F12 <span class="comment"># 查看源代码</span></span><br></pre></td></tr></table></figure>
 
@@ -409,41 +579,180 @@ var saveToLocal = {
 <li>进制转换(PHP)</li>
 </ul>
 <p>以上两点比较生疏，加强练习,最后，<code>F12</code>无敌!!! 没思路就F12</p>
-</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Bobtaoy</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://bobtaoy.github.io/2020/09/26/%E5%8D%97%E9%82%AECTF-CG%20Web%E9%A2%98writeup%E8%AF%A6%E8%A7%A3/">https://bobtaoy.github.io/2020/09/26/%E5%8D%97%E9%82%AECTF-CG%20Web%E9%A2%98writeup%E8%AF%A6%E8%A7%A3/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/CTF/">CTF</a></div><div class="post_share"><div class="social-share" data-image="https://w.wallhaven.cc/full/n6/wallhaven-n6kde7.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/10/03/Wireshark%20%E5%AE%9E%E7%94%A8%E5%B0%8F%E6%8A%80%E5%B7%A7/"><img class="prev-cover" src="https://w.wallhaven.cc/full/n6/wallhaven-n6kde7.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Wireshark 实用小技巧</div></div></a></div><div class="next-post pull-right"><a href="/2020/09/26/MD5%E7%A2%B0%E6%92%9E%E5%92%8CMD5%E5%80%BC(%E5%93%88%E5%B8%8C%E5%80%BC)%E7%9B%B8%E7%AD%89/"><img class="next-cover" src="https://w.wallhaven.cc/full/n6/wallhaven-n6kde7.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">MD5碰撞和MD5值(哈希值)相等</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2020/10/03/Bugku-CTF-never-give-up/" title="Bugku-CTF never give up"><img class="cover" src="https://w.wallhaven.cc/full/n6/wallhaven-n6kde7.jpg"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-10-03</div><div class="title">Bugku-CTF never give up</div></div></a></div><div><a href="/2020/10/04/Linux在CTF中的一些小技巧/" title="Linux在CTF中的一些小技巧"><img class="cover" src="https://w.wallhaven.cc/full/n6/wallhaven-n6kde7.jpg"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-10-04</div><div class="title">Linux在CTF中的一些小技巧</div></div></a></div><div><a href="/2020/09/26/MD5碰撞和MD5值(哈希值)相等/" title="MD5碰撞和MD5值(哈希值)相等"><img class="cover" src="https://w.wallhaven.cc/full/n6/wallhaven-n6kde7.jpg"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-09-26</div><div class="title">MD5碰撞和MD5值(哈希值)相等</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comment</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></article></main><footer id="footer" style="background-image: url(https://w.wallhaven.cc/full/n6/wallhaven-n6kde7.jpg)"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Bobtaoy</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Just trust yourself, then you will know how to live.</div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><a id="to_comment" href="#post-comment" title="Scroll To Comments"><i class="fas fa-comments"></i></a><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></section><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>function loadValine () {
-  function initValine () {
-    const initData = {
-      el: '#vcomment',
-      appId: '8zpT8ubnMCs0p3vahHLvnomJ-gzGzoHsz',
-      appKey: 'QjoNCC6qtXBclb6ll0XkwEbV',
-      placeholder: 'Please leave your footprints',
-      avatar: 'wavatar',
-      meta: 'nick,mail,link'.split(','),
-      pageSize: '10',
-      lang: 'en',
-      recordIP: false,
-      serverURLs: '',
-      emojiCDN: '',
-      emojiMaps: "",
-      enableQQ: false,
-      path: window.location.pathname,
-    }
 
-    if (true) { 
-      initData.requiredFields= ('nick,mail'.split(','))
-    }
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://bobtaoy.github.io/2020/09/26/%E5%8D%97%E9%82%AECTF-CG%20Web%E9%A2%98writeup%E8%AF%A6%E8%A7%A3/" title="南邮CTF-CG Web题writeup详解" target="_blank" rel="external">https://bobtaoy.github.io/2020/09/26/%E5%8D%97%E9%82%AECTF-CG%20Web%E9%A2%98writeup%E8%AF%A6%E8%A7%A3/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
 
-    const valine = new Valine(initData)
-  }
 
-  if (typeof Valine === 'function') initValine() 
-  else $.getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js', initValine)
-}
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/Bobtaoy" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/Bobtaoy" target="_blank"><span class="text-dark">Tao</span><small class="ml-1x"></small></a></h3>
+        <div></div>
+      </div>
+    </figure>
+  </div>
+</div>
 
-if ('Valine' === 'Valine' || !true) {
-  if (true) btf.loadComment(document.querySelector('#vcomment'),loadValine)
-  else setTimeout(() => loadValine(), 0)
-} else {
-  function loadOtherComment () {
-    loadValine()
-  }
-}</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/fireworks.min.js"></script></div></body></html>
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2020/10/03/Wireshark%20%E5%AE%9E%E7%94%A8%E5%B0%8F%E6%8A%80%E5%B7%A7/" title="Wireshark 实用小技巧"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;Newer</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2020/09/26/MD5%E7%A2%B0%E6%92%9E%E5%92%8CMD5%E5%80%BC(%E5%93%88%E5%B8%8C%E5%80%BC)%E7%9B%B8%E7%AD%89/" title="MD5碰撞和MD5值(哈希值)相等"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/Bobtaoy" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        &copy; 2021 Bobtaoy
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

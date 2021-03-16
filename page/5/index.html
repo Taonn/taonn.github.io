@@ -1,177 +1,496 @@
-<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>漫思茶 | Tao's blog</title><meta name="keywords" content="信息安全,信息安全入门,信息安全专业,信息安全技术,网络安全,网络安全入门,网络安全技术,网络安全博客,信息安全博客,技术博客,web安全,web安全入门,渗透测试,代码审计,代码审计入门,程序开发,漫思茶,Tao's blog"><meta name="author" content="Bobtaoy"><meta name="copyright" content="Bobtaoy"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="酒困路长惟欲睡，日高人渴漫思茶">
+<!DOCTYPE html>
+<html lang=en>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Tao&#39;s Blog</title>
+  <meta name="description" content="慢慢走会比较快">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Tao&#39;s blog">
+<meta property="og:title" content="Tao&#39;s Blog">
 <meta property="og:url" content="https://bobtaoy.github.io/page/5/index.html">
-<meta property="og:site_name" content="Tao&#39;s blog">
-<meta property="og:description" content="酒困路长惟欲睡，日高人渴漫思茶">
+<meta property="og:site_name" content="Tao&#39;s Blog">
+<meta property="og:description" content="慢慢走会比较快">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://bobtaoy.github.io/img/avatar.png">
 <meta property="article:author" content="Bobtaoy">
 <meta property="article:tag" content="信息安全,信息安全入门,信息安全专业,信息安全技术,网络安全,网络安全入门,网络安全技术,网络安全博客,信息安全博客,技术博客,web安全,web安全入门,渗透测试,代码审计,代码审计入门,程序开发,漫思茶,Tao&#39;s blog">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://bobtaoy.github.io/img/avatar.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://bobtaoy.github.io/page/5/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css"><script>var GLOBAL_CONFIG = { 
-  root: '/',
-  hexoversion: '5.2.0',
-  algolia: undefined,
-  localSearch: undefined,
-  translate: undefined,
-  noticeOutdate: undefined,
-  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
-  copy: {
-    success: 'Copy successfully',
-    error: 'Copy error',
-    noSupport: 'The browser does not support'
-  },
-  relativeDate: {
-    homepage: false,
-    post: false
-  },
-  runtime: 'days',
-  date_suffix: {
-    just: 'Just',
-    min: 'minutes ago',
-    hour: 'hours ago',
-    day: 'days ago',
-    month: 'months ago'
-  },
-  copyright: undefined,
-  ClickShowText: undefined,
-  lightbox: 'fancybox',
-  Snackbar: {"chs_to_cht":"Traditional Chinese Activated Manually","cht_to_chs":"Simplified Chinese Activated Manually","day_to_night":"Dark Mode Activated Manually","night_to_day":"Light Mode Activated Manually","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
-  justifiedGallery: {
-    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
-    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
-  },
-  isPhotoFigcaption: false,
-  islazyload: false,
-  isanchor: false
-};
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://bobtaoy.github.io/page/5/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Tao&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
 
-var saveToLocal = {
-  set: function setWithExpiry(key, value, ttl) {
-    const now = new Date()
-    const expiryDay = ttl * 86400000
-    const item = {
-      value: value,
-      expiry: now.getTime() + expiryDay,
-    }
-    localStorage.setItem(key, JSON.stringify(item))
-  },
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.2.0"></head>
 
-  get: function getWithExpiry(key) {
-    const itemStr = localStorage.getItem(key)
 
-    if (!itemStr) {
-      return undefined
-    }
-    const item = JSON.parse(itemStr)
-    const now = new Date()
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/Bobtaoy" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Tao</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
 
-    if (now.getTime() > item.expiry) {
-      localStorage.removeItem(key)
-      return undefined
-    }
-    return item.value
-  }
-}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
-  isPost: false,
-  isHome: true,
-  isHighlightShrink: false,
-  isSidebar: false,
-  postUpdate: '2021-03-16 10:37:50'
-}</script><noscript><style type="text/css">
-  #nav {
-    opacity: 1
-  }
-  .justified-gallery img {
-    opacity: 1
-  }
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
 
-  #recent-posts time,
-  #post-meta time {
-    display: inline !important
-  }
-</style></noscript><script>(function () {
-  window.activateDarkMode = function () {
-    document.documentElement.setAttribute('data-theme', 'dark')
-    if (document.querySelector('meta[name="theme-color"]') !== null) {
-      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
-    }
-  }
-  window.activateLightMode = function () {
-    document.documentElement.setAttribute('data-theme', 'light')
-    if (document.querySelector('meta[name="theme-color"]') !== null) {
-      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
-    }
-  }
 
-  const autoChangeMode = 'false'
-  const t = saveToLocal.get('theme')
-  if (autoChangeMode === '1') {
-    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
-    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
-    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
-    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <span class="menu-title">Links</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <span class="menu-title">About</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/Bobtaoy" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
 
-    if (t === undefined) {
-      if (isLightMode) activateLightMode()
-      else if (isDarkMode) activateDarkMode()
-      else if (isNotSpecified || hasNoSupport) {
-        const now = new Date()
-        const hour = now.getHours()
-        const isNight = hour <= 6 || hour >= 18
-        isNight ? activateDarkMode() : activateLightMode()
-      }
-      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
-        if (saveToLocal.get('theme') === undefined) {
-          e.matches ? activateDarkMode() : activateLightMode()
-        }
-      })
-    } else if (t === 'light') activateLightMode()
-    else activateDarkMode()
-  } else if (autoChangeMode === '2') {
-    const now = new Date()
-    const hour = now.getHours()
-    const isNight = hour <= 6 || hour >= 18
-    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
-    else if (t === 'light') activateLightMode()
-    else activateDarkMode()
-  } else {
-    if (t === 'dark') activateDarkMode()
-    else if (t === 'light') activateLightMode()
-  }
-})()</script><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Tao's blog" type="application/atom+xml">
-</head><body><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">26</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">9</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">Categories</div><div class="length_num">7</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/friends-link/"><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/read/"><span> Read</span></a></div></div></div></div><div id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(https://w.wallhaven.cc/full/j5/wallhaven-j5jgem.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Tao's blog</a></span><span id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/friends-link/"><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/read/"><span> Read</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="site-info"><h1 id="site-title">Tao's blog</h1><div id="site-subtitle"><span id="subtitle"></span></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout_page" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/02/02/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BBlueCMS-V1-6/" title="代码审计之BlueCMS_V1.6">代码审计之BlueCMS_V1.6</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-02-02T13:35:01.000Z" title="Created 2021-02-02 21:35:01">2021-02-02</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/PHP/">PHP</a><i class="fas fa-angle-right"></i><a class="article-meta__categories" href="/categories/PHP/web%E5%AE%89%E5%85%A8/">web安全</a><i class="fas fa-angle-right"></i><a class="article-meta__categories" href="/categories/PHP/web%E5%AE%89%E5%85%A8/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">代码审计</a></span></div><div class="content">代码审计之BlueCMS_V1.6漏洞环境&amp;搭建本地环境搭建，使用phpstudy集成系统，CMS版本为BlueCMS_v1.6
-访问install目录
+    </nav>
+  </div>
+</header>
 
-下一步，查看数据库文件有没有生成
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a><span class="category-list-count">11</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/web%E5%AE%89%E5%85%A8/">web安全</a><span class="category-list-count">9</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/web%E5%AE%89%E5%85%A8/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">代码审计</a><span class="category-list-count">5</span></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web%E5%AE%89%E5%85%A8/">web安全</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/web%E5%AE%89%E5%85%A8/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">代码审计</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%83%A1%E4%B9%B1%E5%80%92%E8%85%BE/">胡乱倒腾</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
 
-安装成功！
-漏洞分析丢进seay里面（新建项目-&gt;选择bluecms安装目录-&gt;自动审计-&gt;开始）
-数字型SQL注入产生此漏洞的文件为ad_js.php
 
-seay显示19行的$ad ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/4/"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/26/">26</a><a class="extend next" rel="next" href="/page/6/"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">Bobtaoy</div><div class="author-info__description">酒困路长惟欲睡，日高人渴漫思茶</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">26</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">9</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">Categories</div><div class="length_num">7</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Bobtaoy"><i class="fab fa-github"></i><span>Follow Me</span></a></div></div><div class="sticky_layout"></div></div></main><footer id="footer" style="background-image: url(https://w.wallhaven.cc/full/j5/wallhaven-j5jgem.jpg)"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Bobtaoy</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Just trust yourself, then you will know how to live.</div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></section><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>function subtitleType () {
-  $.getJSON('https://api.btstu.cn/yan/api.php?charset=utf-8&encode=json',function (data) {
-    if (true) {
-      var sub = "I think I should give it a shot!".length == 0 ? new Array() : "I think I should give it a shot!".split(',')
-      var both = sub.unshift(data.text)
-      typed = new Typed('#subtitle', {
-        strings: sub,
-        startDelay: 300,
-        typeSpeed: 150,
-        loop: true,
-        backSpeed: 50,
-      })
-    } else {
-      document.getElementById('subtitle').innerHTML = data.text
-    }
-  })
-}
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/CTF/" style="font-size: 13.75px;">CTF</a> <a href="/tags/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" style="font-size: 14px;">PHP代码审计</a> <a href="/tags/Python%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97/" style="font-size: 13px;">Python常用模块</a> <a href="/tags/Wireshark/" style="font-size: 13px;">Wireshark</a> <a href="/tags/phpstudy%E5%90%8E%E9%97%A8%E5%88%86%E6%9E%90/" style="font-size: 13px;">phpstudy后门分析</a> <a href="/tags/php%E5%AE%89%E5%85%A8/" style="font-size: 13.75px;">php安全</a> <a href="/tags/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/" style="font-size: 13.25px;">常用工具</a> <a href="/tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" style="font-size: 13px;">正则表达式</a> <a href="/tags/%E6%BA%A2%E5%87%BA%E6%94%BB%E5%87%BB/" style="font-size: 13.5px;">溢出攻击</a>
+    </div>
+  </div>
 
-if (true) {
-  if (typeof Typed === 'function') subtitleType()
-  else $.getScript('https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js', subtitleType)
-} else {
-  subtitleType()
-}
-</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/fireworks.min.js"></script></div></body></html>
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  <main class="main" role="main">
+  
+  
+    <div class="content">
+  <article id="post-代码审计之BlueCMS-V1-6" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/02/02/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BBlueCMS-V1-6/">代码审计之BlueCMS_V1.6</a>
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2021/02/02/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BBlueCMS-V1-6/" class="article-date">
+	  <time datetime="2021-02-02T13:35:01.000Z" itemprop="datePublished">2021-02-02</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/PHP/">PHP</a>►<a class="article-category-link" href="/categories/PHP/web%E5%AE%89%E5%85%A8/">web安全</a>►<a class="article-category-link" href="/categories/PHP/web%E5%AE%89%E5%85%A8/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">代码审计</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" rel="tag">PHP代码审计</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/02/02/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BBlueCMS-V1-6/#comments" class="article-comment-link">Comments</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1.9k(words)</span>
+	
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h1 id="代码审计之BlueCMS-V1-6"><a href="#代码审计之BlueCMS-V1-6" class="headerlink" title="代码审计之BlueCMS_V1.6"></a>代码审计之BlueCMS_V1.6</h1><h2 id="漏洞环境-amp-搭建"><a href="#漏洞环境-amp-搭建" class="headerlink" title="漏洞环境&amp;搭建"></a>漏洞环境&amp;搭建</h2><p>本地环境搭建，使用phpstudy集成系统，CMS版本为<code>BlueCMS_v1.6</code></p>
+<p>访问<code>install</code>目录</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228100246267.png" alt="image-20210228100246267"></p>
+<p>下一步，查看数据库文件有没有生成</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228100419373.png" alt="image-20210228100419373"></p>
+<p>安装成功！</p>
+<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>丢进seay里面（新建项目-&gt;选择bluecms安装目录-&gt;自动审计-&gt;开始）</p>
+<h3 id="数字型SQL注入"><a href="#数字型SQL注入" class="headerlink" title="数字型SQL注入"></a>数字型SQL注入</h3><p>产生此漏洞的文件为<code>ad_js.php</code></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228103753924.png" alt="image-20210228103753924"></p>
+<p>seay显示19行的<code>$ad_id</code>变量存在sql注入，而变量<code>$ad_id是</code>从<code>$_GET[&#39;ad_id&#39;]</code>中来的,且只经过了<code>trim</code>。</p>
+<blockquote>
+<p> <code>trim()</code>：函数移除字符串两侧的空白字符或其他预定义字符。</p>
+</blockquote>
+<p>而在ad_js.php文件的开头（第10行）引入了过滤文件<code>require_once dirname(__FILE__) . &#39;/include/common.inc.php&#39;;</code></p>
+<p>查看<code>common.inc.php</code>文件, 发现对<code>$_POST</code>,<code>$_GET</code>,<code>$_COOKIE</code>,<code>$_REQUEST</code>传递的参数都进行了过滤</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228105725166.png" alt="image-20210228105725166"></p>
+<p>跟踪看看<code>deep_addslashes</code>是怎么实现的</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">deep_addslashes</span>(<span class="params">$str</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(is_array($str))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">foreach</span>($str <span class="keyword">as</span> $key=&gt;$val)</span><br><span class="line">		&#123;</span><br><span class="line">			$str[$key] = deep_addslashes($val);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		$str = addslashes($str);	<span class="comment">// </span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> $str;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>addslashes</code>过滤，但是<code>addslashes</code>函数是不影响数字型注入的</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ad = $db-&gt;getone(<span class="string">&quot;SELECT * FROM &quot;</span>.table(<span class="string">&#x27;ad&#x27;</span>).<span class="string">&quot; WHERE ad_id =&quot;</span>.$ad_id);</span><br></pre></td></tr></table></figure>
+
+<p>可以看到上面的是个数字型注入，<code>getone</code>函数我们追踪一下,代码在<code>mysql.class.php</code>中</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getone</span>(<span class="params">$sql, $type=MYSQL_ASSOC</span>)</span>&#123;</span><br><span class="line">    $query = <span class="keyword">$this</span>-&gt;query($sql,<span class="keyword">$this</span>-&gt;linkid);</span><br><span class="line">    $row = mysql_fetch_array($query, $type);</span><br><span class="line">    <span class="keyword">return</span> $row;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>是一个执行sql语句的函数，这里就确认存在数字型sql注入漏洞</p>
+<p>漏洞复现：因为我们这里是白盒测试，所以直接提取一下管理的用户名和密码</p>
+<p><code>http://www.bluecms16.com/ad_js.php?ad_id=1 UNION SELECT 1,2,3,4,5,6,GROUP_CONCAT(admin_name,0x3a,pwd) FROM blue_admin</code></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228105415027.png" alt="image-20210228105415027"></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228110507267.png" alt="image-20210228110507267"></p>
+<blockquote>
+<p>38行输出的时候注释掉了，因此我们需要查看源代码</p>
+</blockquote>
+<p>还要注意一下<code>0x3a</code>-&gt;<code>:</code>, 因为上面使用了<code>addslashes</code>函数，该函数会将<code>单引号（&#39;）</code>,<code>双引号（&quot;）</code>, <code>反斜杠（\）</code>，<code>NULL</code>进行转义，而使用编码就很好的绕过了！</p>
+<h3 id="INSERT型SQL注入"><a href="#INSERT型SQL注入" class="headerlink" title="INSERT型SQL注入"></a>INSERT型SQL注入</h3><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228111910745.png" alt="image-20210228111910745"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// include/common.fun.php 文件108行</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getip</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (getenv(<span class="string">&#x27;HTTP_CLIENT_IP&#x27;</span>))</span><br><span class="line">	&#123;</span><br><span class="line">		$ip = getenv(<span class="string">&#x27;HTTP_CLIENT_IP&#x27;</span>); </span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">elseif</span> (getenv(<span class="string">&#x27;HTTP_X_FORWARDED_FOR&#x27;</span>)) </span><br><span class="line">	&#123; </span><br><span class="line">		$ip = getenv(<span class="string">&#x27;HTTP_X_FORWARDED_FOR&#x27;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">elseif</span> (getenv(<span class="string">&#x27;HTTP_X_FORWARDED&#x27;</span>)) </span><br><span class="line">	&#123; </span><br><span class="line">		$ip = getenv(<span class="string">&#x27;HTTP_X_FORWARDED&#x27;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">elseif</span> (getenv(<span class="string">&#x27;HTTP_FORWARDED_FOR&#x27;</span>))</span><br><span class="line">	&#123;</span><br><span class="line">		$ip = getenv(<span class="string">&#x27;HTTP_FORWARDED_FOR&#x27;</span>); </span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">elseif</span> (getenv(<span class="string">&#x27;HTTP_FORWARDED&#x27;</span>))</span><br><span class="line">	&#123;</span><br><span class="line">		$ip = getenv(<span class="string">&#x27;HTTP_FORWARDED&#x27;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123; </span><br><span class="line">		$ip = $_SERVER[<span class="string">&#x27;REMOTE_ADDR&#x27;</span>];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> $ip;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于第一分析中<code>common.inc.php</code>,只对<code>$_POST</code>,<code>$_GET</code>,<code>$_COOKIE</code>,<code>$_REQUEST</code>进行了处理，但是遗漏了<code>$_SERVER</code>,而<code>getip()</code>函数中恰好是通过该变量获取ip地址。我们可以通过<code>client-ip</code>或<code>x-forwarded-for</code>进行ip的伪造,触发漏洞。</p>
+<p>phpstorm使用<code>ctrl+shift+F</code>搜索一下，看哪里调用了<code>getip()</code>, 如下图，我们跟进<code>comment.php</code>文件114行</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228112453867.png" alt="image-20210228112453867"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$sql = <span class="string">&quot;INSERT INTO &quot;</span>.table(<span class="string">&#x27;comment&#x27;</span>).<span class="string">&quot; (com_id, post_id, user_id, type, mood, content, pub_date, ip, is_check) VALUES (&#x27;&#x27;, &#x27;<span class="subst">$id</span>&#x27;, &#x27;<span class="subst">$user_id</span>&#x27;, &#x27;<span class="subst">$type</span>&#x27;, &#x27;<span class="subst">$mood</span>&#x27;, &#x27;<span class="subst">$content</span>&#x27;, &#x27;<span class="subst">$timestamp</span>&#x27;, &#x27;&quot;</span>.getip().<span class="string">&quot;&#x27;, &#x27;<span class="subst">$is_check</span>&#x27;)&quot;</span>;</span><br><span class="line">$db-&gt;query($sql);</span><br></pre></td></tr></table></figure>
+
+<p>这里我们也分析一下其他变量插入会不会产生漏洞</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$id = !<span class="keyword">empty</span>($_REQUEST[<span class="string">&#x27;id&#x27;</span>]) ? intval($_REQUEST[<span class="string">&#x27;id&#x27;</span>]) : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"><span class="comment">// intval函数进行了转义</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$user_id = $_SESSION[<span class="string">&#x27;user_id&#x27;</span>] ? $_SESSION[<span class="string">&#x27;user_id&#x27;</span>] : <span class="number">0</span>; <span class="comment">// 略</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$mood = intval($_POST[<span class="string">&#x27;mood&#x27;</span>]);</span><br><span class="line"><span class="comment">// intval函数进行了转义</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$content = !<span class="keyword">empty</span>($_POST[<span class="string">&#x27;comment&#x27;</span>]) ? htmlspecialchars($_POST[<span class="string">&#x27;comment&#x27;</span>]) : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"><span class="comment">// 对comment内容做了html转义，所以不存在xss</span></span><br></pre></td></tr></table></figure>
+
+<p>看来我们还是只能利用<code>getip()</code>来触发漏洞</p>
+<p>漏洞复现：</p>
+<pre><code>这里是对评论区进行的sql注入，因此我们需要新建一篇文章，然后在评论区测试（白盒测试，为了方便理解，我将sql语句输出了）</code></pre>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228114626452.png" alt="image-20210228114626452"></p>
+<p>poc 构造思路如下:</p>
+<blockquote>
+<p> 插入两条数据的思路,进行构造（注入返回结果要显示在留言内容处）</p>
+</blockquote>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228121059448.png" alt="image-20210228121059448"></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228120814610.png" alt="image-20210228120814610"></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228120832493.png" alt="image-20210228120832493"></p>
+<h3 id="另一处INSERT型注入"><a href="#另一处INSERT型注入" class="headerlink" title="另一处INSERT型注入"></a>另一处INSERT型注入</h3><p>在文件<code>guest_book.php</code>77行处</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$sql = <span class="string">&quot;INSERT INTO &quot;</span> . table(<span class="string">&#x27;guest_book&#x27;</span>) . <span class="string">&quot; (id, rid, user_id, add_time, ip, content) VALUES (&#x27;&#x27;, &#x27;<span class="subst">$rid</span>&#x27;, &#x27;<span class="subst">$user_id</span>&#x27;, &#x27;<span class="subst">$timestamp</span>&#x27;, &#x27;<span class="subst">$online_ip</span>&#x27;, &#x27;<span class="subst">$content</span>&#x27;)&quot;</span>;</span><br><span class="line">$db-&gt;query($sql);</span><br></pre></td></tr></table></figure>
+
+<p>这里有个<code>$online_ip</code>, 我们跟踪一下</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228141546498.png" alt="image-20210228141546498"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// include/common.fun.php文件106行处</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getip</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   <span class="keyword">if</span> (getenv(<span class="string">&#x27;HTTP_CLIENT_IP&#x27;</span>))</span><br><span class="line">   &#123;</span><br><span class="line">      $ip = getenv(<span class="string">&#x27;HTTP_CLIENT_IP&#x27;</span>); </span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">elseif</span> (getenv(<span class="string">&#x27;HTTP_X_FORWARDED_FOR&#x27;</span>)) </span><br><span class="line">   &#123; <span class="comment">//????????????????????????????ip ???</span></span><br><span class="line">      $ip = getenv(<span class="string">&#x27;HTTP_X_FORWARDED_FOR&#x27;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">elseif</span> (getenv(<span class="string">&#x27;HTTP_X_FORWARDED&#x27;</span>)) </span><br><span class="line">   &#123; </span><br><span class="line">      $ip = getenv(<span class="string">&#x27;HTTP_X_FORWARDED&#x27;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">elseif</span> (getenv(<span class="string">&#x27;HTTP_FORWARDED_FOR&#x27;</span>))</span><br><span class="line">   &#123;</span><br><span class="line">      $ip = getenv(<span class="string">&#x27;HTTP_FORWARDED_FOR&#x27;</span>); </span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">elseif</span> (getenv(<span class="string">&#x27;HTTP_FORWARDED&#x27;</span>))</span><br><span class="line">   &#123;</span><br><span class="line">      $ip = getenv(<span class="string">&#x27;HTTP_FORWARDED&#x27;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">else</span></span><br><span class="line">   &#123; </span><br><span class="line">      $ip = $_SERVER[<span class="string">&#x27;REMOTE_ADDR&#x27;</span>];</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">return</span> $ip;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>原理跟上面的sql注入一样，我们需要构造http头，加个<code>X-FORWARDED-FOR</code></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228143329923.png" alt="image-20210228143329923"></p>
+<h3 id="本地文件包含"><a href="#本地文件包含" class="headerlink" title="本地文件包含"></a>本地文件包含</h3><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228121311009.png" alt="image-20210228121311009"></p>
+<p>漏洞发生在<code>user.php</code>文件750行处</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228121416983.png" alt="image-20210228121416983"></p>
+<p><code>$_POST[&#39;pay&#39;]</code>并没有做多余的安全检测，而是直接进行拼接，但是后面有<code>index.php</code>文件，所以我们的重点是如何截断，所以我们的重点是如何截断。如果php版本低于<code>5.3.4</code>且<code>magic_quotes_gpc=off</code>则可以使用<code>%00</code>截断。还可以使用系统文件路径长度限制来进行截断</p>
+<p>这里我们使用系统文件路径长度限制来截断：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Windows <span class="number">259</span>个字节</span><br><span class="line">Linux <span class="number">4096</span>个字节</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228123050851.png" alt="image-20210228123050851"></p>
+<p>当然了，由于文件包含漏洞可以包含图片文件（例如jpg），而且服务器会解析图片文件（当作php文件执行），那么我们就可以上传一个带木马的jpg文件，然后利用文件包含漏洞包含此jpg文件，拿webshell</p>
+<p>具体利用步骤如下:</p>
+<p>在个人资料编辑,上传头像处传jpg文件-&gt; 使用包含漏洞包含此文件</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228123614385.png" alt="image-20210228123614385"></p>
+<h3 id="任意文件删除"><a href="#任意文件删除" class="headerlink" title="任意文件删除"></a>任意文件删除</h3><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228123713404.png" alt="image-20210228123713404"></p>
+<p>漏洞发生在<code>publish.php</code>文件309行处</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">elseif</span>($act == <span class="string">&#x27;del_pic&#x27;</span>)</span><br><span class="line">&#123;</span><br><span class="line"> 	$id = $_REQUEST[<span class="string">&#x27;id&#x27;</span>];</span><br><span class="line"> 	$db-&gt;query(<span class="string">&quot;DELETE FROM &quot;</span>.table(<span class="string">&#x27;post_pic&#x27;</span>).<span class="string">&quot; WHERE pic_path=&#x27;<span class="subst">$id</span>&#x27;&quot;</span>);</span><br><span class="line"> 	<span class="keyword">if</span>(file_exists(BLUE_ROOT.$id))</span><br><span class="line"> 	&#123;</span><br><span class="line"> 		@unlink(BLUE_ROOT.$id);</span><br><span class="line"> 	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第7行<code>unlink</code>删除文件，传入<code>$id</code>，先删除数据库里的，然后判断本地有没有此文件，如果有，<code>unlink</code>函数也对其进行删除</p>
+<p>漏洞复现：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/del.gif" alt="gif1"></p>
+<h3 id="另一处任意文件删除"><a href="#另一处任意文件删除" class="headerlink" title="另一处任意文件删除"></a>另一处任意文件删除</h3><p>漏洞触发在文件<code>user.php</code>中788行处</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228133713751.png" alt="image-20210228133713751"></p>
+<p>未做任何处理，直接导致任意文件删除漏洞</p>
+<p>漏洞复现:</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/del2.gif" alt="gif2"></p>
+<h3 id="发布文章处XSS"><a href="#发布文章处XSS" class="headerlink" title="发布文章处XSS"></a>发布文章处XSS</h3><p>在<code>user.php</code>文件中的266行，有个对文章内容进行过滤</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$content = !<span class="keyword">empty</span>($_POST[<span class="string">&#x27;content&#x27;</span>]) ? filter_data($_POST[<span class="string">&#x27;content&#x27;</span>]) : <span class="string">&#x27;&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>跟进一下<code>filter_data</code>函数,看它过滤了什么（include/common.fun.php文件985行）</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">filter_data</span>(<span class="params">$str</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   $str = preg_replace(<span class="string">&quot;/&lt;(\/?)(script|i?frame|meta|link)(\s*)[^&lt;]*&gt;/&quot;</span>, <span class="string">&quot;&quot;</span>, $str);</span><br><span class="line">   <span class="keyword">return</span> $str;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>就过滤了几个标签，我们可以用img标签绕过： <code>&lt;img src=1 onerror=alert(&#39;Tao&#39;)&gt;</code></p>
+<p>漏洞复现：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228135019232.png" alt="image-20210228135019232"></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228134954595.png" alt="image-20210228134954595"></p>
+<h3 id="用户注册处xss"><a href="#用户注册处xss" class="headerlink" title="用户注册处xss"></a>用户注册处xss</h3><p>在<code>user.php</code>文件中的763行处</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//编辑个人资料</span></span><br><span class="line"> <span class="keyword">elseif</span>($act == <span class="string">&#x27;edit_user_info&#x27;</span>)&#123;</span><br><span class="line">	 $user_id = intval($_SESSION[<span class="string">&#x27;user_id&#x27;</span>]);</span><br><span class="line">	 <span class="keyword">if</span>(<span class="keyword">empty</span>($user_id))&#123;</span><br><span class="line">		 <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">	 &#125;</span><br><span class="line">	$birthday = trim($_POST[<span class="string">&#x27;birthday&#x27;</span>]);</span><br><span class="line">	$sex = intval($_POST[<span class="string">&#x27;sex&#x27;</span>]);</span><br><span class="line">    $email = !<span class="keyword">empty</span>($_POST[<span class="string">&#x27;email&#x27;</span>]) ? trim($_POST[<span class="string">&#x27;email&#x27;</span>]) : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    $msn = !<span class="keyword">empty</span>($_POST[<span class="string">&#x27;msn&#x27;</span>]) ? trim($_POST[<span class="string">&#x27;msn&#x27;</span>]) : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    $qq = !<span class="keyword">empty</span>($_POST[<span class="string">&#x27;qq&#x27;</span>]) ? trim($_POST[<span class="string">&#x27;qq&#x27;</span>]) : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    $mobile_phone = !<span class="keyword">empty</span>($_POST[<span class="string">&#x27;mobile_phone&#x27;</span>]) ? trim($_POST[<span class="string">&#x27;mobile_phone&#x27;</span>]) : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    $office_phone = !<span class="keyword">empty</span>($_POST[<span class="string">&#x27;office_phone&#x27;</span>]) ? trim($_POST[<span class="string">&#x27;office_phone&#x27;</span>]) : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    $home_phone   = !<span class="keyword">empty</span>($_POST[<span class="string">&#x27;home_phone&#x27;</span>]) ? trim($_POST[<span class="string">&#x27;home_phone&#x27;</span>]) : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">	$address = !<span class="keyword">empty</span>($_POST[<span class="string">&#x27;address&#x27;</span>]) ? htmlspecialchars($_POST[<span class="string">&#x27;address&#x27;</span>]) : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">     ..............</span><br><span class="line">     ...............</span><br><span class="line">     $sql = <span class="string">&quot;UPDATE &quot;</span>.table(<span class="string">&#x27;user&#x27;</span>).<span class="string">&quot; SET birthday = &#x27;<span class="subst">$birthday</span>&#x27;, sex = &#x27;<span class="subst">$sex</span>&#x27;, face_pic = &#x27;<span class="subst">$face_pic</span>&#x27;, email = &#x27;<span class="subst">$email</span>&#x27;, msn = &#x27;<span class="subst">$msn</span>&#x27;, qq = &#x27;<span class="subst">$qq</span>&#x27;,&quot;</span> .<span class="string">&quot; mobile_phone = &#x27;<span class="subst">$mobile_phone</span>&#x27;, office_phone = &#x27;<span class="subst">$office_phone</span>&#x27;, home_phone = &#x27;<span class="subst">$home_phone</span>&#x27;, address=&#x27;<span class="subst">$address</span>&#x27; WHERE user_id = &quot;</span>.intval($_SESSION[<span class="string">&#x27;user_id&#x27;</span>]);</span><br><span class="line">	$db-&gt;query($sql);</span><br><span class="line">	showmsg(<span class="string">&#x27;更新个人资料成功&#x27;</span>, <span class="string">&#x27;user.php&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p><code>$email</code>只是经过了<code>trim</code>, 其余未作处理，存在xss</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228135739337.png" alt="image-20210228135739337"></p>
+<p>观察表结构，<code>email</code>长度是足够存储产生xss代码的</p>
+<p>漏洞复现：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228140258239.png" alt="image-20210228140258239"></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228140315054.png" alt="image-20210228140315054"></p>
+<p>当管理登录后台，查看用户的时候，也会触发（可拿管理员cookie），这里模拟一下管理员登录后台。且具有隐藏性</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210228140444256.png" alt="image-20210228140444256"></p>
+<h3 id="后台大量漏洞"><a href="#后台大量漏洞" class="headerlink" title="后台大量漏洞"></a>后台大量漏洞</h3><p>漏洞有点多，就先不写了，哈哈哈哈！</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://bobtaoy.github.io/2021/02/02/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BBlueCMS-V1-6/" title="代码审计之BlueCMS_V1.6" target="_blank" rel="external">https://bobtaoy.github.io/2021/02/02/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BBlueCMS-V1-6/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/Bobtaoy" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/Bobtaoy" target="_blank"><span class="text-dark">Tao</span><small class="ml-1x"></small></a></h3>
+        <div></div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+</div>
+
+  
+
+  
+    
+    <nav class="bar bar-footer clearfix" data-stick-bottom>
+        <div class="bar-inner">
+        <ul class="pager pull-left">
+            
+            <li class="prev">
+                <a href="/page/4/">
+                    <i class="icon icon-angle-left"></i>
+                    Prev
+                </a>
+            </li>
+            
+            
+            <li class="next">
+                <a href="/page/6/">
+                    Next
+                    <i class="icon icon-angle-right"></i>
+                </a>
+            </li>
+            
+        </ul>
+        <div class="total-article bar-right">Page 5 of 26</div>
+        </div>
+    </nav>
+    
+ 
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/Bobtaoy" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        &copy; 2021 Bobtaoy
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
