@@ -21,7 +21,7 @@
   <meta name="description" content="实验环境 WindowsXP-SP3（PCMan’s FTP Server 2.0.7， Immunityinc debugger, ） 攻击机：kali 2.0  需要的基础：对x86汇编语言有一定的了解，python基础，常用调试工具的使用 缓冲区溢出基础详情参考：缓冲区溢出原理分析(一) ​    简单的来说，如果我们输入的数据长度超过了开发人员定义的缓冲区，那么这个数据就可以覆盖掉关键的寄">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PCMan&#39;s FTP Server缓冲区溢出分析与利用">
-<meta property="og:url" content="https://bobtaoy.github.io/2020/11/16/PCMan-s-FTP-Server%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%88%86%E6%9E%90%E4%B8%8E%E5%88%A9%E7%94%A8/index.html">
+<meta property="og:url" content="https://taonn.github.io/2020/11/16/PCMan-s-FTP-Server%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%88%86%E6%9E%90%E4%B8%8E%E5%88%A9%E7%94%A8/index.html">
 <meta property="og:site_name" content="Tao&#39;s Blog">
 <meta property="og:description" content="实验环境 WindowsXP-SP3（PCMan’s FTP Server 2.0.7， Immunityinc debugger, ） 攻击机：kali 2.0  需要的基础：对x86汇编语言有一定的了解，python基础，常用调试工具的使用 缓冲区溢出基础详情参考：缓冲区溢出原理分析(一) ​    简单的来说，如果我们输入的数据长度超过了开发人员定义的缓冲区，那么这个数据就可以覆盖掉关键的寄">
 <meta property="og:locale" content="en_US">
@@ -59,7 +59,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/overflow.png">
   <!-- Canonical links -->
-  <link rel="canonical" href="https://bobtaoy.github.io/2020/11/16/PCMan-s-FTP-Server%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%88%86%E6%9E%90%E4%B8%8E%E5%88%A9%E7%94%A8/index.html">
+  <link rel="canonical" href="https://taonn.github.io/2020/11/16/PCMan-s-FTP-Server%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%88%86%E6%9E%90%E4%B8%8E%E5%88%A9%E7%94%A8/index.html">
   
     <link rel="alternate" href="/atom.xml" title="Tao&#39;s Blog" type="application/atom+xml">
   
@@ -430,7 +430,7 @@
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="https://bobtaoy.github.io/2020/11/16/PCMan-s-FTP-Server%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%88%86%E6%9E%90%E4%B8%8E%E5%88%A9%E7%94%A8/" title="PCMan&#39;s FTP Server缓冲区溢出分析与利用" target="_blank" rel="external"><font color="red">PCMan's FTP Server缓冲区溢出分析与利用</font></a>
+      <a href="https://taonn.github.io/2020/11/16/PCMan-s-FTP-Server%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E5%88%86%E6%9E%90%E4%B8%8E%E5%88%A9%E7%94%A8/" title="PCMan&#39;s FTP Server缓冲区溢出分析与利用" target="_blank" rel="external"><font color="red">PCMan's FTP Server缓冲区溢出分析与利用</font></a>
     </li>
     
     <li class="post-copyright-license">

