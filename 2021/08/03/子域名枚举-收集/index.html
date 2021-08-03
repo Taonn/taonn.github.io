@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>子域名枚举&amp;收集 | Tao&#39;s Blog</title>
+  <meta name="description" content="引言：信息收集 –&gt; 特此整理 (译文扩展整理) 1. what &amp; why什么是子域名枚举？ ​    子域名枚举是为一个或多个域名查找子域名的过程，它是安全评估和渗透测试前期侦查和信息收集的重要手段。 为什么要子域名枚举？  Sub-domain enumeration can reveal a lot of domains&#x2F;sub-domains that are in sco">
+<meta property="og:type" content="article">
+<meta property="og:title" content="子域名枚举&amp;收集">
+<meta property="og:url" content="https://taonn.github.io/2021/08/03/%E5%AD%90%E5%9F%9F%E5%90%8D%E6%9E%9A%E4%B8%BE-%E6%94%B6%E9%9B%86/index.html">
+<meta property="og:site_name" content="Tao&#39;s Blog">
+<meta property="og:description" content="引言：信息收集 –&gt; 特此整理 (译文扩展整理) 1. what &amp; why什么是子域名枚举？ ​    子域名枚举是为一个或多个域名查找子域名的过程，它是安全评估和渗透测试前期侦查和信息收集的重要手段。 为什么要子域名枚举？  Sub-domain enumeration can reveal a lot of domains&#x2F;sub-domains that are in sco">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum01.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum02.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum03.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum04.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum05.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum06.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum07.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum08.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum09.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum10.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum11.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum12.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum13.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum14.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum15.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum16.png">
+<meta property="og:image" content="https://taonn.github.io/2021/08/03/%E5%AD%90%E5%9F%9F%E5%90%8D%E6%9E%9A%E4%B8%BE-%E6%94%B6%E9%9B%86/img/zone_transfer.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum17.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum18.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum19.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum20.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum21.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum22.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum23.png">
+<meta property="article:published_time" content="2021-08-03T15:03:41.000Z">
+<meta property="article:modified_time" content="2021-08-03T15:04:41.183Z">
+<meta property="article:author" content="Tao">
+<meta property="article:tag" content="信息收集">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum01.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://taonn.github.io/2021/08/03/%E5%AD%90%E5%9F%9F%E5%90%8D%E6%9E%9A%E4%B8%BE-%E6%94%B6%E9%9B%86/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Tao&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/Taonn" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Tao</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">You are right.</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-read">
+          <a href="/read">
+            
+            <span class="menu-title">Read</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <span class="menu-title">Links</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Red-team/">Red team</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web%E5%AE%89%E5%85%A8/">web安全</a><span class="category-list-count">10</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/web%E5%AE%89%E5%85%A8/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">代码审计</a><span class="category-list-count">6</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%83%A1%E4%B9%B1%E5%80%92%E8%85%BE/">胡乱倒腾</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">August 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/web%E5%AE%89%E5%85%A8/">web安全</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/08/03/%E5%AD%90%E5%9F%9F%E5%90%8D%E6%9E%9A%E4%B8%BE-%E6%94%B6%E9%9B%86/" class="title">子域名枚举&amp;收集</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-08-03T15:03:41.000Z" itemprop="datePublished">2021-08-03</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Red-team/">Red team</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/04/08/%E9%85%8D%E7%BD%AE%E5%9F%BA%E4%BA%8EWindows%E5%86%85%E7%BD%AE%E5%B7%A5%E5%85%B7%E7%9A%84%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/" class="title">配置基于Windows内置工具的端口转发</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-04-08T13:18:37.000Z" itemprop="datePublished">2021-04-08</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/web%E5%AE%89%E5%85%A8/">web安全</a><i class="icon icon-angle-right"></i><a class="category-link" href="/categories/web%E5%AE%89%E5%85%A8/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">代码审计</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/02/10/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BPHPCMS-v9-6-1-%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="title">代码审计之PHPCMS v9.6.1 任意文件读取漏洞分析</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-02-10T08:21:17.000Z" itemprop="datePublished">2021-02-10</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/web%E5%AE%89%E5%85%A8/">web安全</a><i class="icon icon-angle-right"></i><a class="category-link" href="/categories/web%E5%AE%89%E5%85%A8/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">代码审计</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/02/09/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BPHPCMS%20v9.6.0%20wap%E6%A8%A1%E5%9D%97SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="title">代码审计之PHPCMSv9.6.0 wap模块SQL注入漏洞分析</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-02-09T10:55:00.000Z" itemprop="datePublished">2021-02-09</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/web%E5%AE%89%E5%85%A8/">web安全</a><i class="icon icon-angle-right"></i><a class="category-link" href="/categories/web%E5%AE%89%E5%85%A8/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">代码审计</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/02/07/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B9%8BPHPCMSV9-6-%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" class="title">代码审计之PHPCMS_V9.6.0任意文件上传漏洞分析</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-02-07T01:39:31.000Z" itemprop="datePublished">2021-02-07</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-子域名枚举-收集" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      子域名枚举&amp;收集
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2021/08/03/%E5%AD%90%E5%9F%9F%E5%90%8D%E6%9E%9A%E4%B8%BE-%E6%94%B6%E9%9B%86/" class="article-date">
+	  <time datetime="2021-08-03T15:03:41.000Z" itemprop="datePublished">2021-08-03</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/web%E5%AE%89%E5%85%A8/">web安全</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" rel="tag">信息收集</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/08/03/%E5%AD%90%E5%9F%9F%E5%90%8D%E6%9E%9A%E4%B8%BE-%E6%94%B6%E9%9B%86/#comments" class="article-comment-link">Comments</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">Word Count: 3.5k(words)</span>
+	
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>引言：信息收集 –&gt; 特此整理 (译文扩展整理)</p>
+<h2 id="1-what-amp-why"><a href="#1-what-amp-why" class="headerlink" title="1. what &amp; why"></a>1. what &amp; why</h2><p><strong>什么是子域名枚举？</strong></p>
+<p>​    子域名枚举是为一个或多个域名查找子域名的过程，它是安全评估和渗透测试前期侦查和信息收集的重要手段。</p>
+<p><strong>为什么要子域名枚举？</strong></p>
+<ul>
+<li>Sub-domain enumeration can reveal a lot of domains/sub-domains that are in scope of a security assessment which in turn increases the chances of finding vulnerabilities<ul>
+<li>子域枚举可以揭示安全评估范围内的许多域/子域，从而增加发现漏洞的机会</li>
+</ul>
+</li>
+<li>Finding applications running on hidden, forgotten sub-domains may lead to uncovering critical vulnerabilities<ul>
+<li>查找在隐藏的、被遗忘的子域上运行的应用程序可能会导致发现关键漏洞</li>
+</ul>
+</li>
+<li>Often times the same vulnerabilities tend to be present across different domains/applications of the same organization<ul>
+<li>通常，相同的漏洞往往存在于同一组织的不同域/应用程序中</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-被动子域名枚举"><a href="#2-被动子域名枚举" class="headerlink" title="2. 被动子域名枚举"></a>2. 被动子域名枚举</h2><p><strong>什么是被动子域名枚举？</strong></p>
+<ul>
+<li>Passive sub-domain enumeration is where an attacker/tester gathers sub-domain information without generating any traffic directly between him and the infrastructure managed by the target organization<ul>
+<li>被动子域枚举是攻击者/测试者收集子域信息而不在他和目标组织管理的基础设施之间直接产生任何流量的地方</li>
+</ul>
+</li>
+<li>The objective is to be stealthy and leave low or no footprint<ul>
+<li>目标是隐身并留下低足迹或不留下足迹</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-1-证书透明度（Certificate-Transparency）"><a href="#2-1-证书透明度（Certificate-Transparency）" class="headerlink" title="2.1 证书透明度（Certificate Transparency）"></a>2.1 证书透明度（Certificate Transparency）</h3><ul>
+<li>Under Certificate Transparency(CT), a Certificate Authority(CA) will have to publish all SSL/TLS certificates they issue in a public log<ul>
+<li>在证书透明度 (CT) 下，证书颁发机构 (CA) 必须在公共日志中发布他们颁发的所有 SSL/TLS 证书</li>
+</ul>
+</li>
+<li>Anyone can look through the CT logs and find certificates issued for a domain<ul>
+<li>任何人都可以查看 CT 日志并找到为域颁发的证书</li>
+</ul>
+</li>
+<li>CT allows website users and domain owners to identify mistakenly or worse maliciously issued certificates. This aids domain owners and browser vendors in identifying erring CAs<ul>
+<li>CT 允许网站用户和域所有者识别错误或更糟的恶意颁发的证书。这有助于域所有者和浏览器供应商识别错误的 CA</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>更多可阅读：<a target="_blank" rel="noopener" href="https://blog.csdn.net/www_helloworld_com/article/details/90403233">https://blog.csdn.net/www_helloworld_com/article/details/90403233</a></p>
+</blockquote>
+<h4 id="2-1-1-证书透明度（CT）-开源网络情报角度"><a href="#2-1-1-证书透明度（CT）-开源网络情报角度" class="headerlink" title="2.1.1 证书透明度（CT）- 开源网络情报角度"></a>2.1.1 证书透明度（CT）- 开源网络情报角度</h4><ul>
+<li>Certificate Transparency(CT) logs by design contain all the certificates issued by a participating CA for any given domain. SSL/TLS certificates generally contain domain names, sub-domain names and email addresses. These logs are available publicly and anyone can look through these logs. This makes them a treasure trove of information for attackers.<ul>
+<li>证书透明度 (CT) 日志按设计包含由参与 CA 为任何给定域颁发的所有证书。 SSL/TLS 证书一般包含域名、子域名和电子邮件地址。这些日志是公开可用的，任何人都可以查看这些日志。这使它们成为攻击者的信息宝库。</li>
+</ul>
+</li>
+<li>By looking through the CT logs an attacker can gather a lot of information about an organization’s infrastructure i.e. internal domains, email addresses in a completely passive manner.<ul>
+<li>通过查看 CT 日志，攻击者可以以完全被动的方式收集有关组织基础设施（即内部域、电子邮件地址）的大量信息。</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-1-2-搜索-CT-logs"><a href="#2-1-2-搜索-CT-logs" class="headerlink" title="2.1.2 搜索 CT logs"></a>2.1.2 搜索 CT logs</h4><ol>
+<li>crtsh：<a target="_blank" rel="noopener" href="https://crt.sh/">https://crt.sh/</a></li>
+<li>censys：<a target="_blank" rel="noopener" href="https://censys.io/">https://censys.io/</a></li>
+<li>facebook：<a target="_blank" rel="noopener" href="https://developers.facebook.com/tools/ct/">https://developers.facebook.com/tools/ct/</a></li>
+<li>google：<a target="_blank" rel="noopener" href="https://google.com/transparencyreport/https/ct/">https://google.com/transparencyreport/https/ct/</a></li>
+<li>spyse：<a target="_blank" rel="noopener" href="https://spyse.com/search/certificate">https://spyse.com/search/certificate</a></li>
+<li>certspotter：<a target="_blank" rel="noopener" href="https://sslmate.com/certspotter/api/">https://sslmate.com/certspotter/api/</a></li>
+<li>entrust：<a target="_blank" rel="noopener" href="https://www.entrust.com/ct-search/">https://www.entrust.com/ct-search/</a></li>
+</ol>
+<h5 id="2-1-2-1-crtsh"><a href="#2-1-2-1-crtsh" class="headerlink" title="2.1.2.1 crtsh"></a>2.1.2.1 crtsh</h5><p>访问<a target="_blank" rel="noopener" href="https://crt.sh/%EF%BC%8C%E8%BE%93%E5%85%A5%E5%AD%90%E5%9F%9F%EF%BC%8C%E4%BE%8B%E5%A6%82%EF%BC%9A%60example.com%60">https://crt.sh/，输入子域，例如：`example.com`</a></p>
+<p><img src="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum01.png"></p>
+<p>crtsh 也提供了使用<code>https://crt.sh/atom?q=&#123;sub-domain&#125;</code>查询的 RSS 提要</p>
+<p>还可以使用PostgreSQL接口来查询数据，shell脚本如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Script by Hanno Bock - https://github.com/hannob/tlshelpers/blob/master/getsubdomain</span></span><br><span class="line"></span><br><span class="line">query=&quot;SELECT ci.NAME_VALUE NAME_VALUE FROM certificate_identity ci WHERE ci.NAME_TYPE = &#x27;dNSName&#x27; AND reverse(lower(ci.NAME_VALUE)) LIKE reverse(lower(&#x27;%.$1&#x27;));&quot;</span><br><span class="line"></span><br><span class="line">echo $query | \</span><br><span class="line">    psql -t -h crt.sh -p 5432 -U guest certwatch | \</span><br><span class="line">    sed -e &#x27;s:^ *::g&#x27; -e &#x27;s:^*\.::g&#x27; -e &#x27;/^$/d&#x27; | \</span><br><span class="line">    sort -u | sed -e &#x27;s:*.::g&#x27;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p> 无psql命令，使用<code>sudo apt-get install postgresql-client</code>安装psql客户端。</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum02.png"></p>
+<h5 id="2-1-2-2-censys"><a href="#2-1-2-2-censys" class="headerlink" title="2.1.2.2 censys"></a>2.1.2.2 censys</h5><p><code>https://search.censys.io/certificates?q=&#123;sub-domain&#125;</code></p>
+<p><img src="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum03.png"></p>
+<p>枚举脚本：<a target="_blank" rel="noopener" href="https://github.com/0xbharath/censys-enumeration">https://github.com/0xbharath/censys-enumeration</a></p>
+<h5 id="2-1-2-3-massdns-提取唯一的可解析子域"><a href="#2-1-2-3-massdns-提取唯一的可解析子域" class="headerlink" title="2.1.2.3 massdns - 提取唯一的可解析子域"></a>2.1.2.3 massdns - 提取唯一的可解析子域</h5><blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/blechschmidt/massdns">https://github.com/blechschmidt/massdns</a></p>
+</blockquote>
+<ul>
+<li>Massdns 是一个极快的 DNS 解析器，可以在更短的时间内解析大量域名</li>
+<li>Massdns 可以与从 CT 日志中提取子域的脚本结合使用，以快速识别唯一的可解析域名</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum04.png"></p>
+<h4 id="2-2-3-证书透明度（CT）的缺点"><a href="#2-2-3-证书透明度（CT）的缺点" class="headerlink" title="2.2.3 证书透明度（CT）的缺点"></a>2.2.3 证书透明度（CT）的缺点</h4><ul>
+<li>Certificate Transparency logs are append only which means once a SSL/TLS certificate is appended to a CT log, there is no way to delete them<ul>
+<li>证书透明度日志仅附加，这意味着一旦 SSL/TLS 证书附加到 CT 日志，就无法删除它们</li>
+</ul>
+</li>
+<li>The obvious downside of this during recon is that the domain/sub-domain names found in CT Logs maynot exist anymore and thus will not resolve to any valid IP address<ul>
+<li><strong>侦察期间明显的缺点是在 CT 日志中找到的域/子域名可能不再存在，因此将无法解析为任何有效的 IP 地址</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="2-2-搜索引擎"><a href="#2-2-搜索引擎" class="headerlink" title="2.2 搜索引擎"></a>2.2 搜索引擎</h3><p>Search engines like Google and Bing supports various advanced search operators to refine search queries. These operators are often referred to as “<code>Google dorks</code>”.</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">site:&#123;sub<span class="literal">-domain</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-1-Google"><a href="#2-2-1-Google" class="headerlink" title="2.2.1 Google"></a>2.2.1 Google</h4><p><img src="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum05.png"></p>
+<h4 id="2-2-2-百度"><a href="#2-2-2-百度" class="headerlink" title="2.2.2 百度"></a>2.2.2 百度</h4><p><img src="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum06.png"></p>
+<h4 id="2-2-4-Bing"><a href="#2-2-4-Bing" class="headerlink" title="2.2.4 Bing"></a>2.2.4 Bing</h4><p><img src="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum07.png"></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://help.bing.microsoft.com/#apex/18/en-US/10001/-1">https://help.bing.microsoft.com/#apex/18/en-US/10001/-1</a></p>
+</blockquote>
+<h4 id="2-2-5-Sogou"><a href="#2-2-5-Sogou" class="headerlink" title="2.2.5 Sogou"></a>2.2.5 Sogou</h4><p><a target="_blank" rel="noopener" href="https://www.sogou.com/">https://www.sogou.com/</a></p>
+<h4 id="2-2-6-360搜索"><a href="#2-2-6-360搜索" class="headerlink" title="2.2.6 360搜索"></a>2.2.6 360搜索</h4><p><a target="_blank" rel="noopener" href="https://www.so.com/">https://www.so.com/</a></p>
+<h4 id="2-2-7-Yahoo"><a href="#2-2-7-Yahoo" class="headerlink" title="2.2.7 Yahoo"></a>2.2.7 Yahoo</h4><p><a target="_blank" rel="noopener" href="http://www.yahoo.com/">http://www.yahoo.com/</a></p>
+<h4 id="2-2-8-Yandex"><a href="#2-2-8-Yandex" class="headerlink" title="2.2.8 Yandex"></a>2.2.8 Yandex</h4><p><a target="_blank" rel="noopener" href="https://www.yandex.ru/">https://www.yandex.ru/</a></p>
+<h4 id="2-2-9-Exalead"><a href="#2-2-9-Exalead" class="headerlink" title="2.2.9 Exalead"></a>2.2.9 Exalead</h4><p><a target="_blank" rel="noopener" href="https://www.exalead.com/search">https://www.exalead.com/search</a></p>
+<h4 id="2-2-10-Dogpile"><a href="#2-2-10-Dogpile" class="headerlink" title="2.2.10 Dogpile"></a>2.2.10 Dogpile</h4><p><a target="_blank" rel="noopener" href="http://www.dogpile.com/">http://www.dogpile.com/</a></p>
+<h3 id="2-3-DNS-aggregators"><a href="#2-3-DNS-aggregators" class="headerlink" title="2.3 DNS aggregators"></a>2.3 DNS aggregators</h3><p>There are a lot of the third party services that will do DNS enumeration on your behalf or they aggregate massive DNS datasets and look through them for sub-domains.</p>
+<h4 id="2-3-1-VirusTotal"><a href="#2-3-1-VirusTotal" class="headerlink" title="2.3.1 VirusTotal"></a>2.3.1 VirusTotal</h4><p><code>https://www.virustotal.com/gui/domain/&#123;sub-domain&#125;/relations</code></p>
+<p><img src="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum08.png"></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/appsecco/the-art-of-subdomain-enumeration/blob/master/virustotal_subdomain_enum.py">https://github.com/appsecco/the-art-of-subdomain-enumeration/blob/master/virustotal_subdomain_enum.py</a></p>
+<blockquote>
+<p>请求头需添加 <code>X-VT-Anti-Abuse-Header</code></p>
+</blockquote>
+<h4 id="2-3-2-DNSdumpster"><a href="#2-3-2-DNSdumpster" class="headerlink" title="2.3.2 DNSdumpster"></a>2.3.2 DNSdumpster</h4><p><img src="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum09.png"></p>
+<blockquote>
+<p> <a target="_blank" rel="noopener" href="https://github.com/PaulSec/API-dnsdumpster.com">https://github.com/PaulSec/API-dnsdumpster.com</a></p>
+</blockquote>
+<h4 id="2-3-3-Netcraft"><a href="#2-3-3-Netcraft" class="headerlink" title="2.3.3 Netcraft"></a>2.3.3 Netcraft</h4><p><code>https://searchdns.netcraft.com/?host=&#123;sub-domain&#125;</code></p>
+<p><img src="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum10.png"></p>
+<h3 id="2-4-ASN发现"><a href="#2-4-ASN发现" class="headerlink" title="2.4 ASN发现"></a>2.4 ASN发现</h3><ul>
+<li>查找 ASN 将帮助我们识别域的网络段</li>
+<li>使用 dig 或 host 解析给定域的 IP 地址</li>
+<li>找到给定 IP 地址的 ASN工具<ul>
+<li><a target="_blank" rel="noopener" href="https://asn.cymru.com/cgi-bin/whois.cgi">https://asn.cymru.com/cgi-bin/whois.cgi</a></li>
+</ul>
+</li>
+<li>查找给定域名的 ASN<ul>
+<li><a target="_blank" rel="noopener" href="http://bgp.he.net/">http://bgp.he.net/</a></li>
+</ul>
+</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum11.png"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -s http://ip-api.com/json/220.181.32.148 | jq -r .as</span><br><span class="line"><span class="comment"># install jq: sudo apt-get install jq</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum12.png"></p>
+<ul>
+<li><p>找到的 ASN 号可用于查找域的网络块</p>
+</li>
+<li><p>我们可以使用高级 WHOIS 查询来查找属于 ASN 的所有 IP 范围</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">whois -h whois.radb.net  -- <span class="string">&#x27;-i origin AS36459&#x27;</span> | grep -Eo <span class="string">&quot;([0-9.]+)&#123;4&#125;/[0-9]+&quot;</span> | uniq</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum13.png"></p>
+<p>nmap脚本查找ASN</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://nmap.org/nsedoc/scripts/targets-asn.html">https://nmap.org/nsedoc/scripts/targets-asn.html</a></p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap --script targets-asn --script-args targets-asn.asn=xxxx</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum14.png"></p>
+<h3 id="2-5-Subject-Alternate-Name-SAN"><a href="#2-5-Subject-Alternate-Name-SAN" class="headerlink" title="2.5 Subject Alternate Name(SAN)"></a>2.5 Subject Alternate Name(SAN)</h3><p>The Subject Alternative Name (SAN) is an extension to the X.509 specification that allows to specify additional host names for a single SSL certificate.</p>
+<h4 id="2-5-1-从SAN中提取域名"><a href="#2-5-1-从SAN中提取域名" class="headerlink" title="2.5.1 从SAN中提取域名"></a>2.5.1 从SAN中提取域名</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sed -ne &#39;s&#x2F;^\( *\)Subject:&#x2F;\1&#x2F;p;&#x2F;X509v3 Subject Alternative Name&#x2F;&#123;</span><br><span class="line">   N;s&#x2F;^.*\n&#x2F;&#x2F;;:a;s&#x2F;^\( *\)\(.*\), &#x2F;\1\2\n\1&#x2F;;ta;p;q; &#125;&#39; &lt; &lt;(</span><br><span class="line">   openssl x509 -noout -text -in &lt;(</span><br><span class="line">       openssl s_client -ign_eof 2&gt;&#x2F;dev&#x2F;null &lt;&lt;&lt;$&#39;HEAD &#x2F; HTTP&#x2F;1.0\r\n\r&#39; \</span><br><span class="line">           -connect baidu.com:443 ) )</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum15.png"></p>
+<p>也可以使用python脚本</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/appsecco/the-art-of-subdomain-enumeration/blob/master/san_subdomain_enum.py">https://github.com/appsecco/the-art-of-subdomain-enumeration/blob/master/san_subdomain_enum.py</a></li>
+</ul>
+<h3 id="2-6-公共数据"><a href="#2-6-公共数据" class="headerlink" title="2.6 公共数据"></a>2.6 公共数据</h3><p>There are projects that gather Internet wide scan data and make it available to researchers and the security community. The datasets published by this projects are a treasure trove of sub-domain information. Although finding sub-domains in this massive datasets is like finding a needle in the haystack, it is worth the effort.</p>
+<p>Following are few public datasets that aggregate information that could be of interest during sub-domain enumeration:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th align="center">Description</th>
+<th align="right">Price</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://scans.io/">Sonar</a></td>
+<td align="center">FDNS, RDNS, UDP, TCP, TLS, HTTP, HTTPS scan data</td>
+<td align="right">FREE</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://www.censys.io/">Censys.io</a></td>
+<td align="center">TCP, TLS, HTTP, HTTPS scan data</td>
+<td align="right">FREE</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://www.certificate-transparency.org/">CT</a></td>
+<td align="center">TLS</td>
+<td align="right">FREE</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://czds.icann.org/">CZDS</a></td>
+<td align="center">DNS zone files for “new” global TLDs</td>
+<td align="right">FREE</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://www.arin.net/">ARIN</a></td>
+<td align="center">American IP registry information (ASN, Org, Net, Poc)</td>
+<td align="right">FREE</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://data.caida.org/datasets/routing/routeviews-prefix2as">CAIDA PFX2AS IPv4</a></td>
+<td align="center">Daily snapshots of ASN to IPv4 mappings</td>
+<td align="right">FREE</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://data.caida.org/datasets/routing/routeviews6-prefix2as">CAIDA PFX2AS IPv6</a></td>
+<td align="center">Daily snapshots of ASN to IPv6 mappings</td>
+<td align="right">FREE</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://raw.githubusercontent.com/GSA/data/gh-pages/dotgov-domains/current-full.csv">US Gov</a></td>
+<td align="center">US government domain names</td>
+<td align="right">FREE</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://www.gov.uk/government/publications/list-of-gov-uk-domain-names">UK Gov</a></td>
+<td align="center">UK government domain names</td>
+<td align="right">FREE</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://ftp.arin.net/pub/stats/">RIR Delegations</a></td>
+<td align="center">Regional IP allocations</td>
+<td align="right">FREE</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://premiumdrops.com/">PremiumDrops</a></td>
+<td align="center">DNS zone files for com/net/info/org/biz/xxx/sk/us TLDs</td>
+<td align="right">$24.95/mo</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://wwws.io/">WWWS.io</a></td>
+<td align="center">Domains across many TLDs (~198m)</td>
+<td align="right">$9/mo</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://whoisxmlapi.com/">WhoisXMLAPI.com</a></td>
+<td align="center">New domain whois data</td>
+<td align="right">$109/mo</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>来源：<a target="_blank" rel="noopener" href="https://github.com/hdm/inetdata">GitHub - hdm/inetdata: Internet data acquisition</a></p>
+</blockquote>
+<h4 id="2-6-1-Rapid7-Forward-DNS-数据集发现子域"><a href="#2-6-1-Rapid7-Forward-DNS-数据集发现子域" class="headerlink" title="2.6.1 Rapid7 Forward DNS 数据集发现子域"></a>2.6.1 Rapid7 Forward DNS 数据集发现子域</h4><p>参考<a target="_blank" rel="noopener" href="https://github.com/rapid7/sonar/wiki/Forward-DNS">Forward DNS · rapid7/sonar Wiki · GitHub</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -silent https:&#x2F;&#x2F;scans.io&#x2F;data&#x2F;rapid7&#x2F;sonar.fdns_v2&#x2F;20170417-fdns.json.gz | pigz -dc | grep &quot;.baidu.com&quot; | jq</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>数据文件很大！</p>
+</blockquote>
+<h2 id="3-主动子域名"><a href="#3-主动子域名" class="headerlink" title="3. 主动子域名"></a>3. 主动子域名</h2><p><strong>什么是主动子域名枚举？</strong></p>
+<ul>
+<li>Active sub-domain enumeration is where an attacker/tester gathers sub-domain information by probing the infrastructure managed by the target organization<ul>
+<li>主动子域枚举是攻击者/测试者通过探测目标组织管理的基础设施来收集子域信息的地方</li>
+</ul>
+</li>
+<li>Sometimes the target organization might have delegated the maintainence of infrastructure to 3rd party and attacker probes the infra maintained by a third party example: nameservers<ul>
+<li>有时目标组织可能已将基础设施的维护委托给 3rd 方，而攻击者会探测由第三方维护的基础设施，例如：名称服务器</li>
+</ul>
+</li>
+<li>The key characteristic of active enumeration is that it generates traffic that may possibly lead to detection and can point to the attacker/tester<ul>
+<li>主动枚举的关键特征是它生成的流量可能会导致检测并可以指向攻击者/测试者</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-1-基于字典的枚举"><a href="#3-1-基于字典的枚举" class="headerlink" title="3.1 基于字典的枚举"></a>3.1 基于字典的枚举</h3><h4 id="3-1-1-Subbrute"><a href="#3-1-1-Subbrute" class="headerlink" title="3.1.1 Subbrute"></a>3.1.1 Subbrute</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/TheRook/subbrute">GitHub - TheRook/subbrute: A DNS meta-query spider that enumerates DNS records, and subdomains.</a><ul>
+<li>根据DNS记录查询子域名</li>
+</ul>
+</li>
+</ul>
+<p>安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">aptitude install python-dnspython</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/TheRook/subbrute.git</span><br><span class="line"><span class="built_in">cd</span> subbrute</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum16.png"></p>
+<h4 id="3-1-2-DNSRecon"><a href="#3-1-2-DNSRecon" class="headerlink" title="3.1.2 DNSRecon"></a>3.1.2 DNSRecon</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/darkoperator/dnsrecon">GitHub - darkoperator/dnsrecon: DNS Enumeration Script</a></li>
+<li>DNSRecon 是一个强大的 DNS 枚举工具，它的一个特点是使用预定义的词表进行基于字典的子域枚举。</li>
+</ul>
+<p>安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">aptitude install dnsrecon	<span class="comment"># kali</span></span><br><span class="line"><span class="comment"># or python3.6+</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/darkoperator/dnsrecon.git</span><br><span class="line"><span class="built_in">cd</span> dnsrecon</span><br><span class="line">pip install -r requirements.txt</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 暴力破解</span></span><br><span class="line">python3.7 dnsrecon.py -d baidu.com -D wordlist.txt -t brt</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># DNS</span></span><br><span class="line">python3.7 dnsrecon.py -t snoop -D wordlist.txt -n 1.1.1.1</span><br><span class="line"><span class="comment"># 1.1.1.1 是目标的NS server地址</span></span><br></pre></td></tr></table></figure>
+
+<p>其他参数选项：</p>
+<ul>
+<li><code>--threads 8</code> # 线程</li>
+<li><code>-n nsserver.com</code> # 使用自定义的解析服务器<ul>
+<li>输出选项：</li>
+<li><code>--db</code>: SQLite 3 文件</li>
+<li><code>--xml</code>: XML 文件</li>
+<li><code>--json</code>: JSON 文件</li>
+<li><code>--csv</code>: CSV 文件</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-2-Permutation-scanning"><a href="#3-2-Permutation-scanning" class="headerlink" title="3.2 Permutation scanning"></a>3.2 Permutation scanning</h3><p>Permutation scanning is another interesting technique to identify sub-domains. In this technique, we identify new sub-domains using permutations, alterations and mutations of already known domains/sub-domains.</p>
+<h4 id="3-2-1-aultdns"><a href="#3-2-1-aultdns" class="headerlink" title="3.2.1 aultdns"></a>3.2.1 aultdns</h4><p><a target="_blank" rel="noopener" href="https://github.com/infosec-au/altdns">GitHub - infosec-au/altdns: Generates permutations, alterations and mutations of subdomains and then resolves them</a></p>
+<p>安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Version: Python2</span></span><br><span class="line">pip install py-altdns</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">altdns -i subdomains.txt -o data_output -w words.txt -r -s results_output.txt</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-区域传输"><a href="#3-3-区域传输" class="headerlink" title="3.3 区域传输"></a>3.3 区域传输</h3><p>区域传输是一种 DNS 事务，其中 DNS 服务器将其区域文件的全部或部分副本传递给另一台 DNS 服务器。</p>
+<p><img src="img/zone_transfer.gif" alt="zone-transfer"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dig +multi AXFR @ns_server target.com</span><br></pre></td></tr></table></figure>
+
+<p>更多参考：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/cyjaysun/p/4265245.html">https://www.cnblogs.com/cyjaysun/p/4265245.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/n5xxxx__zy/article/details/90704865">https://blog.csdn.net/n5xxxx__zy/article/details/90704865</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.briskinfosec.com/blogs/blogsdetail/DNS-Zone-Transfer">DNS Zone Transfer | Briskinfosec</a></li>
+</ul>
+<h3 id="3-4-Zone-walking-DNSSEC"><a href="#3-4-Zone-walking-DNSSEC" class="headerlink" title="3.4 Zone walking DNSSEC"></a>3.4 Zone walking DNSSEC</h3><ul>
+<li>DNSSEC provides a layer of security by adding cryptographic signatures to existing DNS records<ul>
+<li>DNSSEC 通过向现有 DNS 记录添加加密签名来提供一层安全性</li>
+</ul>
+</li>
+<li>These signatures are stored alongside common record types like A, AAAA, MX<ul>
+<li>这些签名与 A、AAAA、MX 等常见记录类型一起存储</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-4-1-DNSSEC-New-records"><a href="#3-4-1-DNSSEC-New-records" class="headerlink" title="3.4.1 DNSSEC - New records"></a>3.4.1 DNSSEC - New records</h4><table>
+<thead>
+<tr>
+<th>Record</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>RRSIG</strong></td>
+<td>Contains a cryptographic signature.</td>
+</tr>
+<tr>
+<td><strong>NSEC and NSEC3</strong></td>
+<td>For explicit denial-of-existence of a DNS record</td>
+</tr>
+<tr>
+<td><strong>DNSKEY</strong></td>
+<td>Contains a public signing key</td>
+</tr>
+<tr>
+<td><strong>DS</strong></td>
+<td>Contains the hash of a DNSKEY record</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>更多详细内容：<a target="_blank" rel="noopener" href="https://appsecco.com/books/subdomain-enumeration/active_techniques/zone_walking.html">https://appsecco.com/books/subdomain-enumeration/active_techniques/zone_walking.html</a></p>
+</blockquote>
+<h3 id="3-5-DNS-记录"><a href="#3-5-DNS-记录" class="headerlink" title="3.5 DNS 记录"></a>3.5 DNS 记录</h3><h4 id="3-5-1-CNAME-记录"><a href="#3-5-1-CNAME-记录" class="headerlink" title="3.5.1 CNAME 记录"></a>3.5.1 CNAME 记录</h4><p>CNAME 代表规范名称。 CNAME 记录可用于将一个名称别名为另一个名称。 CNAME 记录将具有主机名的值。有时，CNAME 会显示组织的子域或显示有关在域上运行的服务类型的信息。</p>
+<p><img src="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum17.png"></p>
+<h4 id="3-5-2-SPF记录"><a href="#3-5-2-SPF记录" class="headerlink" title="3.5.2 SPF记录"></a>3.5.2 SPF记录</h4><p>参考：<a target="_blank" rel="noopener" href="https://www.rapid7.com/blog/post/2015/02/23/osint-through-sender-policy-framework-spf-records/">OSINT Through Sender Policy Framework (SPF) Records | Rapid7 Blog</a></p>
+<h3 id="3-6-HTTP-标头下的子域枚举"><a href="#3-6-HTTP-标头下的子域枚举" class="headerlink" title="3.6  HTTP 标头下的子域枚举"></a>3.6  HTTP 标头下的子域枚举</h3><blockquote>
+<p>很少有安全头暴露子域名信息。</p>
+</blockquote>
+<p>CSP定义的<code>Content-Security-Policy</code>请求头字段，它允许您创建可信内容来源的白名单，并指示浏览器仅执行或呈现来自这些来源的资源。所以基本上，<code>Content-Security-Policy </code>标头将列出我们作为攻击者可能感兴趣的一堆来源（域）。有不推荐使用的 CSP 标头形式，它们是 <code>X-Content-Security-Policy</code> 和<code> X-Webkit-CSP</code></p>
+<p>脚本工具：<a target="_blank" rel="noopener" href="https://github.com/0xbharath/domains-from-csp">https://github.com/0xbharath/domains-from-csp</a></p>
+<h2 id="4-扩展：常见工具"><a href="#4-扩展：常见工具" class="headerlink" title="4. 扩展：常见工具"></a>4. 扩展：常见工具</h2><h4 id="4-1-oneforall"><a href="#4-1-oneforall" class="headerlink" title="4.1 oneforall"></a>4.1 oneforall</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/shmilylty/OneForAll">https://github.com/shmilylty/OneForAll</a></p>
+</blockquote>
+<p>安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/shmilylty/OneForAll.git</span><br><span class="line"><span class="built_in">cd</span> OneForAll/</span><br><span class="line">python3 -m pip install -U pip setuptools wheel -i https://mirrors.aliyun.com/pypi/simple/</span><br><span class="line">pip3 install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/</span><br><span class="line">python3 oneforall.py --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+
+<p>使用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python3 oneforall.py --target example.com run</span><br><span class="line">python3 oneforall.py --targets ./example.txt run</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-2-Sublist3r"><a href="#4-2-Sublist3r" class="headerlink" title="4.2 Sublist3r"></a>4.2 Sublist3r</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/aboul3la/Sublist3r">https://github.com/aboul3la/Sublist3r</a></p>
+</blockquote>
+<ul>
+<li>Baidu, Yahoo, Google, Bing, Ask, Netcraft, DNSdumpster, VirusTotal, Threat Crowd, SSL Certificates, PassiveDNS</li>
+</ul>
+<p>安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/aboul3la/Sublist3r.git</span><br><span class="line"><span class="built_in">cd</span> Subllist3r</span><br><span class="line">pip3 install -r requirements.txt</span><br></pre></td></tr></table></figure>
+
+<p>使用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">python3 sublist3r.py -d target.com -o <span class="variable">$outfile</span></span><br><span class="line"><span class="comment"># 暴力破解</span></span><br><span class="line">python3 sublist3r.py -b -d target.com -o <span class="variable">$outfile</span></span><br></pre></td></tr></table></figure>
+
+<p>其他选项：</p>
+<ul>
+<li><code>-p 80,443</code> # 仅显示开放80,443端口的域名</li>
+<li><code>-e google,yahoo,virustotal</code> # 仅使用google,yahoo,virustotal枚举子域名</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum18.png"></p>
+<h4 id="4-3-Gobuster"><a href="#4-3-Gobuster" class="headerlink" title="4.3 Gobuster"></a>4.3 Gobuster</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/OJ/gobuster">https://github.com/OJ/gobuster</a></p>
+</blockquote>
+<p>安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;OJ&#x2F;gobuster.git</span><br><span class="line">cd gobuster&#x2F;</span><br><span class="line">go get &amp;&amp; go build</span><br><span class="line">go install</span><br></pre></td></tr></table></figure>
+
+<p>简单使用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gobuster -m dns -u target.com -w <span class="variable">$wordlist</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="4-4-amass"><a href="#4-4-amass" class="headerlink" title="4.4 amass"></a>4.4 amass</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/OWASP/Amass">https://github.com/OWASP/Amass</a></p>
+</blockquote>
+<p>安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo snap install amass</span><br></pre></td></tr></table></figure>
+
+<p>简单使用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">amass enum -d example.com</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum19.png"></p>
+<h4 id="4-5-Subfinder"><a href="#4-5-Subfinder" class="headerlink" title="4.5 Subfinder"></a>4.5 Subfinder</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/subfinder/subfinder">https://github.com/subfinder/subfinder</a></p>
+</blockquote>
+<p>VirusTotal, PassiveTotal, SecurityTrails, Censys, Riddler, Shodan, Bruteforce</p>
+<p>安装：<a target="_blank" rel="noopener" href="https://github.com/projectdiscovery/subfinder/releases/tag/v2.4.8">https://github.com/projectdiscovery/subfinder/releases/tag/v2.4.8</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./subfinder -d target.com -o <span class="variable">$outfile</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum20.png"></p>
+<h4 id="4-6-theHarvester"><a href="#4-6-theHarvester" class="headerlink" title="4.6 theHarvester"></a>4.6 theHarvester</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/laramies/theHarvester">https://github.com/laramies/theHarvester</a></p>
+</blockquote>
+<p>安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#kali</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#or</span></span><br><span class="line">$ ~ &gt; git <span class="built_in">clone</span> https://github.com/laramies/theHarvester </span><br><span class="line">$ ~ &gt; <span class="built_in">cd</span> theHarvester</span><br><span class="line"></span><br><span class="line">If developing <span class="keyword">do</span>:</span><br><span class="line">$ ~ &gt; python3 -m pip install -r requirements/dev.txt</span><br><span class="line">Else:</span><br><span class="line">$ ~ &gt; python3 -m pip install -r requirements/base.txt</span><br><span class="line"></span><br><span class="line">$ ~ &gt; python3 theHarvester.py -h  </span><br></pre></td></tr></table></figure>
+
+<p>使用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">theharvester -d target.com -b all</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum21.png"></p>
+<p><img src="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum22.png"></p>
+<h4 id="4-7-Sudomy"><a href="#4-7-Sudomy" class="headerlink" title="4.7 Sudomy"></a>4.7 Sudomy</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/Screetsec/Sudomy">https://github.com/Screetsec/Sudomy</a></p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./sudomy -d target.com -dP -eP -rS -cF -pS -tO -gW --httpx --dnsprobe  -aI webanalyze -sS</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/Taonn/img/main/img/subdomain-enum/subdomain-enum23.png"></p>
+<h4 id="4-8-Knock"><a href="#4-8-Knock" class="headerlink" title="4.8 Knock"></a>4.8 Knock</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/guelfoweb/knock">https://github.com/guelfoweb/knock</a></p>
+</blockquote>
+<ul>
+<li>AXFR, virustotal, brute-force</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">apt-get install python-dnspython</span><br><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;guelfoweb&#x2F;knock.git</span><br><span class="line">cd knock</span><br><span class="line">nano knockpy&#x2F;config.json # &lt;- 设置你的virustotal API_KEY</span><br><span class="line">python setup.py install</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">knockpy target.com</span><br><span class="line">knockpy target.com -w <span class="variable">$wordlist</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="4-9-dnssearch"><a href="#4-9-dnssearch" class="headerlink" title="4.9 dnssearch"></a>4.9 dnssearch</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/evilsocket/dnssearch">https://github.com/evilsocket/dnssearch</a></p>
+</blockquote>
+<h4 id="4-10-Dnscan"><a href="#4-10-Dnscan" class="headerlink" title="4.10 Dnscan"></a>4.10 Dnscan</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/rbsec/dnscan">https://github.com/rbsec/dnscan</a></p>
+</blockquote>
+<h4 id="4-11-Domained"><a href="#4-11-Domained" class="headerlink" title="4.11 Domained"></a>4.11 Domained</h4><p>集成Sublist3r, Knock, Subbrute, Massdns, Recon-ng, Amass &amp; SubFinder</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/cakinney/domained">https://github.com/cakinney/domained</a></p>
+</blockquote>
+<h4 id="4-12-subDomainsBrute"><a href="#4-12-subDomainsBrute" class="headerlink" title="4.12 subDomainsBrute"></a>4.12 subDomainsBrute</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/lijiejie/subDomainsBrute">https://github.com/lijiejie/subDomainsBrute</a></p>
+</blockquote>
+<h4 id="4-13-Layer子域名挖掘机"><a href="#4-13-Layer子域名挖掘机" class="headerlink" title="4.13 Layer子域名挖掘机"></a>4.13 Layer子域名挖掘机</h4><h4 id="4-14-teemo"><a href="#4-14-teemo" class="headerlink" title="4.14 teemo"></a>4.14 teemo</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/bit4woo/teemo">https://github.com/bit4woo/teemo</a></p>
+</blockquote>
+<h2 id="5-在线工具"><a href="#5-在线工具" class="headerlink" title="5. 在线工具"></a>5. 在线工具</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://dnsdumpster.com/">https://dnsdumpster.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.nmmapper.com/sys/tools/subdomainfinder/">https://www.nmmapper.com/sys/tools/subdomainfinder/</a></li>
+<li><a target="_blank" rel="noopener" href="https://spyse.com/tools/subdomain-finder">https://spyse.com/tools/subdomain-finder</a></li>
+<li><a target="_blank" rel="noopener" href="https://searchdns.netcraft.com/">https://searchdns.netcraft.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://detectify.com/">https://detectify.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://pentest-tools.com/information-gathering/find-subdomains-of-domain">https://pentest-tools.com/information-gathering/find-subdomains-of-domain</a></li>
+<li><a target="_blank" rel="noopener" href="https://fofa.so/">https://fofa.so/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.zoomeye.org/">https://www.zoomeye.org/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.shodan.io/">https://www.shodan.io/</a></li>
+<li><a target="_blank" rel="noopener" href="https://phpinfo.me/domain">https://phpinfo.me/domain</a></li>
+</ul>
+<h2 id="6-字典相关"><a href="#6-字典相关" class="headerlink" title="6. 字典相关"></a>6. 字典相关</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://gist.github.com/jhaddix/86a06c5dc309d08580a018c66354a056">https://gist.github.com/jhaddix/86a06c5dc309d08580a018c66354a056</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/assetnote/commonspeak2-wordlists">https://github.com/assetnote/commonspeak2-wordlists</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/danielmiessler/SecLists/tree/master/Discovery/DNS">https://github.com/danielmiessler/SecLists/tree/master/Discovery/DNS</a></li>
+</ul>
+<h2 id="7-威胁情报数据"><a href="#7-威胁情报数据" class="headerlink" title="7. 威胁情报数据"></a>7. 威胁情报数据</h2><ol>
+<li>微步：<a target="_blank" rel="noopener" href="https://x.threatbook.cn/">https://x.threatbook.cn/</a></li>
+<li>alienvault：<a target="_blank" rel="noopener" href="https://otx.alienvault.com/">https://otx.alienvault.com/</a></li>
+<li>riskiq：<a target="_blank" rel="noopener" href="https://www.riskiq.com/">https://www.riskiq.com/</a></li>
+<li>threatminer：<a target="_blank" rel="noopener" href="https://www.threatminer.org/">https://www.threatminer.org/</a></li>
+<li>virustotal：<a target="_blank" rel="noopener" href="https://www.virustotal.com/gui/home/search">https://www.virustotal.com/gui/home/search</a></li>
+</ol>
+<h2 id="8-细节"><a href="#8-细节" class="headerlink" title="8. 细节"></a>8. 细节</h2><ul>
+<li>robots文件</li>
+<li>sitemap文件</li>
+<li>域传送漏洞</li>
+<li>js敏感信息泄露</li>
+</ul>
+<h2 id="9-参考"><a href="#9-参考" class="headerlink" title="9. 参考"></a>9. 参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://appsecco.com/books/subdomain-enumeration/">The Art of subdomain enumeration · GitBook (appsecco.com)</a></li>
+<li><a target="_blank" rel="noopener" href="https://pentester.land/cheatsheets/2018/11/14/subdomains-enumeration-cheatsheet.html#search-engines">Subdomains Enumeration Cheat Sheet · Pentester Land</a></li>
+<li><a target="_blank" rel="noopener" href="https://ricardoiramar.medium.com/subdomain-enumeration-tools-evaluation-57d4ec02d69e">Subdomain Enumeration Tools Evaluation | by Ricardo Iramar dos Santos | Medium</a></li>
+<li><a target="_blank" rel="noopener" href="https://geekflare.com/find-subdomains/">How to find Subdomains of a Domain in Minutes? (geekflare.com)</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/w1590191166/article/details/104160404">https://blog.csdn.net/w1590191166/article/details/104160404</a></li>
+</ul>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://taonn.github.io/2021/08/03/%E5%AD%90%E5%9F%9F%E5%90%8D%E6%9E%9A%E4%B8%BE-%E6%94%B6%E9%9B%86/" title="子域名枚举&amp;收集" target="_blank" rel="external"><font color="red">子域名枚举&收集</font></a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/Taonn" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/Taonn" target="_blank"><span class="text-dark">Tao</span><small class="ml-1x">You are right.</small></a></h3>
+        <div>慢慢走会比较快</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    
+    <li class="next">
+      <a href="/2021/04/08/%E9%85%8D%E7%BD%AE%E5%9F%BA%E4%BA%8EWindows%E5%86%85%E7%BD%AE%E5%B7%A5%E5%85%B7%E7%9A%84%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/" title="配置基于Windows内置工具的端口转发"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <div class="copyright">
+    	
+        &copy; 2021 Tao.<br>
+		<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+		<span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+		
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '8zpT8ubnMCs0p3vahHLvnomJ-gzGzoHsz',
+    appKey: 'QjoNCC6qtXBclb6ll0XkwEbV',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
